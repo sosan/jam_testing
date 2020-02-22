@@ -1672,11 +1672,11 @@ public class ControllerGamepadMenu : MonoBehaviour
         textosOptions[2].text = mainSoundInternal.ToString();
         textosOptions[3].text = mainSfxInternal.ToString();
 
-        ShowFXOptions(0, -130);
+        ShowFXOptions(0, -192);
 
         DeColorOptionsReset(4);
         contOptionsPosition = 0;
-        await UniTask.Delay(200);
+        await UniTask.Delay(500);
         textosOptions[0].color = selectedColor;
         txtOptions[0].color = selectedColor;
 
@@ -1698,7 +1698,7 @@ public class ControllerGamepadMenu : MonoBehaviour
             );
 
 
-        await UniTask.Delay(400);
+        await UniTask.Delay(500);
         DisableCanvas();
 
         contMenuPosition = 0;
