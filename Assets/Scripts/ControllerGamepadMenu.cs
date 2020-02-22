@@ -1689,7 +1689,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         SavePlayerPrefsValues();
 
-        ShowFXOptions(0, -184);
+        ShowFXOptions(0, -249);
 
         DeColorOptionsReset(5);
 
