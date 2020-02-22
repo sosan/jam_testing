@@ -320,13 +320,13 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
 
-        //credits
-        if (canvasMenu[3].activeSelf == true)
-        {
+        ////credits
+        //if (canvasMenu[3].activeSelf == true)
+        //{
 
-            BotonExitCreditsGamepad();
-            return;
-        }
+        //    BotonExitCreditsGamepad();
+        //    return;
+        //}
 
 
 
@@ -354,14 +354,14 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
 
-        //credits
-        if (canvasMenu[3].activeSelf == true)
-        {
+        ////credits
+        //if (canvasMenu[3].activeSelf == true)
+        //{
 
-            BotonExitCreditsGamepad();
+        //    BotonExitCreditsGamepad();
 
 
-        }
+        //}
 
 
     }
@@ -655,6 +655,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         var tempPos = positionTransformparticles[contMenuPosition].anchoredPosition;
         tempPos.x = bola_seleccion.anchoredPosition.x;
         bola_seleccion.anchoredPosition = tempPos;
+        bola_seleccion.gameObject.SetActive(true);
 
 
         
@@ -885,6 +886,9 @@ public class ControllerGamepadMenu : MonoBehaviour
         if (isBegun == true) return;
 
         textos[0].color = selectedColor;
+        
+        contMenuPosition = 0;
+        ShowPositionMenuWithGamePad();
 
     }
 
@@ -894,6 +898,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         if (isBegun == true) return;
         textos[0].color = notSelectedColor;
+        bola_seleccion.gameObject.SetActive(false);
 
     }
 
@@ -904,7 +909,8 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         if (isBegun == true) return;
         textos[1].color = selectedColor;
-
+        contMenuPosition = 1;
+        ShowPositionMenuWithGamePad();
     }
 
 
@@ -912,30 +918,32 @@ public class ControllerGamepadMenu : MonoBehaviour
     {
         if (isBegun == true) return;
         textos[1].color = notSelectedColor;
+        bola_seleccion.gameObject.SetActive(false);
 
     }
 
 
-    public void EnterHoverCredits()
-    {
-        if (isBegun == true) return;
-        textos[2].color = selectedColor;
+    //public void EnterHoverCredits()
+    //{
+    //    if (isBegun == true) return;
+    //    textos[2].color = selectedColor;
 
-    }
+    //}
 
 
-    public void ExitHoverCredits()
-    {
-        if (isBegun == true) return;
-        textos[2].color = notSelectedColor;
+    //public void ExitHoverCredits()
+    //{
+    //    if (isBegun == true) return;
+    //    textos[2].color = notSelectedColor;
 
-    }
+    //}
 
     public void EnterHoverExit()
     {
         if (isBegun == true) return;
         textos[2].color = selectedColor;
-
+        contMenuPosition = 2;
+        ShowPositionMenuWithGamePad();
     }
 
 
@@ -943,6 +951,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     {
         if (isBegun == true) return;
         textos[2].color = notSelectedColor;
+        bola_seleccion.gameObject.SetActive(false);
 
     }
 
@@ -1731,88 +1740,73 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
 
-    public async void BotonExitCredits()
-    {
+    //public async void BotonExitCredits()
+    //{
 
         
-        //DeColorOptions(5);
-        particleCreditsSelected.Play();
+    //    //DeColorOptions(5);
+    //    particleCreditsSelected.Play();
 
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-            );
-
-
-        textoCredits.color = selectedColor;
-        await UniTask.Delay(150);
-        textoCredits.color = notSelectedColor;
-
-        await UniTask.Delay(200);
+    //    MusicController.MusicInstance.PlayFXSound(
+    //        MusicController.MusicInstance.sfx[1]
+    //        );
 
 
+    //    textoCredits.color = selectedColor;
+    //    await UniTask.Delay(150);
+    //    textoCredits.color = notSelectedColor;
 
-        contMenuPosition = 0;
-        contOptionsPosition = 0;
-        DisableCanvas();
-
-
-        canvasMenu[1].SetActive(true); 
-        //mar.SetActive(true);
-        ShowPositionMenuWithGamePad();
+    //    await UniTask.Delay(200);
 
 
 
-    }
+    //    contMenuPosition = 0;
+    //    contOptionsPosition = 0;
+    //    DisableCanvas();
 
 
-    private async void BotonExitCreditsGamepad()
-    {
-
-
-        //DeColorOptions(5); //.... no tendria que estar
-        particleCreditsSelected.Play();
-
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-            );
-
-
-        textoCredits.color = selectedColor;
-        await UniTask.Delay(150);
-        textoCredits.color = notSelectedColor;
-
-        await UniTask.Delay(200);
-
-        contMenuPosition = 0;
-        contOptionsPosition = 0;
-        DisableCanvas();
-
-
-        ShowPositionMenuWithGamePad();
-        canvasMenu[1].SetActive(true);
-        ///*mar.*/SetActive(true);
+    //    canvasMenu[1].SetActive(true); 
+    //    //mar.SetActive(true);
+    //    ShowPositionMenuWithGamePad();
 
 
 
-    }
+    //}
 
 
-    public void OpenDiscord()
-    {
-        if (isBegun == true) return;
-
-        Application.OpenURL("https://discordapp.com/invite/cnURfjc");
-        
+    //private async void BotonExitCreditsGamepad()
+    //{
 
 
-    }
+    //    //DeColorOptions(5); //.... no tendria que estar
+    //    particleCreditsSelected.Play();
 
-    public void OpenItchio()
-    {
-        if (isBegun == true) return;
-        Application.OpenURL("https://joselu.itch.io/juegoheynaujam");
+    //    MusicController.MusicInstance.PlayFXSound(
+    //        MusicController.MusicInstance.sfx[1]
+    //        );
 
-    }
+
+    //    textoCredits.color = selectedColor;
+    //    await UniTask.Delay(150);
+    //    textoCredits.color = notSelectedColor;
+
+    //    await UniTask.Delay(200);
+
+    //    contMenuPosition = 0;
+    //    contOptionsPosition = 0;
+    //    DisableCanvas();
+
+
+    //    ShowPositionMenuWithGamePad();
+    //    canvasMenu[1].SetActive(true);
+    //    ///*mar.*/SetActive(true);
+
+
+
+    //}
+
+
+
 
 
     public void ResetPlayerPrefs()
