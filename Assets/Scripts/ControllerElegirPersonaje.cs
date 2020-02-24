@@ -200,6 +200,65 @@ public class ControllerElegirPersonaje : MonoBehaviour
         }
 
         textoempezarlucha.key = "esperandojugadores";
+
+        //fitting alpha image with collider. needs read/write enabled from texture
+        for (ushort i = 0; i < charactersImagesSmall.Length; i++)
+        {
+
+            charactersImagesSmall[i].alphaHitTestMinimumThreshold = 1;
+
+        }
+
+        for (ushort i = 0; i < matrixCharacters.Length; i++)
+        {
+
+            matrixCharacters[i].health = gameCharactersSettings.health[i];
+            matrixCharacters[i].healthMax = gameCharactersSettings.healthMax;
+            matrixCharacters[i].power = gameCharactersSettings.power[i];
+            matrixCharacters[i].powerMax = gameCharactersSettings.powerMax;
+            matrixCharacters[i].defense = gameCharactersSettings.defense[i];
+            matrixCharacters[i].defenseMax = gameCharactersSettings.defenseMax;
+            matrixCharacters[i].energy = gameCharactersSettings.energy[i];
+            matrixCharacters[i].energyMax = gameCharactersSettings.energyMax;
+            matrixCharacters[i].imageCharacter = gameCharactersSettings.imageCharactersBig.GetSprite(i+"big");
+            charactersImagesSmall[i].sprite = gameCharactersSettings.imageCharactersSmall.GetSprite(i.ToString());
+            matrixCharacters[i].nameCharacter = gameCharactersSettings.nameCharacters[i];
+
+        }
+
+
+        for (ushort i = 0; i < focusPlayers.Length; i++)
+        {
+
+            focusPlayers[i].GetComponent<Image>().color = prefabColorsPlayers[i];
+            bigSelectionPlayers[i].color = prefabColorsPlayers[i];
+
+            barraHP[i].fillAmount = 0;
+            barraDefense[i].fillAmount = 0;
+            barraPower[i].fillAmount =  0;
+
+
+            nameCharactersPlayer[i].text = "";
+            mandosImage[i].gameObject.SetActive(false);
+
+            //if (i % 2 == 0)
+            //{
+            //    explicacion[i].text = "VES A DERECHA PARA AÑADIR JUGADOR";
+
+
+            //}
+            //else
+            //{
+
+            //    explicacion[i].text = "VES A IZQUIERDA PARA AÑADIR JUGADOR";
+            //}
+
+            //namePlayers[i].text = "NONE";
+
+
+
+        }
+
         
 
 
@@ -337,17 +396,21 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
             //jugadores[contadorJugadores].idDevice = obj.control.device.deviceId;
             HacerVibrarMando(obj.control.device.deviceId);
-            
+
             entrada_txt[contadorJugadores - 1].SetActive(false);
             panel_players[contadorJugadores - 1].SetActive(true);
-            focusPlayers[contadorJugadores - 1].transform.position = initialPlayerPosition[contadorJugadores - 1].transform.position;
+            //focusPlayers[contadorJugadores - 1].transform.position = initialPlayerPosition[contadorJugadores - 1].transform.position;
             focusPlayers[contadorJugadores - 1].SetActive(true);
-            
-            
+
             AddPlayer(contadorJugadores - 1, obj.control.device.deviceId);
-
+            (ushort, ushort)posicion = PosicionPlayerMatrix(contadorJugadores - 1);
+            
+            MoveFocus(focusPlayers[contadorJugadores - 1], initialPlayerPosition[contadorJugadores - 1].GetComponent<MatrixCharacters>(), posicion.Item1, contadorJugadores - 1);
+            
             
 
+            
+            
 
 
         }
@@ -546,7 +609,23 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
    
+    private (ushort, ushort) PosicionPlayerMatrix(int contadorJugador)
+    { 
+    
+        ushort x = 0;
+        ushort y = 0;
+        switch (contadorJugador)
+        {
+            case 0: x = 0; y = 2; break;
+            case 1: x = 5; y = 2; break;
+            case 2: x = 0; y = 0; break;
+            case 3: x = 5; y = 0; break;
+            default: Debug.LogError("demasiados"); break;
 
+        }
+    
+        return (x, y);
+    }
 
 
 
@@ -1041,7 +1120,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void MoveFocus(GameObject focus, MatrixCharacters matrixPos, ushort posX, int playerId)
     {
 
-
+        print("nombre=" + focus.name + " matriz=" + matrixPos + " posX=" + posX + " playerID=" + playerId);
+        
         if ((matrixPos is null) == false)
         {
 
@@ -1082,7 +1162,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
             tFocus.defenseMax = matrixPos.defenseMax;
             tFocus.nameCharacter = matrixPos.nameCharacter;
 
-            charactersImagesBig[playerId].sprite = matrixPos.imageCharacter;
+            //charactersImagesBig[playerId].sprite = matrixPos.imageCharacter;
+            playerImage[playerId].sprite = matrixPos.imageCharacter;
+            playerImage[playerId].preserveAspect = true;
             barraHP[playerId].fillAmount = matrixPos.health / matrixPos.healthMax;
             barraDefense[playerId].fillAmount = matrixPos.defense / matrixPos.defenseMax;
             barraPower[playerId].fillAmount = matrixPos.power / matrixPos.powerMax;

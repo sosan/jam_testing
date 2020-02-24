@@ -112,5 +112,7 @@ MonoBehaviour:
   - nombre17
   - nombre18
   initialLifes: 030003000300030003000300030003000300030003000300030003000300030003000300
-  imageCharactersBig: {fileID: 0}
-  imageCharactersSmall: {fileID: 0}
+  imageCharactersBig: {fileID: 4343727234628468602, guid: e0201326c33b2c84193edf34bfae5722,
+    type: 2}
+  imageCharactersSmall: {fileID: 4343727234628468602, guid: ef4114f36e36a704ba12480bf91a6319,
+    type: 2}
