@@ -5,16 +5,63 @@ using UnityEngine.UI;
 using TMPro;
 using InControlActions;
 using UnityEngine.InputSystem;
+using UniRx.Async;
 
 
+//public class InfoJugador
+//{
+//    public Color color;
+//    public int idDevice;
+//    public int x;
+//    public bool listo = false;
+//    public GameObject objPlayer = null;
 
-public class InfoJugador
+//}
+
+public class InfoPlayer
 {
-    public Color color;
-    public int idDevice;
-    public int x;
-    public bool listo = false;
-    public GameObject objPlayer = null;
+    public GameObject focusPlayer;
+    public GameObject playerGameObject;
+    public GameObject playerPos;
+    public Color colorPlayer;
+    public ushort posX;
+    public ushort posY;
+    public ushort playerId;
+    public bool isFirstMove;
+    public bool listo;
+    public Image bigSelectionPlayer;
+    public bool selected;
+    public string namePlayer;
+
+    public int expCurrent;
+    public int expMax;
+    public int levelCurrent;
+    public int levelMax;
+
+    public int indexShotPrefab;
+
+    public float fireCooldown;
+    public float speedMovement;
+    public float powerDamage;
+
+
+    public InfoPlayer() { }
+
+    public InfoPlayer(GameObject focusPlayer, GameObject playerGameObject, GameObject playerPos, Color colorPlayer, ushort posX, ushort posY,
+        ushort playerId, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo)
+    {
+        this.focusPlayer = focusPlayer;
+        this.playerGameObject = playerGameObject;
+        this.playerPos = playerPos;
+        this.colorPlayer = colorPlayer;
+        this.posX = posX;
+        this.posY = posY;
+        this.playerId = playerId;
+        this.isFirstMove = isFirstMove;
+        this.bigSelectionPlayer = bigSelectionPlayer;
+        this.listo = listo;
+    }
+
 
 }
 
@@ -57,6 +104,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public TextMeshProUGUI[] explicacion;
 
     public Image[] mandosImage;
+    public GameObject[] entrada_txt = null;
     public Sprite[] prefabMandosImage;
 
 
@@ -68,7 +116,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     [SerializeField] private const ushort JUGADORES_MAXIMO = 4;
     //private InfoJugador[] jugadores = new InfoJugador[JUGADORES_MAXIMO];
     [HideInInspector] public ushort contadorJugadores = 0;
-    [HideInInspector] public Dictionary<int, InfoJugador> playersById = new Dictionary<int, InfoJugador>();
+    [HideInInspector] public Dictionary<int, InfoPlayer> playersById = new Dictionary<int, InfoPlayer>();
 
     //---------
     public Animation[] focusButtonX;
@@ -89,7 +137,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public GameObject[] focusPlayers = null;
     public Image[] bigSelectionPlayers = null;
     public Image selectionAlAtaker = null;
-    public Image[] playerInfoImage = null;
+    public Image[] playerImage = null;
+    
 
     public Sprite pairSprite = null;
     public Sprite noPairSprite = null;
@@ -98,6 +147,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     public MatrixCharacters[] matrixCharacters = null;
     private MatrixCharacters playerKeyboardLastTaken = null;
+
+    public Image[] recuadros = null;
 
 
     private void OnEnable()
@@ -143,10 +194,13 @@ public class ControllerElegirPersonaje : MonoBehaviour
         { 
             panel_players[i].SetActive(false);
             focusPlayers[i].SetActive(false);
-        
+            entrada_txt[i].SetActive(true);
+            focusPlayers[i].SetActive(false);
+            recuadros[i].color = Color.white;
         }
 
         textoempezarlucha.key = "esperandojugadores";
+        
 
 
 
@@ -160,17 +214,100 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     private void ControlDpad(InputAction.CallbackContext obj)
     {
+        if (playersById.ContainsKey(obj.control.device.deviceId) == false)
+        { 
+            return;
+        }
 
         Vector2 move = obj.ReadValue<Vector2>();
-        ControlEleccionPersonajes(move);
+
+        
+        ControlEleccionPersonajes(move, playersById[obj.control.device.deviceId]);
 
     }
 
-    private void ControlEleccionPersonajes(Vector2 posicion)
+    private void ControlEleccionPersonajes(Vector2 posicion, InfoPlayer player)
     { 
     
-    
-    
+        if (posicion.normalized.y == 1f)
+        { 
+            
+
+            if ((player.focusPlayer.GetComponent<MatrixCharacters>().up is null) == false)
+            {
+
+                player.focusPlayer.GetComponent<MatrixCharacters>().up.down.taken = false;
+
+            }
+            MoveFocus(player.focusPlayer, player.focusPlayer.GetComponent<MatrixCharacters>().up, player.posX, player.playerId );
+
+
+            print("arriba");
+            return;
+        }
+
+        if (posicion.normalized.y == -1f)
+        { 
+            print("abajo");
+            
+            if ((player.focusPlayer.GetComponent<MatrixCharacters>().down is null) == false)
+            {
+                player.focusPlayer.GetComponent<MatrixCharacters>().down.up.taken = false;
+            }
+
+
+            MoveFocus(player.focusPlayer, player.focusPlayer.GetComponent<MatrixCharacters>().down, player.posX, player.playerId);
+            return;
+        
+        }
+
+        if (posicion.normalized.x == 1f)
+        { 
+
+            if (player.posX >= 0 && player.posX < 5)
+            {
+                player.posX++;
+            }
+
+
+            print("derecha");
+            if ((player.focusPlayer.GetComponent<MatrixCharacters>().right is null) == false)
+            {
+
+                player.focusPlayer.GetComponent<MatrixCharacters>().right.left.taken = false;
+
+            }
+
+            MoveFocus(player.focusPlayer, player.focusPlayer.GetComponent<MatrixCharacters>().right, player.posX, player.playerId );
+            return;
+
+        }
+
+        if (posicion.normalized.x == -1f)
+        { 
+        
+            if (player.posX > 0 && player.posX <= 5)
+            {
+                player.posX--;
+            }
+
+            print("izquierda");
+            if ((player.focusPlayer.GetComponent<MatrixCharacters>().left is null) == false)
+            {
+                player.focusPlayer.GetComponent<MatrixCharacters>().left.right.taken = false;
+
+            }
+
+            MoveFocus(player.focusPlayer, player.focusPlayer.GetComponent<MatrixCharacters>().left, player.posX, player.playerId);
+            return;
+
+
+        }
+
+
+
+
+
     }
 
     
@@ -183,80 +320,111 @@ public class ControllerElegirPersonaje : MonoBehaviour
         { 
             print("insertado: " + contadorJugadores + " device=" + obj.control.device.deviceId);
             //insertar player
+            
+
+            
             contadorJugadores++;
             if (contadorJugadores > JUGADORES_MAXIMO)
             { 
         
                 contadorJugadores = JUGADORES_MAXIMO;
+                recuadros[3].color = Color.black;
+
         
             }
 
+            recuadros[contadorJugadores - 1].gameObject.SetActive(false);
+
             //jugadores[contadorJugadores].idDevice = obj.control.device.deviceId;
+            HacerVibrarMando(obj.control.device.deviceId);
             
-            playersById.Add(obj.control.device.deviceId, new InfoJugador());
+            entrada_txt[contadorJugadores - 1].SetActive(false);
+            panel_players[contadorJugadores - 1].SetActive(true);
+            focusPlayers[contadorJugadores - 1].transform.position = initialPlayerPosition[contadorJugadores - 1].transform.position;
+            focusPlayers[contadorJugadores - 1].SetActive(true);
+            
+            
+            AddPlayer(contadorJugadores - 1, obj.control.device.deviceId);
+
+            
+
+
 
         }
         else
         { 
         
             print("player listo: " + contadorJugadores + " device=" + obj.control.device.deviceId);
-            //ejecutar que el player esta listo
-            playersById[obj.control.device.deviceId].listo = true;
-            var numdevices = InputSystem.devices.Count;
-
-            // si solo hay uno tendriamos que ir para ready  todos..
-
-
-            //comprobar que esten todos listos
-            bool completado = true;
             List<int> keys = new List<int>(playersById.Keys);
 
-            for (ushort i = 0; i < playersById.Count; i++)
-            {
-                //CORREGIR....testesar
-                if (readyImage[i].activeSelf == false && playersById[keys[i]].listo == false)
-                {
-                    completado = false;
-                    return;
+            
+            if (playersById[obj.control.device.deviceId].listo == true)
+            { 
+            
+                // tercera vez
+                if (InputSystem.devices.Count == contadorJugadores)
+                { 
+                    
+                    //comprobar que esten todos listos
+                    bool completado = true;
+
+                    for (ushort i = 0; i < playersById.Count; i++)
+                    {
+                        //CORREGIR....testesar
+                        if (readyImage[i].activeSelf == false && playersById[keys[i]].listo == false)
+                        {
+                            completado = false;
+                            return;
+                        }
+
+                    }
+
+                    //todos los jugadores al completo listos
+                    if (completado == true)
+                    {
+
+                        alAtaque();
+
+                    }
+
+
+            
                 }
-
-            }
-
-            //todos los jugadores al completo listos
-            if (completado == true)
-            {
-
-                alAtaque();
-
+                else
+                { 
+            
+            
+            
+                }
+            
             }
             else
-            {
+            { 
+                //ejecutar que el player esta listo
+                playersById[obj.control.device.deviceId].listo = true;
 
-                return;
+                readyImage[contadorJugadores].SetActive(
+                    !readyImage[contadorJugadores].activeSelf
+                );
+
+                if (InputSystem.devices.Count == contadorJugadores)
+                { 
+
+                    for (ushort i = contadorJugadores; i < JUGADORES_MAXIMO; i++)
+                    { 
+                    
+
+                    
+                    }
+
+
+                }
+
+
+
+
             }
 
-
-            //readyImage[contadorJugadores].SetActive(
-            //    !readyImage[contadorJugadores].activeSelf
-            //);
-
-            //thisPlayer.focusPlayer.GetComponent<Image>().enabled = false;
-
-            //thisPlayer.selected = !thisPlayer.selected;
-
-            //selectionAlAtaker.enabled = true;
-
-            //if (thisPlayer.playerId - 1 == 0)
-            //{
-
-            //    explicacion[thisPlayer.playerId - 1].text = "PULSA B PARA DESMARCAR\nPULSA A PARA EMPEZAR";
-            //}
-            //else
-            //{
-
-            //    explicacion[thisPlayer.playerId - 1].text = "PULSA B PARA DESMARCAR";
-
-            //}
 
 
         
@@ -274,21 +442,59 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void ButtonExit(InputAction.CallbackContext obj)
     {
 
-        contadorJugadores--;
-        if (contadorJugadores < 0)
-        { 
-            contadorJugadores = 0;
-        }
+        
 
 
         if (playersById.ContainsKey(obj.control.device.deviceId) == true)
         { 
             playersById.Remove(obj.control.device.deviceId);
+            HacerVibrarMando(obj.control.device.deviceId);
+            //if (contadorJugadores == 4)
+            //{ 
+                
+            //    recuadros[3].color = Color.white;
+                
+            //}
+            contadorJugadores--;
+            if (contadorJugadores < 0)
+            { 
+                contadorJugadores = 0;
+            }
+
+            recuadros[contadorJugadores].gameObject.SetActive(true);
+            panel_players[contadorJugadores].SetActive(false);
+            entrada_txt[contadorJugadores].SetActive(true);
+            focusPlayers[contadorJugadores].SetActive(false);
+            focusPlayers[contadorJugadores].transform.position = initialPlayerPosition[contadorJugadores].transform.position;
+            
+
+            
+
+
         }
 
 
     }
 
+
+    public async void HacerVibrarMando(int deviceId)
+    { 
+        //vibrar el gamepad que ha pulsado el boton
+        var todosgamepads = Gamepad.all;
+        for (ushort i = 0; i < todosgamepads.Count; i++)
+        { 
+            if (todosgamepads[i].deviceId == deviceId)
+            {
+                todosgamepads[i].SetMotorSpeeds(0.5f, 0.5f);
+                await UniTask.Delay(110);
+                todosgamepads[i].SetMotorSpeeds(0f, 0f);
+
+
+            }
+        }
+    
+    
+    }
 
 
 
@@ -344,50 +550,36 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
 
-    public void AddPlayer(InputDevice inputDevice)
+    public void AddPlayer(int contadorJugadores, int deviceId )
     {
+        ushort x = 0; 
+        ushort y = 0;
+        
+        switch (contadorJugadores)
+        {
+            case 0: x = 0; y = 2; break;
+            case 1: x = 5; y = 2; break;
+            case 2: x = 0; y = 0; break;
+            case 3: x = 5; y = 0; break;
+            default: Debug.LogError("demasiados"); break;
 
-        //if (variablesOverScenes.dictPlayers.ContainsKey(inputDevice.GUID.ToString()) == false)
-        //{
+        }
 
+        playersById.Add(deviceId, new InfoPlayer(
+                focusPlayers[contadorJugadores],
+                null,
+                initialPlayerPosition[contadorJugadores],
+                prefabColorsPlayers[contadorJugadores],
+                x, y,
+                (ushort)(contadorJugadores),
+                true,
+                bigSelectionPlayers[contadorJugadores],
+                false,
+                false
 
-        //    if (variablesOverScenes.dictPlayers.Count < VariablesOverScenes.MAX_PLAYERS)
-        //    {
-
-        //        ushort x = 0; ushort y = 0;
-        //        switch (menuManager.countPlayers)
-        //        {
-        //            case 0: x = 0; y = 2; break;
-        //            case 1: x = 5; y = 2; break;
-        //            case 2: x = 0; y = 0; break;
-        //            case 3: x = 5; y = 0; break;
-        //            default: Debug.LogError("demasiados"); break;
-
-        //        }
-
-        //        variablesOverScenes.dictPlayers.Add(inputDevice.GUID.ToString(),
-        //        new InfoPlayer(
-        //            focusPlayers[menuManager.countPlayers],
-        //            null,
-        //            initialPlayerPosition[menuManager.countPlayers],
-        //            //initialPlayerPosition[menuManager.countPlayers].GetComponent<MatrixCharacters>(),
-        //            prefabColorsPlayers[menuManager.countPlayers],
-        //            x, y,
-        //            (ushort)(menuManager.countPlayers + 1),
-        //            true,
-        //            bigSelectionPlayers[menuManager.countPlayers],
-        //            false
-                    
-
-        //        ));
-
-
-        //        menuManager.countPlayers++;
-        //        menuManager.inputDevices.Add(inputDevice);
-
-        //    }
-
-        //}
+            ));
+            
+       
 
     }
 
@@ -850,61 +1042,61 @@ public class ControllerElegirPersonaje : MonoBehaviour
     {
 
 
-        //if ((matrixPos is null) == false)
-        //{
+        if ((matrixPos is null) == false)
+        {
 
 
-        //    if (playerId < 0 || playerId > VariablesOverScenes.MAX_PLAYERS - 1) return;
+            //if (playerId < 0 || playerId > JUGADORES_MAXIMO - 1) return;
 
 
-        //    if (posX % 2 == 0)
-        //    {
+            if (posX % 2 == 0)
+            {
 
-        //        focus.GetComponent<Image>().sprite = pairSprite;
-        //    }
-        //    else
-        //    {
+                focus.GetComponent<Image>().sprite = pairSprite;
+            }
+            else
+            {
 
-        //        focus.GetComponent<Image>().sprite = noPairSprite;
-        //    }
-
-
-        //    focus.transform.position = matrixPos.gameObject.transform.position;
-        //    matrixPos.taken = true;
-
-        //    var tFocus = focus.GetComponent<MatrixCharacters>();
-
-        //    tFocus.up = matrixPos.up;
-        //    tFocus.down = matrixPos.down;
-        //    tFocus.right = matrixPos.right;
-        //    tFocus.left = matrixPos.left;
+                focus.GetComponent<Image>().sprite = noPairSprite;
+            }
 
 
-        //    tFocus.health = matrixPos.health;
-        //    tFocus.healthMax = matrixPos.healthMax;
-        //    tFocus.energy = matrixPos.energy;
-        //    tFocus.energyMax = matrixPos.energyMax;
-        //    tFocus.power = matrixPos.power;
-        //    tFocus.powerMax = matrixPos.powerMax;
-        //    tFocus.defense = matrixPos.defense;
-        //    tFocus.defenseMax = matrixPos.defenseMax;
-        //    tFocus.nameCharacter = matrixPos.nameCharacter;
+            focus.transform.position = matrixPos.gameObject.transform.position;
+            matrixPos.taken = true;
 
-        //    charactersImagesBig[playerId].sprite = matrixPos.imageCharacter;
-        //    barraHP[playerId].fillAmount = matrixPos.health / matrixPos.healthMax;
-        //    barraDefense[playerId].fillAmount = matrixPos.defense / matrixPos.defenseMax;
-        //    barraPower[playerId].fillAmount = matrixPos.power / matrixPos.powerMax;
-        //    nameCharactersPlayer[playerId].text = matrixPos.nameCharacter;
+            var tFocus = focus.GetComponent<MatrixCharacters>();
+
+            tFocus.up = matrixPos.up;
+            tFocus.down = matrixPos.down;
+            tFocus.right = matrixPos.right;
+            tFocus.left = matrixPos.left;
 
 
+            tFocus.health = matrixPos.health;
+            tFocus.healthMax = matrixPos.healthMax;
+            tFocus.energy = matrixPos.energy;
+            tFocus.energyMax = matrixPos.energyMax;
+            tFocus.power = matrixPos.power;
+            tFocus.powerMax = matrixPos.powerMax;
+            tFocus.defense = matrixPos.defense;
+            tFocus.defenseMax = matrixPos.defenseMax;
+            tFocus.nameCharacter = matrixPos.nameCharacter;
 
+            charactersImagesBig[playerId].sprite = matrixPos.imageCharacter;
+            barraHP[playerId].fillAmount = matrixPos.health / matrixPos.healthMax;
+            barraDefense[playerId].fillAmount = matrixPos.defense / matrixPos.defenseMax;
+            barraPower[playerId].fillAmount = matrixPos.power / matrixPos.powerMax;
+            nameCharactersPlayer[playerId].text = matrixPos.nameCharacter;
 
 
 
-        //}
 
-       
-        
+
+
+        }
+
+
+
     }
 
     private void FirstUpdateUICharacters(int playerId, MatrixCharacters matrixPlayer)

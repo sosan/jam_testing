@@ -18,5 +18,5 @@ resetdefault,RESTABLECER VALORES PREDETERMINADOS,RESET DEFAULT VALUES
 movimientodescripcion_mouse,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
 movimientodescripcion_gamepad,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
 pulsaboton,PULSA UN BOTON,PRESS A BUTTON
-esperandojugadores,ESPERANDO…,WAITING…
+esperandojugadores,ESPERANDO,WAITING
 alataker,EMPEZAR,START

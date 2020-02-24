@@ -276,12 +276,12 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void MenuButtonPressedGamepad(InputAction.CallbackContext obj)
     {
 
-          
-
+        
+        
         if (canvasMenu[1].activeSelf == true)
         {
 
-
+            elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
 
             switch (contMenuPosition)
             {
@@ -301,7 +301,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         //options
         if (canvasMenu[2].activeSelf == true)
         {
-
+            elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
             switch (contOptionsPosition)
             {
 
@@ -320,17 +320,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
 
-        ////credits
-        //if (canvasMenu[3].activeSelf == true)
-        //{
-
-        //    BotonExitCreditsGamepad();
-        //    return;
-        //}
-
-
-
-
+        
     }
 
 
