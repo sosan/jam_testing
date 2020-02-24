@@ -1482,7 +1482,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1266582051657948509}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -4285,7 +4285,7 @@ GameObject:
   - component: {fileID: 1266582050313935040}
   - component: {fileID: 1266582050313935055}
   m_Layer: 5
-  m_Name: nombreplayer (1)
+  m_Name: nombreplayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4307,7 +4307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -169.61}
+  m_AnchoredPosition: {x: 0, y: -123}
   m_SizeDelta: {x: 282.55, y: 26.82}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1266582050313935055
@@ -4330,8 +4330,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: NOMBRE PLAYER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fa14b5d0a1d70b4788803f6fab18f72, type: 2}
+  m_sharedMaterial: {fileID: -4697420436793808567, guid: 5fa14b5d0a1d70b4788803f6fab18f72,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4642,7 +4643,7 @@ GameObject:
   - component: {fileID: 1266582050383728040}
   - component: {fileID: 1266582050383728023}
   m_Layer: 5
-  m_Name: nombreplayer
+  m_Name: personaje1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4943,7 +4944,7 @@ GameObject:
   - component: {fileID: 1266582050440385828}
   - component: {fileID: 1266582050440385827}
   m_Layer: 5
-  m_Name: nombreplayer
+  m_Name: personaje3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5771,7 +5772,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1266582051657948509}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -6939,7 +6940,7 @@ GameObject:
   - component: {fileID: 1266582050787564985}
   - component: {fileID: 1266582050787564984}
   m_Layer: 5
-  m_Name: nombreplayer (3)
+  m_Name: nombreplayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6961,7 +6962,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -169.61}
+  m_AnchoredPosition: {x: 0, y: -123}
   m_SizeDelta: {x: 282.55, y: 26.82}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1266582050787564984
@@ -6984,8 +6985,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: NOMBRE PLAYER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fa14b5d0a1d70b4788803f6fab18f72, type: 2}
+  m_sharedMaterial: {fileID: -4697420436793808567, guid: 5fa14b5d0a1d70b4788803f6fab18f72,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7452,7 +7454,7 @@ RectTransform:
   - {fileID: 1266582052159594993}
   - {fileID: 1266582051349907210}
   m_Father: {fileID: 1266582051657948509}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -11421,7 +11423,7 @@ GameObject:
   - component: {fileID: 1266582051493042142}
   - component: {fileID: 1266582051493042141}
   m_Layer: 5
-  m_Name: nombreplayer
+  m_Name: personaje2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11751,7 +11753,7 @@ GameObject:
   - component: {fileID: 1266582051512655858}
   - component: {fileID: 1266582051512655857}
   m_Layer: 5
-  m_Name: nombreplayer
+  m_Name: personaje4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12588,10 +12590,10 @@ RectTransform:
   - {fileID: 1266582052077991585}
   - {fileID: 1266582050945784392}
   - {fileID: 1266582050895908947}
-  - {fileID: 1266582051662432596}
   - {fileID: 1266582050542147111}
   - {fileID: 1266582050878029937}
   - {fileID: 1055215390}
+  - {fileID: 1266582051662432596}
   m_Father: {fileID: 1266582051708584651}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12666,11 +12668,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1266582051657948509}
-  m_RootOrder: 9
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -169.61}
+  m_AnchoredPosition: {x: 0, y: -123}
   m_SizeDelta: {x: 282.55, y: 26.82}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1266582051662432597
@@ -16703,7 +16705,7 @@ GameObject:
   - component: {fileID: 1266582052304170847}
   - component: {fileID: 1266582052304170846}
   m_Layer: 5
-  m_Name: nombreplayer (2)
+  m_Name: nombreplayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16725,7 +16727,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -169.61}
+  m_AnchoredPosition: {x: 0, y: -123}
   m_SizeDelta: {x: 282.55, y: 26.82}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1266582052304170846
@@ -16748,8 +16750,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: NOMBRE PLAYER
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5fa14b5d0a1d70b4788803f6fab18f72, type: 2}
+  m_sharedMaterial: {fileID: -4697420436793808567, guid: 5fa14b5d0a1d70b4788803f6fab18f72,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

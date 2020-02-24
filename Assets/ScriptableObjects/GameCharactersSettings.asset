@@ -14,24 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthMax: 1800
   health:
-  - 100
-  - 200
-  - 300
-  - 400
   - 500
   - 600
   - 700
+  - 500
+  - 700
   - 800
   - 900
+  - 950
+  - 700
+  - 650
   - 1000
-  - 1100
-  - 1200
-  - 1300
-  - 1400
-  - 1500
-  - 1600
-  - 1700
-  - 1800
+  - 950
+  - 700
+  - 950
+  - 700
+  - 1000
+  - 600
+  - 1000
   energyMax: 180
   energy:
   - 10
@@ -52,65 +52,66 @@ MonoBehaviour:
   - 160
   - 170
   - 180
-  defenseMax: 18
+  defenseMax: 24
   defense:
-  - 18
-  - 17
   - 16
-  - 15
-  - 14
-  - 13
-  - 12
-  - 11
   - 10
-  - 9
-  - 8
+  - 16
+  - 10
+  - 12
+  - 15
+  - 10
+  - 15
+  - 10
   - 7
-  - 6
+  - 10
+  - 7
   - 5
-  - 4
-  - 3
-  - 2
-  - 1
-  powerMax: 18
+  - 10
+  - 5
+  - 12
+  - 5
+  - 16
+  powerMax: 22
   power:
-  - 18
-  - 17
-  - 16
   - 15
-  - 14
-  - 13
-  - 12
-  - 11
   - 10
-  - 9
-  - 8
-  - 7
   - 6
+  - 9
+  - 12
+  - 10
+  - 8
+  - 10
+  - 8
+  - 12
   - 5
-  - 4
-  - 3
-  - 2
-  - 1
+  - 15
+  - 12
+  - 13
+  - 15
+  - 9
+  - 15
+  - 9
+  - 12
   nameCharacters:
-  - nombre1
-  - nombre2
-  - nombre3
-  - nombre4
-  - nombre5
-  - nombre6
-  - nombre7
-  - nombre8
-  - nombre9
-  - nombre10
-  - nombre11
-  - nombre12
-  - nombre13
-  - nombre14
-  - nombre15
-  - nombre16
-  - nombre17
-  - nombre18
+  - Whiskey
+  - Kodiak
+  - Grizzly
+  - Knuckles
+  - Dandy
+  - Bourbon
+  - Hawk
+  - Judge
+  - Wyoming
+  - Pint
+  - Jackrabbit
+  - Rocky
+  - Cobra
+  - Tequila
+  - Lucky
+  - Bullseye
+  - Colorado
+  - Fox
   initialLifes: 030003000300030003000300030003000300030003000300030003000300030003000300
   imageCharactersBig: {fileID: 4343727234628468602, guid: e0201326c33b2c84193edf34bfae5722,
     type: 2}

@@ -401,6 +401,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             panel_players[contadorJugadores - 1].SetActive(true);
             //focusPlayers[contadorJugadores - 1].transform.position = initialPlayerPosition[contadorJugadores - 1].transform.position;
             focusPlayers[contadorJugadores - 1].SetActive(true);
+            mandosImage[contadorJugadores - 1].gameObject.SetActive(true);
 
             AddPlayer(contadorJugadores - 1, obj.control.device.deviceId);
             (ushort, ushort)posicion = PosicionPlayerMatrix(contadorJugadores - 1);
