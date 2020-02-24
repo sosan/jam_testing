@@ -16,9 +16,10 @@ public class ControllerGamepadMenu : MonoBehaviour
     //[SerializeField] private Canvas[] canvasGeneral;
     //[SerializeField] private const ushort MAX_ = null;
     [SerializeField] private GameController gameController = null;
+    [SerializeField] private ControllerElegirPersonaje elegirPersonaje = null;
     [SerializeField] private GameObject[] canvasMenu = null;
-    [SerializeField] private Animation camAnim = null;
-    [SerializeField] private Animation spriteInicioAnim = null;
+    //[SerializeField] private Animation camAnim = null;
+    //[SerializeField] private Animation spriteInicioAnim = null;
     [SerializeField] private ControllerMenuAnimations controllerMenuAnimations = null;
     [SerializeField] private TextMeshProUGUI[] textos = null;
     [SerializeField] private Color notSelectedColor = Color.white;
@@ -30,12 +31,12 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     [SerializeField] private ParticleSystem particleOptionsSelected = null;
     [SerializeField] private RectTransform particleTransformOptions = null;
-    [SerializeField] private ParticleSystem particleCreditsSelected = null;
+    //[SerializeField] private ParticleSystem particleCreditsSelected = null;
     [SerializeField] private ParticleSystem particleLogo = null;
     [SerializeField] private CanvasGroup canvasAlphaMenu = null;
     [SerializeField] private UILocalization descripcionMovimientoLocalization = null;
     //[SerializeField] private TextMeshProUGUI textMovement = null;
-    [SerializeField] private GameObject mar = null;
+    //[SerializeField] private GameObject mar = null;
 
     private bool isCompletedVertical = false;
     private bool isCompletedHorizontal = false;
@@ -68,8 +69,8 @@ public class ControllerGamepadMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] txtOptions = null;
 
 
-    [Header("Credits")]
-    [SerializeField] private TextMeshProUGUI textoCredits = null;
+    //[Header("Credits")]
+    //[SerializeField] private TextMeshProUGUI textoCredits = null;
 
 
     //private CancellationTokenSource[] tokenSource = null;
@@ -94,7 +95,8 @@ public class ControllerGamepadMenu : MonoBehaviour
     private async void Start()
     {
 
-
+        Application.targetFrameRate = 60;
+        Application.runInBackground = true;
 
         MusicController.MusicInstance.SettingsMixer(
            isMutedInternal,
@@ -139,8 +141,6 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void Awake()
     {
 
-        //mar.SetActive(false);
-        //Getting values
         GettingPlayerPrefsValues();
 
        
@@ -1018,24 +1018,25 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private async void ShowInitGameGamepad()
+    private void ShowInitGameGamepad()
     {
 
+        if (isBegun == true) return;
+        isBegun = true;
 
-
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-        );
+        //MusicController.MusicInstance.PlayFXSound(
+        //    MusicController.MusicInstance.sfx[1]
+        //);
 
         descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
-        //ShowFX(-39, -32);
-        ShowFX(positionTransformparticles[0].anchoredPosition);
-        controllerMenuAnimations.DesactiveMenu();
+        
+        //controllerMenuAnimations.DesactiveMenu();
 
-        await UniTask.Delay(5000);
+        //await UniTask.Delay(5000);
 
-        DisableCanvas();
-        print("Show initgame");
+        //DisableCanvas();
+        print("entramos por gamepad");
+        ShowElegirPersonaje();
 
 
     }
@@ -1082,32 +1083,6 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
     }
-
-
- 
-    //private async void ShowCreditsGamepad()
-    //{
-    //    MusicController.MusicInstance.PlayFXSound(
-    //        MusicController.MusicInstance.sfx[1]
-    //        );
-
-
-    //    ShowPositionMenu(2);
-    //    ShowFX(-5, -109);
-    //    await UniTask.Delay(290);
-
-
-    //    DisableCanvas();
-    //    textoCredits.color = selectedColor;
-    //    canvasMenu[3].SetActive(true);
-
-    //}
-
-
-  
-
-
-
 
     private async void ShowExitGamepad()
     {
@@ -1190,32 +1165,6 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
 
-//    public async void ShowCredits()
-//    {
-//        if (isBegun == true) return;
-//#if UNITY_EDITOR
-//        print("credits");
-//#endif
-//        MusicController.MusicInstance.PlayFXSound(
-//            MusicController.MusicInstance.sfx[1]
-//            );
-
-//        ShowPositionMenu(2);
-//        ShowFX(-5, -84);
-//        await UniTask.Delay(290);
-
-
-//        DisableCanvas();
-
-//        canvasMenu[3].SetActive(true);
-
-
-
-
-//    }
-
-
-
     public async void ShowExit()
     {
 
@@ -1252,35 +1201,38 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     }
 
+    
+
+
     public void ClickedEnterGame()
     {
 
         if (isBegun == true) return;
 
-        //print("clicked");
+        print("entramos por click");
         isBegun = true;
-        ShowPositionMenu(0);
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-            );
-
-
         descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
-        ShowFX(positionTransformparticles[0].anchoredPosition);
-        InitGame();
 
 
-
-
-
+        ShowPositionMenu(0);
+        //MusicController.MusicInstance.PlayFXSound(
+        //    MusicController.MusicInstance.sfx[1]
+        //    );
+        
+        //ShowFX(positionTransformparticles[0].anchoredPosition);
+        ShowElegirPersonaje();
 
 
     }
 
 
-    private async void InitGame()
+    private async void ShowElegirPersonaje()
     {
 
+        ShowFX(positionTransformparticles[0].anchoredPosition);
+          MusicController.MusicInstance.PlayFXSound(
+            MusicController.MusicInstance.sfx[1]
+        );
         
 
         float duration = controllerMenuAnimations.DesactiveMenu();
@@ -1294,16 +1246,9 @@ public class ControllerGamepadMenu : MonoBehaviour
         //print("Show initgame");
 
         canvasMenu[3].SetActive(true);
+        elegirPersonaje.InitActions();
 
-        spriteInicioAnim.Play("spriteprincipio");
-
-        camAnim.Play("cameraanim");
-
-
-        var t = camAnim.GetClip("cameraanim").length * 1000;
-        await UniTask.Delay(TimeSpan.FromMilliseconds(t));
-
-        gameController.InitGame();
+        //gameController.InitGame();
 
     }
 

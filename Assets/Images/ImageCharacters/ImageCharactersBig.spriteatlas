@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ImageCharactersBig
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 1
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 22893e44ad5b41547b35e4ef1ba3bce4, type: 3}
+    totalSpriteSurfaceArea: 1531989
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 00985270439ab8b4fb58ab88b26147cd, type: 3}
+  - {fileID: 21300000, guid: 2c76c7c0d9eae324fa34c2500799710f, type: 3}
+  - {fileID: 21300000, guid: ecfe39c041b4981498fe5243b24b12c6, type: 3}
+  - {fileID: 21300000, guid: 9bd5a7f15d30472429511836f041df32, type: 3}
+  - {fileID: 21300000, guid: 03adebc44ffb54c47b01eba420c1a6a2, type: 3}
+  - {fileID: 21300000, guid: 8e8e52e4408309f41ad0da9b6fa6f8dd, type: 3}
+  - {fileID: 21300000, guid: c805a6c5811677d4caf5b77ccc636c9f, type: 3}
+  - {fileID: 21300000, guid: 6b3940160fac56a418054820bfe1fbf4, type: 3}
+  - {fileID: 21300000, guid: a40cb8b6cab9e2e44a63e3d26866a055, type: 3}
+  - {fileID: 21300000, guid: ff02bab657a497f49b47241779f0678b, type: 3}
+  - {fileID: 21300000, guid: 30cea337ff85e334f80edcda5f525fe7, type: 3}
+  - {fileID: 21300000, guid: 2c6b3357cb873994e8e61849b7f950bf, type: 3}
+  - {fileID: 21300000, guid: c49f0577d5eeadc4c83f2810c37ddf6b, type: 3}
+  - {fileID: 21300000, guid: 8e2a84f7b340c2a4894aa08ec6057be5, type: 3}
+  - {fileID: 21300000, guid: 713c26c92919d144284742fef1bee784, type: 3}
+  - {fileID: 21300000, guid: 433b5a4a336e45d47bba0157778975e6, type: 3}
+  - {fileID: 21300000, guid: cf3087fb1e0680c4fa5e8d006884cdb5, type: 3}
+  - {fileID: 21300000, guid: 9e84a44f7d1bbad40905dcb6afec5db8, type: 3}
+  - {fileID: 21300000, guid: 827242bf7015e4d41ac77c3f065252bf, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - 18big
+  - 12big
+  - 4big
+  - 8big
+  - 16big
+  - 0big
+  - 11big
+  - 9big
+  - 5big
+  - 14big
+  - 6big
+  - 17big
+  - 10big
+  - 1big
+  - 2big
+  - 13big
+  - 3big
+  - 7big
+  - 15big
+  m_Tag: ImageCharactersBig
+  m_IsVariant: 0

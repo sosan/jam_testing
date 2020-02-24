@@ -15,5 +15,8 @@ musicvolumen,VOLUMEN MUSICA,MUSIC VOLUMEN
 sfxvolumen,VOLUMEN SFX,SFX VOLUMEN
 volumenconfig,CONFIGURACION VOLUMEN,VOLUMEN CONFIGURATION
 resetdefault,RESTABLECER VALORES PREDETERMINADOS,RESET DEFAULT VALUES
-movimientodescripcion_mouse,BUENA <color=#bc008e>SUERTE!</color>,GOOD <color=#bc008e>LUCK!</color>
-movimientodescripcion_gamepad,BUENA <color=#bc008e>SUERTE!</color>,GOOD <color=#bc008e>LUCK!</color>
+movimientodescripcion_mouse,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
+movimientodescripcion_gamepad,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
+pulsaboton,PULSA UN BOTON,PRESS A BUTTON
+esperandojugadores,ESPERANDO…,WAITING…
+alataker,EMPEZAR,START

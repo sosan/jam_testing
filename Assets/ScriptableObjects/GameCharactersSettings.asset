@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e62b8cb760c3ac547ae0dd8e2a820603, type: 3}
+  m_Name: GameCharactersSettings
+  m_EditorClassIdentifier: 
+  healthMax: 1800
+  health:
+  - 100
+  - 200
+  - 300
+  - 400
+  - 500
+  - 600
+  - 700
+  - 800
+  - 900
+  - 1000
+  - 1100
+  - 1200
+  - 1300
+  - 1400
+  - 1500
+  - 1600
+  - 1700
+  - 1800
+  energyMax: 180
+  energy:
+  - 10
+  - 20
+  - 30
+  - 40
+  - 50
+  - 60
+  - 70
+  - 80
+  - 90
+  - 100
+  - 110
+  - 120
+  - 130
+  - 140
+  - 150
+  - 160
+  - 170
+  - 180
+  defenseMax: 18
+  defense:
+  - 18
+  - 17
+  - 16
+  - 15
+  - 14
+  - 13
+  - 12
+  - 11
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+  powerMax: 18
+  power:
+  - 18
+  - 17
+  - 16
+  - 15
+  - 14
+  - 13
+  - 12
+  - 11
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+  nameCharacters:
+  - nombre1
+  - nombre2
+  - nombre3
+  - nombre4
+  - nombre5
+  - nombre6
+  - nombre7
+  - nombre8
+  - nombre9
+  - nombre10
+  - nombre11
+  - nombre12
+  - nombre13
+  - nombre14
+  - nombre15
+  - nombre16
+  - nombre17
+  - nombre18
+  initialLifes: 030003000300030003000300030003000300030003000300030003000300030003000300
+  imageCharactersBig: {fileID: 0}
+  imageCharactersSmall: {fileID: 0}

@@ -33,7 +33,7 @@ public class MusicController : MonoBehaviour
         {
             MusicInstance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
 
 
     }
