@@ -38,17 +38,27 @@ public class InfoPlayer
     public int levelCurrent;
     public int levelMax;
 
+    
+
+
     public int indexShotPrefab;
 
-    public float fireCooldown;
-    public float speedMovement;
-    public float powerDamage;
+    public float fireCooldown = 0;
+    public float speedMovement = 0;
+    public float powerDamage = 0;
+    public float durationShotSeconds = 0;
+    public float bombCooldown = 0;
+    public float defense = 0;
+    public float defenseMax = 0;
+
+
+    public bool bot;
 
 
     public InfoPlayer() { }
 
     public InfoPlayer(GameObject focusPlayer, GameObject playerGameObject, GameObject playerPos, Color colorPlayer, ushort posX, ushort posY,
-        ushort playerId, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo)
+        ushort playerId, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot)
     {
         this.focusPlayer = focusPlayer;
         this.playerGameObject = playerGameObject;
@@ -60,6 +70,7 @@ public class InfoPlayer
         this.isFirstMove = isFirstMove;
         this.bigSelectionPlayer = bigSelectionPlayer;
         this.listo = listo;
+        this.bot = bot;
     }
 
 
@@ -101,7 +112,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     [SerializeField] private UILocalization textoempezarlucha = null;
 
 
-    public TextMeshProUGUI[] explicacion;
+    [SerializeField] private GameObject[] listoMensaje = null;
 
     public Image[] mandosImage;
     public GameObject[] entrada_txt = null;
@@ -124,7 +135,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public GameObject[] readyImage = null;
 
     public Color[] prefabColorsPlayers;
-    public GameObject prefabPlayer;
+    public GameObject prefabPlayer = null;
+    public Transform[] initialPositionInstantiation = null;
 
     public TextMeshProUGUI[] namePlayers = null;
 
@@ -197,6 +209,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             entrada_txt[i].SetActive(true);
             focusPlayers[i].SetActive(false);
             recuadros[i].color = Color.white;
+            listoMensaje[i].SetActive(false);
         }
 
         textoempezarlucha.key = "esperandojugadores";
@@ -214,12 +227,18 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
             matrixCharacters[i].health = gameCharactersSettings.health[i];
             matrixCharacters[i].healthMax = gameCharactersSettings.healthMax;
-            matrixCharacters[i].power = gameCharactersSettings.power[i];
+            matrixCharacters[i].power = gameCharactersSettings.powerDamage[i];
             matrixCharacters[i].powerMax = gameCharactersSettings.powerMax;
             matrixCharacters[i].defense = gameCharactersSettings.defense[i];
             matrixCharacters[i].defenseMax = gameCharactersSettings.defenseMax;
             matrixCharacters[i].energy = gameCharactersSettings.energy[i];
             matrixCharacters[i].energyMax = gameCharactersSettings.energyMax;
+
+
+
+
+
+
             matrixCharacters[i].imageCharacter = gameCharactersSettings.imageCharactersBig.GetSprite(i+"big");
             charactersImagesSmall[i].sprite = gameCharactersSettings.imageCharactersSmall.GetSprite(i.ToString());
             matrixCharacters[i].nameCharacter = gameCharactersSettings.nameCharacters[i];
@@ -403,7 +422,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             focusPlayers[contadorJugadores - 1].SetActive(true);
             mandosImage[contadorJugadores - 1].gameObject.SetActive(true);
 
-            AddPlayer(contadorJugadores - 1, obj.control.device.deviceId);
+            AddPlayer(contadorJugadores - 1, obj.control.device.deviceId, false);
             (ushort, ushort)posicion = PosicionPlayerMatrix(contadorJugadores - 1);
             
             MoveFocus(focusPlayers[contadorJugadores - 1], initialPlayerPosition[contadorJugadores - 1].GetComponent<MatrixCharacters>(), posicion.Item1, contadorJugadores - 1);
@@ -419,70 +438,43 @@ public class ControllerElegirPersonaje : MonoBehaviour
         { 
         
             print("player listo: " + contadorJugadores + " device=" + obj.control.device.deviceId);
-            List<int> keys = new List<int>(playersById.Keys);
+            
 
             
             if (playersById[obj.control.device.deviceId].listo == true)
             { 
-            
+
+                print("3 vez");
+                print("devices count=" + Gamepad.all.Count);
+                print("contadojugadores=" + contadorJugadores);
                 // tercera vez
-                if (InputSystem.devices.Count == contadorJugadores)
-                { 
-                    
-                    //comprobar que esten todos listos
-                    bool completado = true;
-
-                    for (ushort i = 0; i < playersById.Count; i++)
-                    {
-                        //CORREGIR....testesar
-                        if (readyImage[i].activeSelf == false && playersById[keys[i]].listo == false)
-                        {
-                            completado = false;
-                            return;
-                        }
-
-                    }
-
-                    //todos los jugadores al completo listos
-                    if (completado == true)
-                    {
-
-                        alAtaque();
-
-                    }
-
-
-            
-                }
-                else
-                { 
-            
-            
-            
-                }
+                //ComprobarPersonajesListo();
             
             }
             else
             { 
+                print("devices count=" + Gamepad.all.Count);
+                print("contadojugadores=" + contadorJugadores);
+
                 //ejecutar que el player esta listo
                 playersById[obj.control.device.deviceId].listo = true;
-
-                readyImage[contadorJugadores].SetActive(
-                    !readyImage[contadorJugadores].activeSelf
+                
+                HacerVibrarMando(obj.control.device.deviceId);
+                
+                ushort o = playersById[obj.control.device.deviceId].playerId;
+                listoMensaje[o].SetActive(true);
+                readyImage[o].SetActive(
+                    !readyImage[o].activeSelf
                 );
 
-                if (InputSystem.devices.Count == contadorJugadores)
-                { 
+                print("devices count=" + Gamepad.all.Count);
+                print("contadojugadores=" + contadorJugadores);
 
-                    for (ushort i = contadorJugadores; i < JUGADORES_MAXIMO; i++)
-                    { 
-                    
-
-                    
-                    }
+                ComprobarPersonajesListo();
+               
+                
 
 
-                }
 
 
 
@@ -511,27 +503,28 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         if (playersById.ContainsKey(obj.control.device.deviceId) == true)
         { 
-            playersById.Remove(obj.control.device.deviceId);
+            
             HacerVibrarMando(obj.control.device.deviceId);
-            //if (contadorJugadores == 4)
-            //{ 
-                
-            //    recuadros[3].color = Color.white;
-                
-            //}
+            
             contadorJugadores--;
             if (contadorJugadores < 0)
             { 
                 contadorJugadores = 0;
             }
 
-            recuadros[contadorJugadores].gameObject.SetActive(true);
-            panel_players[contadorJugadores].SetActive(false);
-            entrada_txt[contadorJugadores].SetActive(true);
-            focusPlayers[contadorJugadores].SetActive(false);
-            focusPlayers[contadorJugadores].transform.position = initialPlayerPosition[contadorJugadores].transform.position;
-            
+            ushort o = playersById[obj.control.device.deviceId].playerId;
 
+            listoMensaje[o].SetActive(false);
+            readyImage[o].SetActive(false);
+
+
+            recuadros[o].gameObject.SetActive(true);
+            panel_players[o].SetActive(false);
+            entrada_txt[o].SetActive(true);
+            focusPlayers[o].SetActive(false);
+            focusPlayers[o].transform.position = initialPlayerPosition[o].transform.position;
+            
+            playersById.Remove(obj.control.device.deviceId);
             
 
 
@@ -629,8 +622,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
     }
 
 
-
-    public void AddPlayer(int contadorJugadores, int deviceId )
+    // contadorujugadores es mala estrategia...
+    public void AddPlayer(int contadorJugadores, int deviceId, bool isBot )
     {
         ushort x = 0; 
         ushort y = 0;
@@ -655,7 +648,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 true,
                 bigSelectionPlayers[contadorJugadores],
                 false,
-                false
+                false,
+                isBot
 
             ));
             
@@ -663,460 +657,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     }
 
-    private void Update()
-    {
+   
 
-
-
-        //if (menuManager.pantallaElegirMando.activeSelf == false) return;
-        //if (InputManager.ActiveDevices.Count <= 0) return;
-
-
-
-        //var activeInputDevice = InputManager.ActiveDevice;
-       
-        //if (variablesOverScenes.dictPlayers.ContainsKey(activeInputDevice.GUID.ToString()) == false)
-        //{
-
-
-        //    if (variablesOverScenes.dictPlayers.Count < VariablesOverScenes.MAX_PLAYERS)
-        //    {
-
-
-               
-
-
-        //    }
-        //    else
-        //    {
-
-
-
-        //    }
-
-
-
-
-
-        //}
-
-
-        //InfoPlayer thisPlayer = variablesOverScenes.dictPlayers[activeInputDevice.GUID.ToString()];
-
-        //if (thisPlayer.playerId < 0 || thisPlayer.playerId > VariablesOverScenes.MAX_PLAYERS) return; //comprobaciones extra mas adelante
-
-        
-
-
-        //if (activeInputDevice.Action1.WasPressed && thisPlayer.isFirstMove == false)
-        //{
-
-
-        //    if (thisPlayer.playerId == 1 && thisPlayer.selected == true)
-        //    {
-
-
-
-        //        bool completado = true;
-        //        List<string> keys = new List<string>(variablesOverScenes.dictPlayers.Keys);
-
-        //        for (ushort i = 0; i < variablesOverScenes.dictPlayers.Count; i++)
-        //        {
-
-
-        //            //CORREGIR....testesar
-        //            if (readyImage[i].activeSelf == false && variablesOverScenes.dictPlayers[keys[i]].isFirstMove == true)
-        //            {
-        //                completado = false;
-        //                return;
-        //            }
-
-        //        }
-
-
-        //        if (completado == true)
-        //        {
-
-        //            alAtaque();
-
-        //        }
-        //        else
-        //        {
-
-        //            return;
-        //        }
-
-
-
-
-        //    }
-           
-        //    readyImage[thisPlayer.playerId - 1].SetActive(
-        //        !readyImage[thisPlayer.playerId - 1].activeSelf
-        //    );
-
-        //    thisPlayer.focusPlayer.GetComponent<Image>().enabled = false;
-
-        //    thisPlayer.selected = !thisPlayer.selected;
-
-        //    selectionAlAtaker.enabled = true;
-
-        //    if (thisPlayer.playerId - 1 == 0)
-        //    {
-
-        //        explicacion[thisPlayer.playerId - 1].text = "PULSA B PARA DESMARCAR\nPULSA A PARA EMPEZAR";
-        //    }
-        //    else
-        //    {
-
-        //        explicacion[thisPlayer.playerId - 1].text = "PULSA B PARA DESMARCAR";
-
-        //    }
-
-
-        //}
-
-
-        //if (activeInputDevice.Action2.WasPressed && thisPlayer.isFirstMove == false)
-        //{
-
-
-        //    readyImage[thisPlayer.playerId - 1].SetActive(false);
-
-        //    thisPlayer.selected = false;
-        //    thisPlayer.focusPlayer.GetComponent<Image>().enabled = true;
-        //    selectionAlAtaker.enabled = false;
-        //    explicacion[thisPlayer.playerId - 1].text = "PULSA A PARA MARCAR";
-
-        //    print("selected=" + thisPlayer.selected);
-
-
-
-
-
-        //}
-
-
-
-
-        //if (thisPlayer.selected == true) return;
-
-        //if (activeInputDevice.RightStick.WasPressed)
-        //{
-
-
-        //    rstick.Filter(activeInputDevice.RightStick, Time.deltaTime);
-        //    ControlWithStickRaw(thisPlayer, rstick);
-
-
-        //    return;
-
-
-        //}
-
-        //if (activeInputDevice.DPad.WasPressed)
-        //{
-
-        //    //print("dpad");
-
-        //    dpad.Filter(activeInputDevice.Direction, Time.deltaTime);
-        //    ControlWithDpadRaw(thisPlayer, dpad);
-
-        //    return;
-
-        //}
-        
-
-
-        //if(activeInputDevice.LeftStick.WasPressed)
-        //{
-
-
-        //    //print("leftstick");
-
-        //    lstick.Filter(activeInputDevice.LeftStick, Time.deltaTime);
-        //    ControlWithStickRaw(thisPlayer, lstick);
-        //    return;
-
-
-        //}
-
-
-      
-
-
-    }
-
-
-    //private void ControlWithStickRaw(InfoPlayer thisPlayer, TwoAxisInputControl stick)
-    //{
-
-    //    //print("x=" + stick.Value.normalized.x + " Y=" + stick.Value.normalized.y);
-
-
-    //    //if (stick.Value.normalized.y >= 0.5f)
-    //    //{
-
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-    //    //        return;
-
-    //    //    }
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up is null) == false)
-    //    //    {
-
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up.down.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up, thisPlayer.posX, thisPlayer.playerId - 1);
-    //    //}
-
-        
-    //    //if (stick.Value.normalized.y <= -0.5f)
-    //    //{
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-    //    //        return;
-
-    //    //    }
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down is null) == false)
-    //    //    {
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down.up.taken = false;
-    //    //    }
-
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down, thisPlayer.posX, thisPlayer.playerId - 1);
-
-    //    //}
-
-    //    //if (stick.Value.normalized.x >= 0.5f)
-    //    //{
-
-    //    //    //print("derecha");
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-
-    //    //        if (thisPlayer.playerId < 1 || thisPlayer.playerId > VariablesOverScenes.MAX_PLAYERS) return;
-
-    //    //        //nopair, p1 o p3
-    //    //        if (thisPlayer.playerId % 2 != 0)
-    //    //        {
-    //    //            thisPlayer.isFirstMove = false;
-    //    //            thisPlayer.focusPlayer.GetComponent<Image>().enabled = true;
-    //    //            FirstUpdateUICharacters(thisPlayer.playerId - 1, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>());
-
-
-    //    //        }
-    //    //        return;
-
-
-    //    //    }
-
-
-    //    //    if (thisPlayer.posX >= 0 && thisPlayer.posX < 5)
-    //    //    {
-    //    //        thisPlayer.posX++;
-    //    //    }
-
-
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right is null) == false)
-    //    //    {
-
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right.left.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right, thisPlayer.posX, thisPlayer.playerId -1);
-    //    //}
-
-    //    //if (stick.Value.normalized.x <= -0.5f)
-    //    //{
-
-
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-    //    //        if (thisPlayer.playerId < 1 || thisPlayer.playerId > VariablesOverScenes.MAX_PLAYERS) return;
-
-    //    //        //pair, p2 o p4
-    //    //        if (thisPlayer.playerId % 2 == 0)
-    //    //        {
-
-
-
-    //    //            thisPlayer.isFirstMove = false;
-    //    //            thisPlayer.focusPlayer.GetComponent<Image>().enabled = true;
-    //    //            FirstUpdateUICharacters(thisPlayer.playerId - 1, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>());
-
-    //    //        }
-    //    //        return;
-
-
-    //    //    }
-
-
-    //    //    if (thisPlayer.posX > 0 && thisPlayer.posX <= 5)
-    //    //    {
-    //    //        thisPlayer.posX--;
-    //    //    }
-
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left is null) == false)
-    //    //    {
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left.right.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left, thisPlayer.posX, thisPlayer.playerId - 1);
-
-
-    //    //}
-
-
-    //}
-
-    //private void ControlWithDpadRaw(InfoPlayer thisPlayer, TwoAxisInputControl stick)
-    //{
-
-    //    //print("x=" + stick.X + " Y=" + stick.Value.normalized.y);
-
-
-    //    //if (stick.Y == 1f)
-    //    //{
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-    //    //        return;
-
-    //    //    }
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up is null) == false)
-    //    //    {
-
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up.down.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().up, thisPlayer.posX, thisPlayer.playerId -1 );
-    //    //    return;
-    //    //}
-
-
-    //    //if (stick.Y == -1f)
-    //    //{
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-    //    //        return;
-
-    //    //    }
-
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down is null) == false)
-    //    //    {
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down.up.taken = false;
-    //    //    }
-
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().down, thisPlayer.posX, thisPlayer.playerId - 1);
-    //    //    return;
-    //    //}
-
-    //    //if (stick.X == 1f)
-    //    //{
-
-    //    //    //print("derecha");
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-
-    //    //        if (thisPlayer.playerId < 1 || thisPlayer.playerId > VariablesOverScenes.MAX_PLAYERS) return;
-    //    //        //nopair, p1 o p3
-    //    //        if (thisPlayer.playerId % 2 != 0)
-    //    //        {
-    //    //            thisPlayer.isFirstMove = false;
-    //    //            thisPlayer.focusPlayer.GetComponent<Image>().enabled = true;
-
-    //    //            FirstUpdateUICharacters(thisPlayer.playerId - 1, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>());
-
-
-    //    //        }
-    //    //        return;
-
-
-    //    //    }
-
-
-
-    //    //    if (thisPlayer.posX >= 0 && thisPlayer.posX < 5)
-    //    //    {
-    //    //        thisPlayer.posX++;
-    //    //    }
-
-
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right is null) == false)
-    //    //    {
-
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right.left.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().right, thisPlayer.posX, thisPlayer.playerId -1 );
-    //    //    return;
-    //    //}
-
-    //    //if (stick.X == -1f)
-    //    //{
-
-
-
-    //    //    if (thisPlayer.isFirstMove == true)
-    //    //    {
-
-    //    //        if (thisPlayer.playerId < 1 || thisPlayer.playerId > VariablesOverScenes.MAX_PLAYERS) return;
-    //    //        //pair, p2 o p4
-    //    //        if (thisPlayer.playerId % 2 == 0)
-    //    //        {
-    //    //            thisPlayer.isFirstMove = false;
-    //    //            thisPlayer.focusPlayer.GetComponent<Image>().enabled = true;
-
-    //    //            FirstUpdateUICharacters(thisPlayer.playerId - 1, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>());
-
-
-    //    //        }
-    //    //        return;
-
-
-    //    //    }
-
-
-    //    //    if (thisPlayer.posX > 0 && thisPlayer.posX <= 5)
-    //    //    {
-    //    //        thisPlayer.posX--;
-    //    //    }
-
-
-    //    //    if ((thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left is null) == false)
-    //    //    {
-    //    //        thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left.right.taken = false;
-
-    //    //    }
-
-    //    //    MoveFocus(thisPlayer.focusPlayer, thisPlayer.focusPlayer.GetComponent<MatrixCharacters>().left, thisPlayer.posX, thisPlayer.playerId - 1);
-    //    //    return;
-
-    //    //}
-
-
-    //}
 
     private void MoveFocus(GameObject focus, MatrixCharacters matrixPos, ushort posX, int playerId)
     {
@@ -1161,6 +703,12 @@ public class ControllerElegirPersonaje : MonoBehaviour
             tFocus.powerMax = matrixPos.powerMax;
             tFocus.defense = matrixPos.defense;
             tFocus.defenseMax = matrixPos.defenseMax;
+            
+            tFocus.bombCooldown = matrixPos.bombCooldown;
+            tFocus.durationShotSeconds = matrixPos.durationShotSeconds;
+            tFocus.fireCooldown = matrixPos.fireCooldown;
+            tFocus.speedMovement = matrixPos.speedMovement;
+
             tFocus.nameCharacter = matrixPos.nameCharacter;
 
             //charactersImagesBig[playerId].sprite = matrixPos.imageCharacter;
@@ -1182,62 +730,106 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     }
 
-    private void FirstUpdateUICharacters(int playerId, MatrixCharacters matrixPlayer)
-    {
+
+    private void ComprobarPersonajesListo()
+    { 
+        if (Gamepad.all.Count == contadorJugadores)
+        { 
+            
+            //comprobar que esten todos listos
+            bool completado = true;
+            List<int> keys = new List<int>(playersById.Keys);
+
+            for (ushort i = 0; i < keys.Count; i++)
+            {
+                //CORREGIR....testesar
+                if (playersById[keys[i]].listo == false)
+                {
+                    completado = false;
+                    return;
+                }
+
+            }
+
+            //todos los jugadores al completo listos
+            if (completado == true)
+            {
+                print("al ataker");
+                RellenarBots();
+                alAtaque();
+
+            }
 
 
-      
-        {
-
-
-
-            var tInitial = initialPlayerPosition[playerId].GetComponent<MatrixCharacters>();
-
-            charactersImagesBig[playerId].sprite = tInitial.imageCharacter;
-
-            barraHP[playerId].fillAmount = tInitial.health /
-                tInitial.healthMax;
-
-            barraDefense[playerId].fillAmount = tInitial.defense /
-                tInitial.defenseMax;
-
-            barraPower[playerId].fillAmount = tInitial.power /
-                tInitial.powerMax;
-            nameCharactersPlayer[playerId].text = tInitial.nameCharacter;
-
-
-
-            matrixPlayer.health = tInitial.health;
-            matrixPlayer.healthMax = tInitial.healthMax;
-            matrixPlayer.energy = tInitial.energy;
-            matrixPlayer.energyMax = tInitial.energyMax;
-            matrixPlayer.power = tInitial.power;
-            matrixPlayer.powerMax = tInitial.powerMax;
-            matrixPlayer.defense = tInitial.defense;
-            matrixPlayer.defenseMax = tInitial.defenseMax;
-            matrixPlayer.nameCharacter = tInitial.nameCharacter;
-
+            
+        }
+        else
+        { 
+            
+            
 
         }
-
-
-
-        mandosImage[playerId].sprite = prefabMandosImage[0];
-        mandosImage[playerId].gameObject.SetActive(true);
-
-        
-        explicacion[playerId].text = "PULSA A PARA MARCAR";
-
-        namePlayers[playerId].text = "P" + (playerId + 1);
-
-
+    
+    
     }
+
+    private void RellenarBots()
+    { 
+        //List<int> keys = new List<int>(playersById.Keys);
+
+        //for (ushort i = 0; i < keys.Count; i++)
+        //{
+        //    if (playersById[keys[i]].listo == false)
+        //    {
+        //        // bot
+        //        AddPlayer(i, 100, true);
+        //        int rnd = Random.Range(0, gameCharactersSettings.health.Length);
+
+        //        float health = gameCharactersSettings.health[rnd];
+        //        float power = gameCharactersSettings.powerDamage[rnd];
+        //        float defense = gameCharactersSettings.defense[rnd];
+
+        //        contadorJugadores++;
+
+
+        //    }
+
+        //}
+    
+    
+    }
+
 
     public void alAtaque()
     {
         //int id = 0;
+        List<int> keys = new List<int>(playersById.Keys);
 
 
+        for(ushort i = 0; i < keys.Count; i++)
+        { 
+            GameObject playerGo = GameObject.Instantiate(prefabPlayer, initialPositionInstantiation[i].position, Quaternion.identity);
+
+            var controllerplayer = playerGo.GetComponent<ControllerPlayer>().player;
+            var configplayer = playersById[keys[i]].focusPlayer.GetComponent<MatrixCharacters>();
+
+
+            controllerplayer.fireCooldown = configplayer.fireCooldown;
+            controllerplayer.speedMovement = configplayer.speedMovement;
+            controllerplayer.powerDamage = configplayer.power;
+            controllerplayer.durationShotSeconds = configplayer.durationShotSeconds;
+            controllerplayer.bombCooldown = configplayer.bombCooldown;
+            controllerplayer.defense = configplayer.defense;
+            controllerplayer.defenseMax = configplayer.defenseMax;
+
+            playerGo.GetComponent<SpriteRenderer>().color = playersById[keys[i]].colorPlayer;
+
+
+
+
+            playersById[keys[i]].playerGameObject = playerGo;
+        
+        }
         //foreach (var playerInfo in variablesOverScenes.dictPlayers)
         //{
         //    if (playerInfo.Key is null) continue;
@@ -1287,61 +879,6 @@ public class ControllerElegirPersonaje : MonoBehaviour
     //}
 
     
-
-    //public void Personaje4()
-    //{
-    //    DisplayFX(3);
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 3;
-    //    jugadores[0] = infoJugador;
-
-    //}
-
-
-    //public void Personaje5()
-    //{
-    //    DisplayFX(4);
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 4;
-    //    jugadores[0] = infoJugador;
-    //}
-
-    //public void Personaje6()
-    //{
-
-    //    DisplayFX(5);
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 5;
-    //    jugadores[0] = infoJugador;
-    //}
-
-    //public void Personaje1()
-    //{
-    //    print("personaje1");
-    //    DisplayFX(0);
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 0;
-    //    jugadores[0] = infoJugador;
-    //}
-
-    //public void Personaje2()
-    //{
-    //    DisplayFX(1);
-
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 1;
-    //    jugadores[0] = infoJugador;
-    //}
-
-    //public void Personaje3()
-    //{
-    //    DisplayFX(2);
-    //    InfoJugador infoJugador = new InfoJugador();
-    //    infoJugador.x = 2;
-    //    jugadores[0] = infoJugador;
-
-    //}
-
 
     public void ClickPersonajes(int i)
     {

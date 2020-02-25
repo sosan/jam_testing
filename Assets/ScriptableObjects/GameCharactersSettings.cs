@@ -29,17 +29,26 @@ public sealed class GameCharactersSettings : ScriptableObject
 
     [Header("[Power Characters]")]
     [SerializeField] public float powerMax;
-    [SerializeField] public float[] power;
+    [SerializeField] public float[] powerDamage;
 
     [Header("Nombre Characters")]
     [SerializeField] public string[] nameCharacters;
 
+
     [Header("[Initial Lifes Characters]")]
     [SerializeField] public ushort[] initialLifes;
 
+    [Header("[Fire Cooldown Characters]")]
+    [SerializeField] public float[] fireCooldown;
 
-    
+    [Header("[speed movement Characters]")]
+    [SerializeField] public float[] speedMovement;
 
+    [Header("[Duration Shots Seconds Characters]")]
+    [SerializeField] public float[] durationShotSeconds;
+
+    [Header("[bomb cooldown Characters]")]
+    [SerializeField] public float[] bombCooldown;
 
 
 

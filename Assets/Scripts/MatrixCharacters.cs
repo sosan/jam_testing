@@ -32,6 +32,19 @@ public class MatrixCharacters : MonoBehaviour
     [SerializeField] public float powerMax = 0;
     [SerializeField] public float power = 0;
 
+    [Header("[FIRE cooldown Characters]")]
+    [SerializeField] public float fireCooldown = 0;
+
+    [Header("[speed movement Characters]")]
+    [SerializeField] public float speedMovement = 0;
+
+    [Header("[Duration Shots Seconds Characters]")]
+    [SerializeField] public float durationShotSeconds = 0;
+
+    [Header("[bomb cooldown Characters]")]
+    [SerializeField] public float bombCooldown = 0;
+
+
     [Header("Nombre Characters")]
     [SerializeField] public string nameCharacter;
 

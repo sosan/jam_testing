@@ -73,26 +73,25 @@ MonoBehaviour:
   - 5
   - 16
   powerMax: 22
-  power:
+  powerDamage:
   - 15
-  - 10
+  - 11
+  - 12
+  - 9
   - 6
-  - 9
-  - 12
   - 10
-  - 8
+  - 12
+  - 9
+  - 6
   - 10
-  - 8
+  - 14
+  - 10
+  - 11
   - 12
-  - 5
   - 15
-  - 12
-  - 13
-  - 15
+  - 6
+  - 7
   - 9
-  - 15
-  - 9
-  - 12
   nameCharacters:
   - Whiskey
   - Kodiak
@@ -113,6 +112,82 @@ MonoBehaviour:
   - Colorado
   - Fox
   initialLifes: 030003000300030003000300030003000300030003000300030003000300030003000300
+  fireCooldown:
+  - 3
+  - 2
+  - 1
+  - 3
+  - 2
+  - 1
+  - 3
+  - 2
+  - 1
+  - 3
+  - 2
+  - 1
+  - 3
+  - 2
+  - 1
+  - 3
+  - 2
+  - 1
+  speedMovement:
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+  - 5
+  - 4
+  - 3
+  - 2
+  - 1
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+  - 5
+  - 4
+  - 3
+  durationShotSeconds:
+  - 4
+  - 3
+  - 2
+  - 1
+  - 4
+  - 3
+  - 3
+  - 2
+  - 4
+  - 3
+  - 2
+  - 2
+  - 4
+  - 3
+  - 2
+  - 1
+  - 4
+  - 3
+  bombCooldown:
+  - 4
+  - 3
+  - 2
+  - 1
+  - 4
+  - 3
+  - 2
+  - 1
+  - 4
+  - 3
+  - 2
+  - 1
+  - 4
+  - 3
+  - 3
+  - 2
+  - 1
+  - 4
   imageCharactersBig: {fileID: 4343727234628468602, guid: e0201326c33b2c84193edf34bfae5722,
     type: 2}
   imageCharactersSmall: {fileID: 4343727234628468602, guid: ef4114f36e36a704ba12480bf91a6319,
