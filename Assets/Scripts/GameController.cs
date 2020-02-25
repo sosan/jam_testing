@@ -11,19 +11,7 @@ public class GameController : MonoBehaviour
 {
 
 
-    //[SerializeField] private GameObject game = null;
-    //[SerializeField] private GameObject[] objetosGame = null;
-    //[SerializeField] private GameObject fiesta = null;
-
-    //[SerializeField] private Animation animLunes = null;
-    //[SerializeField] private Animation animDemasDias = null;
-
-    [HideInInspector] public ushort diaSemana = 1; //1 = lunes, 2 martes, 3 miercoles, 4 jueves, 5 viernes, 6 sabado, 7 domingo
-    [SerializeField] private TextMeshProUGUI textMoney = null;
-    [SerializeField] private TextMeshProUGUI textTime = null;
-    //[SerializeField] private Resumen resumen = null;
-
-
+    [SerializeField] public Transform[] initialPlayerPositions = null;
     public ReactiveProperty<bool> faseConcluida = new ReactiveProperty<bool>(false);
 
 
@@ -74,14 +62,13 @@ public class GameController : MonoBehaviour
         }
 
 
-        textTime.text = "";
-        textMoney.text = "";
+        //textTime.text = "";
+        //textMoney.text = "";
 
     }
 
     void Start()
     {
-        diaSemana = 0;
         GettingPlayerPrefsValues();
 
     }
@@ -179,12 +166,12 @@ public class GameController : MonoBehaviour
     public void InitGame()
     {
 
-        MusicController.MusicInstance.SettingsMixer(
-          isMutedInternal,
-          mainVolumenInternal,
-          mainSoundInternal,
-          mainSfxInternal
-      );
+      //  MusicController.MusicInstance.SettingsMixer(
+      //    isMutedInternal,
+      //    mainVolumenInternal,
+      //    mainSoundInternal,
+      //    mainSfxInternal
+      //);
 
 
 
@@ -225,7 +212,7 @@ public class GameController : MonoBehaviour
         (_ =>
         {
 
-            textTime.text = Localization.Get("tiempo") + DateTime.FromBinary(binLocal).AddMinutes(tiempoCurrentBatalla).ToString("HH:mm");
+            //textTime.text = Localization.Get("tiempo") + DateTime.FromBinary(binLocal).AddMinutes(tiempoCurrentBatalla).ToString("HH:mm");
                 tiempoCurrentBatalla += 28;
 
 
@@ -243,7 +230,7 @@ public class GameController : MonoBehaviour
 
             crono.Dispose();
                 
-                textTime.text = "";
+                //textTime.text = "";
                 tiempoCurrentBatalla = 0;
             //print("parartodo. P=" + party + " S=" + saltarseResumen);
 
