@@ -17,7 +17,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     //[SerializeField] private const ushort MAX_ = null;
     [SerializeField] private GameController gameController = null;
     [SerializeField] private ControllerElegirPersonaje elegirPersonaje = null;
-    [SerializeField] private GameObject[] canvasMenu = null;
+    
     //[SerializeField] private Animation camAnim = null;
     //[SerializeField] private Animation spriteInicioAnim = null;
     [SerializeField] private ControllerMenuAnimations controllerMenuAnimations = null;
@@ -111,7 +111,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         canvasAlphaMenu.alpha = 0;
 
-        canvasMenu[0].SetActive(true);
+        gameController.canvasMenu[0].SetActive(true);
         //particleLogo.Play();
         await UniTask.Delay(3000);
 
@@ -124,10 +124,10 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         }
 
-        canvasMenu[0].SetActive(false);
+        gameController.canvasMenu[0].SetActive(false);
 
         //textos[contMenuPosition].color = selectedColor;
-        canvasMenu[1].SetActive(true);
+        gameController.canvasMenu[1].SetActive(true);
         //mar.SetActive(true);
 
         controllerMenuAnimations.animations.Play("MenuActivate");
@@ -156,7 +156,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         inputActions.Menu.RightStick.performed += MenuStickHandle;
         inputActions.Menu.RightStick.canceled += MenuResetStickMove;
 
-        inputActions.Menu.MovementMouse.performed += MovementMouse;
+        //inputActions.Menu.MovementMouse.performed += MovementMouse;
 
 
 
@@ -276,9 +276,9 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void MenuButtonPressedGamepad(InputAction.CallbackContext obj)
     {
 
+        if (isBegun == true) return;
         
-        
-        if (canvasMenu[1].activeSelf == true)
+        if (gameController.canvasMenu[1].activeSelf == true)
         {
 
             elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
@@ -299,7 +299,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
         //options
-        if (canvasMenu[2].activeSelf == true)
+        if (gameController.canvasMenu[2].activeSelf == true)
         {
             elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
             switch (contOptionsPosition)
@@ -336,8 +336,11 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void ButtonExit(InputAction.CallbackContext obj)
     {
 
+
+        if (isBegun == true) return;
+
         //options
-        if (canvasMenu[2].activeSelf == true)
+        if (gameController.canvasMenu[2].activeSelf == true)
         {
 
             BotonExitOptionsGamepad();
@@ -345,7 +348,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
         ////credits
-        //if (canvasMenu[3].activeSelf == true)
+        //if (gameController.canvasMenu[3].activeSelf == true)
         //{
 
         //    BotonExitCreditsGamepad();
@@ -358,7 +361,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void MenuResetStickMove(InputAction.CallbackContext obj)
     {
-
+        if (isBegun == true) return;
         isCompletedVertical = false;
         isCompletedHorizontal = false;
     }
@@ -367,10 +370,10 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void MenuDPADHandle(InputAction.CallbackContext obj)
     {
-
+        if (isBegun == true) return;
 
         //Menu
-        if (canvasMenu[1].activeSelf == true)
+        if (gameController.canvasMenu[1].activeSelf == true)
         {
             descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
             var move = obj.ReadValue<Vector2>();
@@ -380,7 +383,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
         //Options
-        if (canvasMenu[2].activeSelf == true)
+        if (gameController.canvasMenu[2].activeSelf == true)
         {
             var move = obj.ReadValue<Vector2>();
             ControlOptions(move);
@@ -730,10 +733,11 @@ public class ControllerGamepadMenu : MonoBehaviour
     {
 
         if (isCompletedVertical == true) return;
+        if (isBegun == true) return;
 
 
         //Menu
-        if (canvasMenu[1].activeSelf == true)
+        if (gameController.canvasMenu[1].activeSelf == true)
         {
             descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
             var mov = obj.ReadValue<Vector2>();
@@ -743,7 +747,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
         //Options
-        if (canvasMenu[2].activeSelf == true)
+        if (gameController.canvasMenu[2].activeSelf == true)
         {
 
             var mov = obj.ReadValue<Vector2>();
@@ -1069,7 +1073,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         contOptionsPosition = 0;
         ShowPositionOptions();
 
-        canvasMenu[2].SetActive(true);
+        gameController.canvasMenu[2].SetActive(true);
 
 
     }
@@ -1150,7 +1154,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         ShowPositionOptions();
 
 
-        canvasMenu[2].SetActive(true);
+        gameController.canvasMenu[2].SetActive(true);
     }
 
 
@@ -1179,12 +1183,10 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void DisableCanvas()
     {
-        //mar.SetActive(false);
-
-        for (ushort i = 0; i < canvasMenu.Length; i++)
+        for (ushort i = 0; i < gameController.canvasMenu.Length; i++)
         {
 
-            canvasMenu[i].SetActive(false);
+            gameController.canvasMenu[i].SetActive(false);
 
         }
 
@@ -1219,6 +1221,9 @@ public class ControllerGamepadMenu : MonoBehaviour
     private async void ShowElegirPersonaje()
     {
 
+
+        inputActions.Disable();
+
         ShowFX(positionTransformparticles[0].anchoredPosition);
           MusicController.MusicInstance.PlayFXSound(
             MusicController.MusicInstance.sfx[1]
@@ -1235,7 +1240,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         //print("Show initgame");
 
-        canvasMenu[3].SetActive(true);
+        gameController.canvasMenu[3].SetActive(true);
         elegirPersonaje.InitActions();
 
         //gameController.InitGame();
@@ -1642,7 +1647,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         ShowPositionMenuWithGamePad();
 
         descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
-        canvasMenu[1].SetActive(true);
+        gameController.canvasMenu[1].SetActive(true);
         //mar.SetActive(true);
 
     }
@@ -1667,7 +1672,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         contOptionsPosition = 0;
         ShowPositionMenuWithGamePad();
         descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
-        canvasMenu[1].SetActive(true);
+        gameController.canvasMenu[1].SetActive(true);
         //mar.SetActive(true);
 
     }
@@ -1700,7 +1705,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     //    DisableCanvas();
 
 
-    //    canvasMenu[1].SetActive(true); 
+    //    gameController.canvasMenu[1].SetActive(true); 
     //    //mar.SetActive(true);
     //    ShowPositionMenuWithGamePad();
 
@@ -1733,7 +1738,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
     //    ShowPositionMenuWithGamePad();
-    //    canvasMenu[1].SetActive(true);
+    //    gameController.canvasMenu[1].SetActive(true);
     //    ///*mar.*/SetActive(true);
 
 

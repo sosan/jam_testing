@@ -7,83 +7,6 @@ using InControlActions;
 using UnityEngine.InputSystem;
 using UniRx.Async;
 
-
-//public class InfoJugador
-//{
-//    public Color color;
-//    public int idDevice;
-//    public int x;
-//    public bool listo = false;
-//    public GameObject objPlayer = null;
-
-//}
-
-public class InfoPlayer
-{
-    public GameObject focusPlayer;
-    public GameObject playerGameObject;
-    public GameObject playerPos;
-    public Color colorPlayer;
-    public ushort posX;
-    public ushort posY;
-
-    public float lastPosX = 0;
-    public float lastPosY = 0;
-    public float currentPosX = 0;
-    public float currentPosY = 0;
-
-    public ushort posicionPlayer;
-    public bool isFirstMove;
-    public bool listo;
-    public Image bigSelectionPlayer;
-    public bool selected;
-    public string namePlayer;
-
-    public int expCurrent;
-    public int expMax;
-    public int levelCurrent;
-    public int levelMax;
-
-    public bool vacio = true;
-
-
-    public int indexShotPrefab;
-
-    public float fireCooldown = 0;
-    public float speedMovement = 0;
-    public float powerDamage = 0;
-    public float durationShotSeconds = 0;
-    public float bombCooldown = 0;
-    public float defense = 0;
-    public float defenseMax = 0;
-
-
-    public bool bot;
-
-
-    public InfoPlayer() { }
-
-    public InfoPlayer(GameObject focusPlayer, GameObject playerGameObject, GameObject playerPos, Color colorPlayer, ushort posX, ushort posY,
-        ushort posicionPlayer, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot)
-    {
-        this.focusPlayer = focusPlayer;
-        this.playerGameObject = playerGameObject;
-        this.playerPos = playerPos;
-        this.colorPlayer = colorPlayer;
-        this.posX = posX;
-        this.posY = posY;
-        this.posicionPlayer = posicionPlayer;
-        this.isFirstMove = isFirstMove;
-        this.bigSelectionPlayer = bigSelectionPlayer;
-        this.listo = listo;
-        this.bot = bot;
-    }
-
-
-}
-
-
-
 public class ControllerElegirPersonaje : MonoBehaviour
 {
 
@@ -129,11 +52,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     //private TwoAxisInputControl rstick = new TwoAxisInputControl();
     //private TwoAxisInputControl dpad = new TwoAxisInputControl();
 
-    // fundamentales
-    [SerializeField] private const ushort JUGADORES_MAXIMO = 4;
-    private InfoPlayer[] jugadores = new InfoPlayer[JUGADORES_MAXIMO];
-    [HideInInspector] public ushort contadorJugadores = 0;
-    [HideInInspector] public Dictionary<int, InfoPlayer> dictPlayers = new Dictionary<int, InfoPlayer>();
+   
 
     //---------
     public Animation[] focusButtonX;
@@ -164,16 +83,19 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public GameObject[] initialPlayerPosition = null;
 
     public MatrixCharacters[] matrixCharacters = null;
-    private MatrixCharacters playerKeyboardLastTaken = null;
+    //private MatrixCharacters playerKeyboardLastTaken = null;
 
     public Image[] recuadros = null;
+    
 
+    private bool isCompletedMoveRightStick = false;
+    private bool isCompletedMoveLeftStick = false;
 
     private void OnEnable()
     {
 
         //inputActions.Enable();
-
+        
 
     }
 
@@ -201,11 +123,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
         inputActions.Menu.Buttons.performed += BotonSur;
         inputActions.Menu.ExitButton.performed += ButtonExit;
 
-        //inputActions.Menu.LeftStick.performed += MenuStickHandle;
-        //inputActions.Menu.LeftStick.canceled += MenuResetStickMove;
+        inputActions.Menu.LeftStick.performed += ControlLeftStick;
+        inputActions.Menu.LeftStick.canceled += ResetLeftStick;
 
-        //inputActions.Menu.RightStick.performed += MenuStickHandle;
-        //inputActions.Menu.RightStick.canceled += MenuResetStickMove;
+        inputActions.Menu.RightStick.performed += ControlRightStick;
+        inputActions.Menu.RightStick.canceled += ResetRightStick;
 
         //inputActions.Menu.MovementMouse.performed += MovementMouse;
         for (ushort i = 0; i < panel_players.Length; i++)
@@ -266,21 +188,6 @@ public class ControllerElegirPersonaje : MonoBehaviour
             nameCharactersPlayer[i].text = "";
             mandosImage[i].gameObject.SetActive(false);
 
-            //if (i % 2 == 0)
-            //{
-            //    explicacion[i].text = "VES A DERECHA PARA AÑADIR JUGADOR";
-
-
-            //}
-            //else
-            //{
-
-            //    explicacion[i].text = "VES A IZQUIERDA PARA AÑADIR JUGADOR";
-            //}
-
-            //namePlayers[i].text = "NONE";
-
-
 
         }
 
@@ -296,27 +203,91 @@ public class ControllerElegirPersonaje : MonoBehaviour
     
     }
 
+    private void ResetLeftStick(InputAction.CallbackContext obj)
+    { 
+        isCompletedMoveLeftStick = false;
+        //print("reset l");
+    }
+
+    private void ResetRightStick(InputAction.CallbackContext obj)
+    { 
+        //print("reset r");
+        isCompletedMoveRightStick = false;
+    
+    }
+
+
     private void ControlDpad(InputAction.CallbackContext obj)
     {
-        if (dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
+        if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
         { 
             return;
         }
 
         Vector2 move = obj.ReadValue<Vector2>();
 
+        int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
         
-        ControlEleccionPersonajes(move, dictPlayers[obj.control.device.deviceId]);
+        ControlEleccionPersonajes(move, gameController.jugadores[posicionPlayer], isLeftStick: false, isRightStick: false);
 
     }
 
-    private void ControlEleccionPersonajes(Vector2 posicion, InfoPlayer player)
+    private void ControlLeftStick(InputAction.CallbackContext obj)
+    { 
+
+
+        if (isCompletedMoveLeftStick == true) return;
+        
+        if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
+        { 
+            return;
+        }
+
+        Vector2 move = obj.ReadValue<Vector2>();
+
+        int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
+        
+        //print("X=" + move.x +  " y=" + move.y);
+
+        ControlEleccionPersonajes(move, gameController.jugadores[posicionPlayer], isLeftStick: true, isRightStick: false);
+        
+    }
+
+    private void ControlRightStick(InputAction.CallbackContext obj)
     { 
     
-        if (posicion.normalized.y == 1f)
+        if (isCompletedMoveRightStick == true) return;
+        if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
+        { 
+            return;
+        }
+
+        Vector2 move = obj.ReadValue<Vector2>();
+
+        int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
+        
+        ControlEleccionPersonajes(move, gameController.jugadores[posicionPlayer], isLeftStick: false, isRightStick: true);
+    
+    }
+
+
+    private void ControlEleccionPersonajes(Vector2 posicion, InfoPlayer player, bool isLeftStick, bool isRightStick)
+    { 
+    
+        if (posicion.y >= 0.5f)
         { 
             
+            if (isLeftStick == true)
+            { 
+                isCompletedMoveLeftStick = true;
+            }
 
+            if (isRightStick == true)
+            { 
+                isCompletedMoveRightStick = true;
+            }
+
+            
             if ((player.focusPlayer.GetComponent<MatrixCharacters>().up is null) == false)
             {
 
@@ -330,8 +301,20 @@ public class ControllerElegirPersonaje : MonoBehaviour
             return;
         }
 
-        if (posicion.normalized.y == -1f)
+        if (posicion.y <= -0.5f)
         { 
+
+            if (isLeftStick == true)
+            { 
+                isCompletedMoveLeftStick = true;
+            }
+
+            if (isRightStick == true)
+            { 
+                isCompletedMoveRightStick = true;
+            }
+
+
             print("abajo");
             
             if ((player.focusPlayer.GetComponent<MatrixCharacters>().down is null) == false)
@@ -345,8 +328,20 @@ public class ControllerElegirPersonaje : MonoBehaviour
         
         }
 
-        if (posicion.normalized.x == 1f)
+        if (posicion.x >= 0.5f)
         { 
+
+            if (isLeftStick == true)
+            { 
+                isCompletedMoveLeftStick = true;
+            }
+
+            if (isRightStick == true)
+            { 
+                isCompletedMoveRightStick = true;
+            }
+
+
 
             if (player.posX >= 0 && player.posX < 5)
             {
@@ -367,8 +362,19 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         }
 
-        if (posicion.normalized.x == -1f)
+        if (posicion.x <= -0.5f)
         { 
+
+
+            if (isLeftStick == true)
+            { 
+                isCompletedMoveLeftStick = true;
+            }
+
+            if (isRightStick == true)
+            { 
+                isCompletedMoveRightStick = true;
+            }
         
             if (player.posX > 0 && player.posX <= 5)
             {
@@ -398,20 +404,20 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void BotonSur(InputAction.CallbackContext obj)
     {
 
-        print(dictPlayers.ContainsKey(obj.control.device.deviceId));
+        print(gameController.dictPlayers.ContainsKey(obj.control.device.deviceId));
 
-        if (dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
+        if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
         { 
-            print("insertado: " + contadorJugadores + " device=" + obj.control.device.deviceId);
+            print("insertado: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
             //insertar player
             
 
             
-            contadorJugadores++;
-            if (contadorJugadores > JUGADORES_MAXIMO)
+            gameController.contadorJugadores++;
+            if (gameController.contadorJugadores > gameController.JUGADORES_MAXIMO)
             { 
         
-                contadorJugadores = JUGADORES_MAXIMO;
+                gameController.contadorJugadores = gameController.JUGADORES_MAXIMO;
                 recuadros[3].color = Color.black;
                 return;
 
@@ -427,15 +433,15 @@ public class ControllerElegirPersonaje : MonoBehaviour
             
             }
             
-            jugadores[posicionLibre].vacio = false;
+            gameController.jugadores[posicionLibre].vacio = false;
             recuadros[posicionLibre].gameObject.SetActive(false);
 
-            //jugadores[contadorJugadores].idDevice = obj.control.device.deviceId;
+            //gameController.jugadores[gameController.contadorJugadores].idDevice = obj.control.device.deviceId;
             HacerVibrarMando(obj.control.device.deviceId);
 
             entrada_txt[posicionLibre].SetActive(false);
             panel_players[posicionLibre].SetActive(true);
-            //focusPlayers[contadorJugadores - 1].transform.position = initialPlayerPosition[contadorJugadores - 1].transform.position;
+            //focusPlayers[gameController.contadorJugadores - 1].transform.position = initialPlayerPosition[gameController.contadorJugadores - 1].transform.position;
             focusPlayers[posicionLibre].SetActive(true);
             mandosImage[posicionLibre].gameObject.SetActive(true);
 
@@ -454,16 +460,16 @@ public class ControllerElegirPersonaje : MonoBehaviour
         else
         { 
         
-            print("player listo: " + contadorJugadores + " device=" + obj.control.device.deviceId);
+            print("player listo: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
             
-
+            int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
             
-            if (dictPlayers[obj.control.device.deviceId].listo == true)
+            if (gameController.jugadores[posicionPlayer].listo == true)
             { 
 
                 print("3 vez");
                 print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + contadorJugadores);
+                print("contadojugadores=" + gameController.contadorJugadores);
                 // tercera vez
                 //ComprobarPersonajesListo();
             
@@ -471,21 +477,21 @@ public class ControllerElegirPersonaje : MonoBehaviour
             else
             { 
                 print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + contadorJugadores);
+                print("contadojugadores=" + gameController.contadorJugadores);
 
                 //ejecutar que el player esta listo
-                dictPlayers[obj.control.device.deviceId].listo = true;
+                gameController.jugadores[posicionPlayer].listo = true;
                 
                 HacerVibrarMando(obj.control.device.deviceId);
                 
-                ushort o = dictPlayers[obj.control.device.deviceId].posicionPlayer;
-                listoMensaje[o].SetActive(true);
-                readyImage[o].SetActive(
-                    !readyImage[o].activeSelf
+                //ushort o = gameController.dictPlayers[obj.control.device.deviceId].posicionPlayer;
+                listoMensaje[posicionPlayer].SetActive(true);
+                readyImage[posicionPlayer].SetActive(
+                    !readyImage[posicionPlayer].activeSelf
                 );
 
                 print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + contadorJugadores);
+                print("contadojugadores=" + gameController.contadorJugadores);
 
                 ComprobarPersonajesListo();
                
@@ -515,30 +521,40 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void ButtonExit(InputAction.CallbackContext obj)
     {
 
-        if (dictPlayers.ContainsKey(obj.control.device.deviceId) == true)
+        if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == true)
         { 
+
+            int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
             
-            HacerVibrarMando(obj.control.device.deviceId);
-            
-            contadorJugadores--;
-            if (contadorJugadores < 0)
+            if(gameController.jugadores[posicionPlayer].listo == true)
             { 
-                contadorJugadores = 0;
+                return;
             }
 
-            ushort o = dictPlayers[obj.control.device.deviceId].posicionPlayer;
-
-            listoMensaje[o].SetActive(false);
-            readyImage[o].SetActive(false);
-
-
-            recuadros[o].gameObject.SetActive(true);
-            panel_players[o].SetActive(false);
-            entrada_txt[o].SetActive(true);
-            focusPlayers[o].SetActive(false);
-            focusPlayers[o].transform.position = initialPlayerPosition[o].transform.position;
+            HacerVibrarMando(obj.control.device.deviceId);
             
-            dictPlayers.Remove(obj.control.device.deviceId);
+            gameController.contadorJugadores--;
+            if (gameController.contadorJugadores < 0)
+            { 
+                gameController.contadorJugadores = 0;
+            }
+
+           
+            //ushort o = gameController.dictPlayers[obj.control.device.deviceId].posicionPlayer;
+            gameController.jugadores[posicionPlayer].listo = false;
+            gameController.jugadores[posicionPlayer].vacio = true;
+
+            listoMensaje[posicionPlayer].SetActive(false);
+            readyImage[posicionPlayer].SetActive(false);
+
+
+            recuadros[posicionPlayer].gameObject.SetActive(true);
+            panel_players[posicionPlayer].SetActive(false);
+            entrada_txt[posicionPlayer].SetActive(true);
+            focusPlayers[posicionPlayer].SetActive(false);
+            focusPlayers[posicionPlayer].transform.position = initialPlayerPosition[posicionPlayer].transform.position;
+            
+            gameController.dictPlayers.Remove(obj.control.device.deviceId);
             
 
 
@@ -572,10 +588,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
     
         //short posicionLibre = -1;
 
-        for(short i = 0; i < JUGADORES_MAXIMO; i++)
+
+        for(short i = 0; i < gameController.JUGADORES_MAXIMO; i++)
         { 
-            
-            if (jugadores[i].vacio == true)
+            print(gameController.jugadores[i]);    
+            if (gameController.jugadores[i].vacio == true)
             { 
                 //posicionLibre = i;
                 
@@ -658,12 +675,12 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
     // contadorujugadores es mala estrategia...
-    public void AddPlayer(int contadorJugadores, int deviceId, bool isBot )
+    public void AddPlayer(int posicionLibre, int deviceId, bool isBot )
     {
         ushort x = 0; 
         ushort y = 0;
         
-        switch (contadorJugadores)
+        switch (posicionLibre)
         {
             case 0: x = 0; y = 2; break;
             case 1: x = 5; y = 2; break;
@@ -673,22 +690,41 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         }
 
-        dictPlayers.Add(deviceId, new InfoPlayer(
-                focusPlayers[contadorJugadores],
+        //int posicionLibre = GetPosicionLibre();
+
+        gameController.dictPlayers.Add(deviceId, posicionLibre);
+
+        gameController.jugadores[posicionLibre] = new InfoPlayer(
+                focusPlayers[posicionLibre],
                 null,
-                initialPlayerPosition[contadorJugadores],
-                prefabColorsPlayers[contadorJugadores],
+                initialPlayerPosition[posicionLibre],
+                prefabColorsPlayers[posicionLibre],
                 x, y,
-                (ushort)(contadorJugadores),
+                (ushort)(posicionLibre),
                 true,
-                bigSelectionPlayers[contadorJugadores],
+                bigSelectionPlayers[posicionLibre],
                 false,
                 false,
                 isBot
 
-            ));
-            
-       
+            );
+
+        //gameController.dictPlayers.Add(deviceId, new InfoPlayer(
+        //        focusPlayers[gameController.contadorJugadores],
+        //        null,
+        //        initialPlayerPosition[gameController.contadorJugadores],
+        //        prefabColorsPlayers[gameController.contadorJugadores],
+        //        x, y,
+        //        (ushort)(gameController.contadorJugadores),
+        //        true,
+        //        bigSelectionPlayers[gameController.contadorJugadores],
+        //        false,
+        //        false,
+        //        isBot
+
+        //    ));
+
+
 
     }
 
@@ -704,7 +740,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
         {
 
 
-            //if (playerId < 0 || playerId > JUGADORES_MAXIMO - 1) return;
+            //if (playerId < 0 || playerId > gameController.JUGADORES_MAXIMO - 1) return;
 
 
             if (posX % 2 == 0)
@@ -768,25 +804,36 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     private void ComprobarPersonajesListo()
     { 
-        if (Gamepad.all.Count == contadorJugadores)
+        if (Gamepad.all.Count == gameController.contadorJugadores)
         { 
             
             //comprobar que esten todos listos
             bool completado = true;
-            List<int> keys = new List<int>(dictPlayers.Keys);
-
-            for (ushort i = 0; i < keys.Count; i++)
-            {
-                //CORREGIR....testesar
-                if (dictPlayers[keys[i]].listo == false)
-                {
+            for (ushort i = 0; i < Gamepad.all.Count; i++)
+            { 
+                if (gameController.jugadores[i].listo == false)
+                { 
                     completado = false;
                     return;
+                
                 }
-
+            
+            
             }
+            //List<int> keys = new List<int>(gameController.dictPlayers.Keys);
 
-            //todos los jugadores al completo listos
+            //for (ushort i = 0; i < keys.Count; i++)
+            //{
+            //    //CORREGIR....testesar
+            //    if (gameController.dictPlayers[keys[i]].listo == false)
+            //    {
+            //        completado = false;
+            //        return;
+            //    }
+
+            //}
+
+            //todos los gameController.jugadores al completo listos
             if (completado == true)
             {
                 print("al ataker");
@@ -824,7 +871,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
         //        float power = gameCharactersSettings.powerDamage[rnd];
         //        float defense = gameCharactersSettings.defense[rnd];
 
-        //        contadorJugadores++;
+        //        gameController.contadorJugadores++;
 
 
         //    }
@@ -838,12 +885,42 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public void alAtaque()
     {
 
+        if (inputActions != null)
+        {
+            inputActions.Disable();
 
-        for(ushort i = 0; i < jugadores.Length; i++)
+        }
+
+        gameController.canvasMenu[4].SetActive(true);
+        gameController.canvasMenu[3].SetActive(false);
+       
+
+        for(ushort i = 0; i < gameController.jugadores.Length; i++)
         { 
-            if (jugadores[i].listo == true)
+            if (gameController.jugadores[i].listo == true)
             { 
-            
+                GameObject playerGo = GameObject.Instantiate(prefabPlayer, gameController.initialPlayerPositions[i].position, Quaternion.identity, gameController.canvasMenu[4].transform);
+                
+
+                var controllerplayer = playerGo.GetComponent<ControllerPlayer>().player;
+                var configplayer = gameController.jugadores[i].focusPlayer.GetComponent<MatrixCharacters>();
+                playerGo.name = configplayer.nameCharacter;
+                playerGo.layer = LayerMask.NameToLayer("player");
+
+                controllerplayer.fireCooldown = configplayer.fireCooldown;
+                controllerplayer.speedMovement = configplayer.speedMovement;
+                controllerplayer.powerDamage = configplayer.power;
+                controllerplayer.durationShotSeconds = configplayer.durationShotSeconds;
+                controllerplayer.bombCooldown = configplayer.bombCooldown;
+                controllerplayer.defense = configplayer.defense;
+                controllerplayer.defenseMax = configplayer.defenseMax;
+
+                //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
+                playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
+
+                gameController.jugadores[i].playerGameObject = playerGo;
+
+                playerGo.GetComponent<ControllerPlayer>().gameController = gameController;
                 
             
             }
@@ -853,38 +930,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
 
-        //int id = 0;
-        List<int> keys = new List<int>(dictPlayers.Keys);
 
-
-        for(ushort i = 0; i < keys.Count; i++)
-        { 
-
-            ----------
-
-            GameObject playerGo = GameObject.Instantiate(prefabPlayer, gameController.initialPlayerPositions[i].position, Quaternion.identity);
-
-            var controllerplayer = playerGo.GetComponent<ControllerPlayer>().player;
-            var configplayer = dictPlayers[keys[i]].focusPlayer.GetComponent<MatrixCharacters>();
-
-
-            controllerplayer.fireCooldown = configplayer.fireCooldown;
-            controllerplayer.speedMovement = configplayer.speedMovement;
-            controllerplayer.powerDamage = configplayer.power;
-            controllerplayer.durationShotSeconds = configplayer.durationShotSeconds;
-            controllerplayer.bombCooldown = configplayer.bombCooldown;
-            controllerplayer.defense = configplayer.defense;
-            controllerplayer.defenseMax = configplayer.defenseMax;
-
-            playerGo.GetComponent<SpriteRenderer>().color = dictPlayers[keys[i]].colorPlayer;
-
-
-
-
-            dictPlayers[keys[i]].playerGameObject = playerGo;
-        
-        }
-        //foreach (var playerInfo in variablesOverScenes.dictPlayers)
+        //foreach (var playerInfo in variablesOverScenes.gameController.dictPlayers)
         //{
         //    if (playerInfo.Key is null) continue;
 
@@ -940,7 +987,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
         if (i == 0) return;
         //teclado
 
-        if (contadorJugadores >= JUGADORES_MAXIMO)
+        if (gameController.contadorJugadores >= gameController.JUGADORES_MAXIMO)
         {
             print("no se admiten mas jugadores");
             return;
@@ -948,7 +995,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
 
-        //if (variablesOverScenes.dictPlayers.ContainsKey("teclado") == true)
+        //if (variablesOverScenes.gameController.dictPlayers.ContainsKey("teclado") == true)
         //{
 
         //    print("encontrado");
@@ -975,7 +1022,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
         //    //añadir personaje y cambiar de personaje
-        //    variablesOverScenes.dictPlayers.Add("teclado",
+        //    variablesOverScenes.gameController.dictPlayers.Add("teclado",
         //   new InfoPlayer(
 
         //       //tInput,
@@ -1005,7 +1052,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
 
-        //InfoPlayer thisPlayer = variablesOverScenes.dictPlayers["teclado"];
+        //InfoPlayer thisPlayer = variablesOverScenes.gameController.dictPlayers["teclado"];
 
 
 
