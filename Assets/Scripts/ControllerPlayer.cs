@@ -15,10 +15,22 @@ public class ControllerPlayer : MonoBehaviour
     [SerializeField] public Rigidbody2D rigid = null;
     [SerializeField] public Transform thistransform = null;
 
+
+    //en segundos
+    [SerializeField] public float bombCooldown = 5; 
+    [SerializeField] public float fireCooldown = 0;
+    [SerializeField] public float durationShotSeconds = 0;
+    [SerializeField] public float speedMovement = 0;
+    [SerializeField] public float defense = 0;
+    [SerializeField] public float defenseMax = 0;
+
+
     private bool isCompletedMoveLeftStick = false;
     private float m_MovementInputValue; 
     private Vector2 _inputs = Vector2.zero;
-    public float m_Speed = 12f; 
+    public float m_Speed = 12f;
+
+    private bool bombAwaiting = false;
     
 
     private void Awake()
@@ -54,23 +66,41 @@ public class ControllerPlayer : MonoBehaviour
     }
 
 
-    private void BotonOeste(InputAction.CallbackContext obj)
+    private async void BotonOeste(InputAction.CallbackContext obj)
     {
+
+        if (bombAwaiting == true) return;
+
 
         gameController.HacerVibrarMando(obj.control.device.deviceId);
 
+
+        float x = (float)Math.Round(this.transform.position.x * 2, MidpointRounding.ToEven) / 2;
+        float y = (float)Math.Round(this.transform.position.y * 2, MidpointRounding.ToEven) / 2;
+
+        //print("x=" + x + " y=" + y);
+        if ((Math.Abs(x) % 1) == 0)
+        {
+            x += 0.5f;
+
+        }
+
+        if ((Math.Abs(y) % 1) == 0)
+        {
+            y += 0.5f;
+
+        }
+
         GameObject bomba = GameObject.Instantiate(gameController.prefabBomba, 
-            new Vector3(
-                (float)Math.Round(this.transform.position.x * 2, MidpointRounding.AwayFromZero) / 2,
-                (float)Math.Round(this.transform.position.y * 2, MidpointRounding.AwayFromZero) / 2,
-                (float)Math.Round(this.transform.position.z * 2, MidpointRounding.AwayFromZero) / 2
-                ), 
+            new Vector3(x, y, 0), 
             Quaternion.identity,
             gameController.canvasMenu[4].transform);
 
         bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-
-
+        
+        bombAwaiting = true;
+        await UniTask.Delay(TimeSpan.FromSeconds(bombCooldown));
+        bombAwaiting = false;
 
     }
 
