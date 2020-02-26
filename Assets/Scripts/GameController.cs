@@ -6,6 +6,8 @@ using UniRx.Async;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using InControlActions;
 
 
 public class InfoPlayer
@@ -100,6 +102,8 @@ public class GameController : MonoBehaviour
 
     [HideInInspector] public ushort tiempoCurrentBatalla = 0;
     [SerializeField] private ushort TIEMPOMAXBATALLA = 180;
+
+    [SerializeField] public GameObject prefabBomba = null;
 
 
     private bool isMutedDefault = false;
@@ -303,6 +307,26 @@ public class GameController : MonoBehaviour
 
 
 
+    }
+
+
+    public async void HacerVibrarMando(int deviceId)
+    { 
+        //vibrar el gamepad que ha pulsado el boton
+        var todosgamepads = Gamepad.all;
+        for (ushort i = 0; i < todosgamepads.Count; i++)
+        { 
+            if (todosgamepads[i].deviceId == deviceId)
+            {
+                todosgamepads[i].SetMotorSpeeds(0.5f, 0.5f);
+                await UniTask.Delay(110);
+                todosgamepads[i].SetMotorSpeeds(0f, 0f);
+
+
+            }
+        }
+    
+    
     }
 
 

@@ -437,7 +437,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             recuadros[posicionLibre].gameObject.SetActive(false);
 
             //gameController.jugadores[gameController.contadorJugadores].idDevice = obj.control.device.deviceId;
-            HacerVibrarMando(obj.control.device.deviceId);
+            gameController.HacerVibrarMando(obj.control.device.deviceId);
 
             entrada_txt[posicionLibre].SetActive(false);
             panel_players[posicionLibre].SetActive(true);
@@ -482,7 +482,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 //ejecutar que el player esta listo
                 gameController.jugadores[posicionPlayer].listo = true;
                 
-                HacerVibrarMando(obj.control.device.deviceId);
+                gameController.HacerVibrarMando(obj.control.device.deviceId);
                 
                 //ushort o = gameController.dictPlayers[obj.control.device.deviceId].posicionPlayer;
                 listoMensaje[posicionPlayer].SetActive(true);
@@ -531,7 +531,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 return;
             }
 
-            HacerVibrarMando(obj.control.device.deviceId);
+            gameController.HacerVibrarMando(obj.control.device.deviceId);
             
             gameController.contadorJugadores--;
             if (gameController.contadorJugadores < 0)
@@ -564,24 +564,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     }
 
 
-    public async void HacerVibrarMando(int deviceId)
-    { 
-        //vibrar el gamepad que ha pulsado el boton
-        var todosgamepads = Gamepad.all;
-        for (ushort i = 0; i < todosgamepads.Count; i++)
-        { 
-            if (todosgamepads[i].deviceId == deviceId)
-            {
-                todosgamepads[i].SetMotorSpeeds(0.5f, 0.5f);
-                await UniTask.Delay(110);
-                todosgamepads[i].SetMotorSpeeds(0f, 0f);
-
-
-            }
-        }
     
-    
-    }
 
     private short GetPosicionLibre()
     { 
@@ -917,6 +900,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
                 //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
                 playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
+                controllerplayer.colorPlayer = gameController.jugadores[i].colorPlayer;
 
                 gameController.jugadores[i].playerGameObject = playerGo;
 

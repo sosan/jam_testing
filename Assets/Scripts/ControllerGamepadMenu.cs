@@ -281,7 +281,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         if (gameController.canvasMenu[1].activeSelf == true)
         {
 
-            elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
+            gameController.HacerVibrarMando(obj.control.device.deviceId);
 
             switch (contMenuPosition)
             {
@@ -301,7 +301,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         //options
         if (gameController.canvasMenu[2].activeSelf == true)
         {
-            elegirPersonaje.HacerVibrarMando(obj.control.device.deviceId);
+            gameController.HacerVibrarMando(obj.control.device.deviceId);
             switch (contOptionsPosition)
             {
 

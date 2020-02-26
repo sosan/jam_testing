@@ -13,6 +13,7 @@ public class ControllerPlayer : MonoBehaviour
     [SerializeField] public InfoPlayer player = new InfoPlayer();
     [SerializeField] public GameController gameController = null;
     [SerializeField] public Rigidbody2D rigid = null;
+    [SerializeField] public Transform thistransform = null;
 
     private bool isCompletedMoveLeftStick = false;
     private float m_MovementInputValue; 
@@ -23,6 +24,7 @@ public class ControllerPlayer : MonoBehaviour
     private void Awake()
     {
         rigid = this.GetComponent<Rigidbody2D>();
+        thistransform = this.gameObject.transform;
         
     }
 
@@ -54,6 +56,19 @@ public class ControllerPlayer : MonoBehaviour
 
     private void BotonOeste(InputAction.CallbackContext obj)
     {
+
+        gameController.HacerVibrarMando(obj.control.device.deviceId);
+
+        GameObject bomba = GameObject.Instantiate(gameController.prefabBomba, 
+            new Vector3(
+                (float)Math.Round(this.transform.position.x * 2, MidpointRounding.AwayFromZero) / 2,
+                (float)Math.Round(this.transform.position.y * 2, MidpointRounding.AwayFromZero) / 2,
+                (float)Math.Round(this.transform.position.z * 2, MidpointRounding.AwayFromZero) / 2
+                ), 
+            Quaternion.identity,
+            gameController.canvasMenu[4].transform);
+
+        bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
 
 
 
@@ -136,11 +151,12 @@ public class ControllerPlayer : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    //private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         
-        print("colision=" + collision.name);
 
+        collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
 
 
     }
