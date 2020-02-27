@@ -171,22 +171,22 @@ MonoBehaviour:
   - 3
   bombCooldown:
   - 4
-  - 3
-  - 2
-  - 1
-  - 4
-  - 3
-  - 2
-  - 1
-  - 4
-  - 3
-  - 2
-  - 1
   - 4
   - 3
   - 3
+  - 4
+  - 4
+  - 3
+  - 3
+  - 3
+  - 3
+  - 4
+  - 4
+  - 3
+  - 3
+  - 3
   - 2
-  - 1
+  - 2
   - 4
   imageCharactersBig: {fileID: 4343727234628468602, guid: e0201326c33b2c84193edf34bfae5722,
     type: 2}

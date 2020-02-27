@@ -162,7 +162,24 @@ public class ControllerElegirPersonaje : MonoBehaviour
             matrixCharacters[i].energy = gameCharactersSettings.energy[i];
             matrixCharacters[i].energyMax = gameCharactersSettings.energyMax;
 
+            matrixCharacters[i].fireCooldown = gameCharactersSettings.fireCooldown[i];
+            matrixCharacters[i].speedMovement = gameCharactersSettings.speedMovement[i];
+            matrixCharacters[i].durationShotSeconds = gameCharactersSettings.durationShotSeconds[i];
+            matrixCharacters[i].bombCooldown = gameCharactersSettings.bombCooldown[i];
+         
 
+
+            /*
+              controllerplayer.fireCooldown = configplayer.;
+                controllerplayer.speedMovement = configplayer.;
+                controllerplayer.powerDamage = configplayer.power;
+                controllerplayer.durationShotSeconds = configplayer.;
+                //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
+                controllerplayer.bombCooldown = configplayer.;
+                controllerplayer.defense = configplayer.defense;
+                controllerplayer.defenseMax = configplayer.defenseMax;
+             
+             */
 
 
 
@@ -899,6 +916,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 controllerplayer.speedMovement = configplayer.speedMovement;
                 controllerplayer.powerDamage = configplayer.power;
                 controllerplayer.durationShotSeconds = configplayer.durationShotSeconds;
+                //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
                 controllerplayer.bombCooldown = configplayer.bombCooldown;
                 controllerplayer.defense = configplayer.defense;
                 controllerplayer.defenseMax = configplayer.defenseMax;

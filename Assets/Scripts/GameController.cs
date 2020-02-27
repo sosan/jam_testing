@@ -143,7 +143,7 @@ public class GameController : MonoBehaviour
     public bool isDebug = true;
     public float speed = 0.8f;
     
-    [SerializeField] public short minimoBloques = 6;
+    private short minimoBloques = 10;
     [SerializeField] public short bloquesAmarillos = 0;
     [SerializeField] public short bloquesAzules = 0;
     [SerializeField] public short bloquesRojos = 0;
@@ -307,7 +307,7 @@ public class GameController : MonoBehaviour
     private void ActualizarPuntuacion()
     {
 #if UNITY_EDITOR
-        print("bloques amarillos=" + bloquesAmarillos);
+        //print("bloques amarillos=" + bloquesAmarillos);
 #endif
         if (bloquesAmarillos > minimoBloques)
         { 

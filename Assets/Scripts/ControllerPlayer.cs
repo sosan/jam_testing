@@ -124,6 +124,7 @@ public class ControllerPlayer : MonoBehaviour
         bomba.GetComponent<ControllerBomba>().controllerplayer = this;
         
         bombAwaiting = true;
+        print("player cooldown=" + player.bombCooldown);
         await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
         bombAwaiting = false;
 
@@ -131,7 +132,7 @@ public class ControllerPlayer : MonoBehaviour
 
     private void BotonSur(InputAction.CallbackContext obj)
     {
-        print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
+        //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
 
