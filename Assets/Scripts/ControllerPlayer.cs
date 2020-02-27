@@ -14,7 +14,7 @@ public class ControllerPlayer : MonoBehaviour
     [SerializeField] public GameController gameController = null;
     [SerializeField] public Rigidbody2D rigid = null;
     [SerializeField] public Transform thistransform = null;
-    [SerializeField] private LayerMask raycastLayerMask = -1;
+    [SerializeField] public LayerMask raycastLayerMask = -1;
 
 
     private bool isCompletedMoveLeftStick = false;
@@ -67,11 +67,16 @@ public class ControllerPlayer : MonoBehaviour
 
         //raycast para saber si estamos encima de que estamos..
         var hit = Physics2D.OverlapBox(this.gameObject.transform.position, new Vector2(0, 0), 0, layerMask: raycastLayerMask);
-        if (hit.gameObject.tag == "fondo")
+        if (hit is null == false)
         { 
-            return;
-        }
+            if (hit.gameObject.tag == "fondo")
+            { 
+                return;
+            }
 
+        
+        }
+        
         ////10ms tag
         //var stop = System.Diagnostics.Stopwatch.StartNew();
         //stop.Start();
@@ -154,16 +159,23 @@ public class ControllerPlayer : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
         
-    }
+    //}
 
     //private void OnTriggerEnter2D(Collider2D collision)
     private void OnTriggerStay2D(Collider2D collision)
     {
         
         if(gameController.playerSePuedenMover == false) return;
+        ProcesarColision(collision);
+        
+        
+    }
+
+    public void ProcesarColision(Collider2D collision)
+    { 
         if (collision.gameObject.tag == nombreColores.fondo.ToString())
         { 
             collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
@@ -180,7 +192,10 @@ public class ControllerPlayer : MonoBehaviour
         
         }
 
-        
+    
+    
     }
+        
+    
 
 }

@@ -208,6 +208,9 @@ MonoBehaviour:
   gameController: {fileID: 0}
   rigid: {fileID: 0}
   thistransform: {fileID: 0}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
   m_Speed: 5
 --- !u!50 &4462778762192266002
 Rigidbody2D:

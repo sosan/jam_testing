@@ -5019,7 +5019,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 258.9, y: 57.56}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &377931764
@@ -5470,14 +5470,13 @@ MonoBehaviour:
   isDebug: 0
   speed: 0.8
   minimoBloques: 6
-  bloquesAmarillos: 1
-  bloquesAzules: 1
-  bloquesRojos: 1
-  bloquesBlancos: 1
+  bloquesAmarillos: 0
+  bloquesAzules: 0
+  bloquesRojos: 0
+  bloquesBlancos: 0
   ready: {fileID: 1106458389}
   playerSePuedenMover: 0
   texto_fase2: go
-  NUM_BLOQUES: 162
 --- !u!1 &400123555
 GameObject:
   m_ObjectHideFlags: 0
@@ -15455,7 +15454,7 @@ GameObject:
   - component: {fileID: 1106458392}
   - component: {fileID: 1106458391}
   m_Layer: 5
-  m_Name: tiempo_txt
+  m_Name: ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

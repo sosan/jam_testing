@@ -142,16 +142,16 @@ public class GameController : MonoBehaviour
     public float speed = 0.8f;
     
     [SerializeField] public short minimoBloques = 6;
-    [SerializeField] public short bloquesAmarillos = 1;
-    [SerializeField] public short bloquesAzules = 1;
-    [SerializeField] public short bloquesRojos = 1;
-    [SerializeField] public short bloquesBlancos = 1;
+    [SerializeField] public short bloquesAmarillos = 0;
+    [SerializeField] public short bloquesAzules = 0;
+    [SerializeField] public short bloquesRojos = 0;
+    [SerializeField] public short bloquesBlancos = 0;
 
     [SerializeField] public TextMeshProUGUI ready = null;
 
     [HideInInspector] public bool playerSePuedenMover = false;
     [HideInInspector] public string texto_fase2 = "go";
-    [HideInInspector] public ushort NUM_BLOQUES = 162;
+    private ushort NUM_BLOQUES = 145;
     
     //[SerializeField] public nombreColores nombreColoresPlayers;
 

@@ -910,6 +910,15 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 gameController.jugadores[i].playerGameObject = playerGo;
 
                 playerGo.GetComponent<ControllerPlayer>().gameController = gameController;
+
+                //-----------------
+                var hit = Physics2D.OverlapBox(playerGo.transform.position, new Vector2(0, 0), 0, 
+                    layerMask: playerGo.GetComponent<ControllerPlayer>().raycastLayerMask);
+
+                if (hit is null == false)
+                { 
+                    playerGo.GetComponent<ControllerPlayer>().ProcesarColision(hit);
+                }
                 
             
             }
