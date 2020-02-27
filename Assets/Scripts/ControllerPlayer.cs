@@ -62,6 +62,8 @@ public class ControllerPlayer : MonoBehaviour
     private async void BotonOeste(InputAction.CallbackContext obj)
     {
 
+        if (obj.control.device.deviceId != player.deviceId) return;
+
         if(gameController.playerSePuedenMover == false) return;
         if (bombAwaiting == true) return;
 
@@ -129,13 +131,15 @@ public class ControllerPlayer : MonoBehaviour
 
     private void BotonSur(InputAction.CallbackContext obj)
     {
-
+        print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
+        if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
 
     }
 
     private void ResetLeftStick(InputAction.CallbackContext obj)
     {
+        if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
        _inputs = Vector2.zero;
         
@@ -143,6 +147,9 @@ public class ControllerPlayer : MonoBehaviour
 
     private void ControlLeftStick(InputAction.CallbackContext obj)
     {
+
+        //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
+        if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
         _inputs = obj.ReadValue<Vector2>();
 
@@ -154,6 +161,7 @@ public class ControllerPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if(gameController.playerSePuedenMover == false) return;
         rigid.MovePosition(this.rigid.position + _inputs * m_Speed * Time.deltaTime);
         
@@ -175,7 +183,8 @@ public class ControllerPlayer : MonoBehaviour
     }
 
     public void ProcesarColision(Collider2D collision)
-    { 
+    {
+        
         if (collision.gameObject.tag == nombreColores.fondo.ToString())
         { 
             collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;

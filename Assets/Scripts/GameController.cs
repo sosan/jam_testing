@@ -51,6 +51,7 @@ public class InfoPlayer
     public float defenseMax = 0;
 
     public short numerobloques = 0;
+    public int deviceId = -1;
 
     public bool bot;
 
@@ -59,7 +60,7 @@ public class InfoPlayer
     public InfoPlayer() { }
 
     public InfoPlayer(GameObject focusPlayer, GameObject playerGameObject, GameObject playerPos, Color colorPlayer, ushort posX, ushort posY,
-        ushort posicionPlayer, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot, nombreColores coloresplayer)
+        ushort posicionPlayer, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot, nombreColores coloresplayer, int deviceId)
     {
         this.focusPlayer = focusPlayer;
         this.playerGameObject = playerGameObject;
@@ -73,6 +74,7 @@ public class InfoPlayer
         this.listo = listo;
         this.bot = bot;
         this.nombreColorPlayer = coloresplayer;
+        this.deviceId = deviceId;
     }
 
 
@@ -310,7 +312,7 @@ public class GameController : MonoBehaviour
         if (bloquesAmarillos > minimoBloques)
         { 
             barrasPuntuaje[0].fillAmount = (float)bloquesAmarillos / NUM_BLOQUES;
-            print(barrasPuntuaje[0].fillAmount);
+            //print(barrasPuntuaje[0].fillAmount);
         }
         
         if (bloquesAzules > minimoBloques)

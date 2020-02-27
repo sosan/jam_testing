@@ -91,13 +91,13 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private bool isCompletedMoveRightStick = false;
     private bool isCompletedMoveLeftStick = false;
 
-    private void OnEnable()
-    {
+    //private void OnEnable()
+    //{
 
-        //inputActions.Enable();
+    //    //inputActions.Enable();
         
 
-    }
+    //}
 
     private void OnDisable()
     {
@@ -677,6 +677,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         gameController.dictPlayers.Add(deviceId, posicionLibre);
 
+        print("deviceid=" + deviceId);
+
         gameController.jugadores[posicionLibre] = new InfoPlayer(
                 focusPlayers[posicionLibre],
                 null,
@@ -689,10 +691,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 false,
                 false,
                 isBot,
-                nombrePlayerColor
+                nombrePlayerColor,
+                deviceId
 
             );
-
+        print("deviceid=" + deviceId + "" + gameController.jugadores[posicionLibre].deviceId);
         //gameController.dictPlayers.Add(deviceId, new InfoPlayer(
         //        focusPlayers[gameController.contadorJugadores],
         //        null,
@@ -899,6 +902,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 controllerplayer.bombCooldown = configplayer.bombCooldown;
                 controllerplayer.defense = configplayer.defense;
                 controllerplayer.defenseMax = configplayer.defenseMax;
+
+                controllerplayer.deviceId = gameController.jugadores[i].deviceId;
 
                 //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
                 playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
