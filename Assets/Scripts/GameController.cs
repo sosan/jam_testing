@@ -16,6 +16,7 @@ public class InfoPlayer
     public GameObject playerGameObject;
     public GameObject playerPos;
     public Color colorPlayer;
+    public nombreColores nombreColorPlayer;
     public ushort posX;
     public ushort posY;
 
@@ -49,14 +50,16 @@ public class InfoPlayer
     public float defense = 0;
     public float defenseMax = 0;
 
+    public short numerobloques = 0;
 
     public bool bot;
+
 
 
     public InfoPlayer() { }
 
     public InfoPlayer(GameObject focusPlayer, GameObject playerGameObject, GameObject playerPos, Color colorPlayer, ushort posX, ushort posY,
-        ushort posicionPlayer, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot)
+        ushort posicionPlayer, bool isFirstMove, Image bigSelectionPlayer, bool selected, bool listo, bool bot, nombreColores coloresplayer)
     {
         this.focusPlayer = focusPlayer;
         this.playerGameObject = playerGameObject;
@@ -69,11 +72,23 @@ public class InfoPlayer
         this.bigSelectionPlayer = bigSelectionPlayer;
         this.listo = listo;
         this.bot = bot;
+        this.nombreColorPlayer = coloresplayer;
     }
 
 
 }
 
+public enum nombreColores
+{ 
+    amarillo,
+    azul,
+    rojo,
+    blanco,
+    None,
+    fondo
+
+
+}
 
 
 public class GameController : MonoBehaviour
@@ -81,6 +96,11 @@ public class GameController : MonoBehaviour
 
     [Header("canvas")]
     [SerializeField] public GameObject[] canvasMenu = null;
+
+    [Header("Animation Events")]
+    [SerializeField] public Animation animaciones = null;
+    [SerializeField] public AnimationEvents eventos = null;
+
 
 
      // fundamentales
@@ -100,10 +120,12 @@ public class GameController : MonoBehaviour
 
     private IDisposable crono = null;
 
-    [HideInInspector] public ushort tiempoCurrentBatalla = 0;
+    
     [SerializeField] private ushort TIEMPOMAXBATALLA = 180;
+    private short tiempoCurrentBatalla = 180;
 
     [SerializeField] public GameObject prefabBomba = null;
+    [SerializeField] public Image[] barrasPuntuaje = null;
 
 
     private bool isMutedDefault = false;
@@ -118,6 +140,20 @@ public class GameController : MonoBehaviour
 
     public bool isDebug = true;
     public float speed = 0.8f;
+    
+    [SerializeField] public short minimoBloques = 6;
+    [SerializeField] public short bloquesAmarillos = 1;
+    [SerializeField] public short bloquesAzules = 1;
+    [SerializeField] public short bloquesRojos = 1;
+    [SerializeField] public short bloquesBlancos = 1;
+
+    [SerializeField] public TextMeshProUGUI ready = null;
+
+    [HideInInspector] public bool playerSePuedenMover = false;
+    [HideInInspector] public string texto_fase2 = "go";
+    [HideInInspector] public ushort NUM_BLOQUES = 162;
+    
+    //[SerializeField] public nombreColores nombreColoresPlayers;
 
 
     private void Awake()
@@ -129,25 +165,23 @@ public class GameController : MonoBehaviour
         { 
         
             jugadores[i] = new InfoPlayer();
-        
+            barrasPuntuaje[i].fillAmount = 0.1f;
         
         }
 
 
 
-        if (isDebug == true)
-        {
+        //if (isDebug == true)
+        //{
 
 
-            //money.Value = 1000;
-            speed = 0.8f;
+        //    //money.Value = 1000;
+        //    speed = 0.8f;
 
 
-        }
+        //}
 
-
-        tiempoBatalla.text = "";
-        //textMoney.text = "";
+        tiempoBatalla.text = Localization.Get("tiempo") + "00:00";
 
     }
 
@@ -256,8 +290,9 @@ public class GameController : MonoBehaviour
       //    mainSoundInternal,
       //    mainSfxInternal
       //);
+        animaciones.Play("ready");
+        //EfectoReady();
         
-       
 
 
 
@@ -267,18 +302,40 @@ public class GameController : MonoBehaviour
     }
 
 
-    private void IniciarCrono()
+    private void ActualizarPuntuacion()
+    {
+#if UNITY_EDITOR
+        print("bloques amarillos=" + bloquesAmarillos);
+#endif
+        if (bloquesAmarillos > minimoBloques)
+        { 
+            barrasPuntuaje[0].fillAmount = (float)bloquesAmarillos / NUM_BLOQUES;
+            print(barrasPuntuaje[0].fillAmount);
+        }
+        
+        if (bloquesAzules > minimoBloques)
+        { 
+            barrasPuntuaje[1].fillAmount = (float)bloquesAzules / NUM_BLOQUES;
+        }
+
+        if (bloquesRojos > minimoBloques)
+        { 
+            barrasPuntuaje[2].fillAmount = (float)bloquesRojos / NUM_BLOQUES;
+        }
+
+        if (bloquesBlancos > minimoBloques)
+        { 
+            barrasPuntuaje[3].fillAmount = (float)bloquesBlancos / NUM_BLOQUES;
+        }
+
+    }
+
+
+    public void IniciarCrono()
     {
 
-
-        long binlocal = new DateTime(2019, 1, 1,9, 0, 0).ToBinary();
-
-#if UNITY_EDITOR
-        print("inicar crono=") ;
-
-#endif
-       
-
+        playerSePuedenMover = true;
+        long binlocal = new DateTime(year:2019, month:1, day:1, hour:9, minute:0, second:0).ToBinary();
 
         crono = Observable.Timer(
         TimeSpan.FromSeconds(0), //esperamos 1 segundos 
@@ -287,9 +344,11 @@ public class GameController : MonoBehaviour
         .Subscribe
         (_ =>
         {
+            tiempoBatalla.text = Localization.Get("tiempo") + DateTime.FromBinary(binlocal).AddSeconds(tiempoCurrentBatalla).ToString("mm:ss");
+            //print(tiempoCurrentBatalla);
+            tiempoCurrentBatalla--;
 
-            tiempoBatalla.text = Localization.Get("tiempo") + DateTime.FromBinary(binlocal).AddSeconds(tiempoCurrentBatalla).ToString("HH:mm");
-            tiempoCurrentBatalla++;
+            ActualizarPuntuacion();
 
         }
         , ex => { Debug.Log(" cuentaatrasantes OnError:" + ex.Message); if (crono != null) crono.Dispose(); },
@@ -328,6 +387,98 @@ public class GameController : MonoBehaviour
     
     
     }
+
+
+    //public void EfectoReady()
+    //{
+
+    //    //FASE 1
+    //    ready.text = Localization.Get("listos"); // "READY?";
+    //    ready.fontSize = 300;
+
+    //    Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
+    //    .Take(15)
+    //    .Subscribe(_ =>
+    //    {
+    //        ready.fontSize -= 20;
+
+    //    },
+    //    ex => { },
+    //    () =>
+    //    {
+    //        //FASE 2
+    //        ready.text = Localization.Get("go"); //"GO!";
+    //        ready.fontSize = 300;
+
+    //        Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
+    //        .Take(15)
+    //        .Subscribe(y =>
+    //        {
+
+    //            ready.fontSize -= 20;
+
+    //        },
+    //        ex => { },
+    //        () =>
+    //        {
+    //            playerSePuedenMover = true;
+    //            IniciarCrono();
+
+
+    //        });
+
+
+    //    }).AddTo(this.gameObject);;
+
+
+
+    //}
+
+
+    //public void EfectoMisionFailed()
+    //{
+
+
+    //    //FASE 1
+    //    ready.text = Localization.Get("failed");
+    //    ready.fontSize = 10;
+
+    //    Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
+    //    .Take(40)
+    //    .Subscribe(_ =>
+    //    {
+
+
+    //        ready.fontSize += 3;
+
+
+    //    },
+    //    ex => { }, //error
+    //    () =>
+    //    {
+
+    //        ////FASE 2
+    //        //Observable.Timer(TimeSpan.FromSeconds(1))
+    //        //.Take(1)
+    //        //.Subscribe(y =>
+    //        //{
+    //        //    ready.text = "";
+                
+
+    //        //});
+
+
+             
+
+
+    //    }).AddTo(this.gameObject);
+
+
+
+
+    //}
+
+
 
 
 

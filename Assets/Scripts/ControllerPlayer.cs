@@ -14,15 +14,7 @@ public class ControllerPlayer : MonoBehaviour
     [SerializeField] public GameController gameController = null;
     [SerializeField] public Rigidbody2D rigid = null;
     [SerializeField] public Transform thistransform = null;
-
-
-    //en segundos
-    [SerializeField] public float bombCooldown = 5; 
-    [SerializeField] public float fireCooldown = 0;
-    [SerializeField] public float durationShotSeconds = 0;
-    [SerializeField] public float speedMovement = 0;
-    [SerializeField] public float defense = 0;
-    [SerializeField] public float defenseMax = 0;
+    [SerializeField] private LayerMask raycastLayerMask = -1;
 
 
     private bool isCompletedMoveLeftStick = false;
@@ -31,6 +23,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_Speed = 12f;
 
     private bool bombAwaiting = false;
+    
     
 
     private void Awake()
@@ -69,8 +62,30 @@ public class ControllerPlayer : MonoBehaviour
     private async void BotonOeste(InputAction.CallbackContext obj)
     {
 
+        if(gameController.playerSePuedenMover == false) return;
         if (bombAwaiting == true) return;
 
+        //raycast para saber si estamos encima de que estamos..
+        var hit = Physics2D.OverlapBox(this.gameObject.transform.position, new Vector2(0, 0), 0, layerMask: raycastLayerMask);
+        if (hit.gameObject.tag == "fondo")
+        { 
+            return;
+        }
+
+        ////10ms tag
+        //var stop = System.Diagnostics.Stopwatch.StartNew();
+        //stop.Start();
+
+
+        //for(int i = 0; i < 1000000; ++i)
+        //{ 
+        
+        //    hit.gameObject.name = "amarillo";
+        
+        //}
+
+        //stop.Stop();
+        //print("tiempo=" + stop.Elapsed.TotalMilliseconds);
 
         gameController.HacerVibrarMando(obj.control.device.deviceId);
 
@@ -97,9 +112,12 @@ public class ControllerPlayer : MonoBehaviour
             gameController.canvasMenu[4].transform);
 
         bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+        bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
+        bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+        bomba.GetComponent<ControllerBomba>().controllerplayer = this;
         
         bombAwaiting = true;
-        await UniTask.Delay(TimeSpan.FromSeconds(bombCooldown));
+        await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
         bombAwaiting = false;
 
     }
@@ -107,71 +125,31 @@ public class ControllerPlayer : MonoBehaviour
     private void BotonSur(InputAction.CallbackContext obj)
     {
 
-
+        if(gameController.playerSePuedenMover == false) return;
 
     }
 
     private void ResetLeftStick(InputAction.CallbackContext obj)
     {
-       //isCompletedMoveLeftStick = false;
+        if(gameController.playerSePuedenMover == false) return;
        _inputs = Vector2.zero;
         
     }
 
     private void ControlLeftStick(InputAction.CallbackContext obj)
     {
-
+        if(gameController.playerSePuedenMover == false) return;
         _inputs = obj.ReadValue<Vector2>();
-        //CalculoMovimientoPlayer(_inputs);
 
     }
 
-
-    //private void CalculoMovimientoPlayer(Vector2 move)
-    //{ 
-
-    //    if (move.x <= -0.5f)
-    //    { 
-            
-    //        print("izq");
-    //        isCompletedMoveLeftStick = true;
-    //        //_inputs = Vector2.zero;
-
-    //        return;
-        
-    //    }
     
-    //    if (move.x >= 0.5f)
-    //    { 
-    //        print("der");
-    //        isCompletedMoveLeftStick = true;
-    //        //_inputs = Vector2.zero;
-    //        return;
-        
-    //    }
-
-    //    if (move.y <= -0.5f)
-    //    { 
-        
-    //        print("aba");
-    //        isCompletedMoveLeftStick = true;
-    //        return;
-    //    }
-    
-    //    if (move.y >= 0.5f)
-    //    { 
-    //        print("arr");
-    //        isCompletedMoveLeftStick = true;
-    //        return;
-        
-    //    }
 
 
-    
-    //}
 
     private void FixedUpdate()
     {
+        if(gameController.playerSePuedenMover == false) return;
         rigid.MovePosition(this.rigid.position + _inputs * m_Speed * Time.deltaTime);
         
     }
@@ -185,10 +163,24 @@ public class ControllerPlayer : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         
+        if(gameController.playerSePuedenMover == false) return;
+        if (collision.gameObject.tag == nombreColores.fondo.ToString())
+        { 
+            collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
+            switch(player.nombreColorPlayer)
+            {
+                case nombreColores.amarillo: gameController.bloquesAmarillos++; break;
+                case nombreColores.azul: gameController.bloquesAzules++; break;
+                case nombreColores.rojo: gameController.bloquesRojos++; break;
+                case nombreColores.blanco: gameController.bloquesBlancos++; break;
+            
+            }
+            //player.numerobloques++;
+            collision.gameObject.tag = player.nombreColorPlayer.ToString();
+        
+        }
 
-        collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
-
-
+        
     }
 
 }

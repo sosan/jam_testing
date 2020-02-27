@@ -662,13 +662,13 @@ public class ControllerElegirPersonaje : MonoBehaviour
     {
         ushort x = 0; 
         ushort y = 0;
-        
+        nombreColores nombrePlayerColor = nombreColores.None;
         switch (posicionLibre)
         {
-            case 0: x = 0; y = 2; break;
-            case 1: x = 5; y = 2; break;
-            case 2: x = 0; y = 0; break;
-            case 3: x = 5; y = 0; break;
+            case 0: x = 0; y = 2; nombrePlayerColor = nombreColores.amarillo; break;
+            case 1: x = 5; y = 2; nombrePlayerColor = nombreColores.azul; break;
+            case 2: x = 0; y = 0; nombrePlayerColor = nombreColores.rojo; break;
+            case 3: x = 5; y = 0; nombrePlayerColor = nombreColores.blanco; break;
             default: Debug.LogError("demasiados"); break;
 
         }
@@ -688,7 +688,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 bigSelectionPlayers[posicionLibre],
                 false,
                 false,
-                isBot
+                isBot,
+                nombrePlayerColor
 
             );
 
@@ -882,6 +883,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
         { 
             if (gameController.jugadores[i].listo == true)
             { 
+                                       
                 GameObject playerGo = GameObject.Instantiate(prefabPlayer, gameController.initialPlayerPositions[i].position, Quaternion.identity, gameController.canvasMenu[4].transform);
                 
 
@@ -902,6 +904,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
                 controllerplayer.colorPlayer = gameController.jugadores[i].colorPlayer;
 
+                //COLOCAMOS LOS COLORES DE CADA JUGADOR EN LA BARRA
+                gameController.barrasPuntuaje[i].color = gameController.jugadores[i].colorPlayer;
+
                 gameController.jugadores[i].playerGameObject = playerGo;
 
                 playerGo.GetComponent<ControllerPlayer>().gameController = gameController;
@@ -910,6 +915,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
             }
         
         }
+
+
+        gameController.InitGame();
 
 
 

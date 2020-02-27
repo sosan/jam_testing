@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bullet
+  - amarillo
+  - azul
+  - rojo
+  - blanco
+  - fondo
+  - limites
   layers:
   - Default
   - TransparentFX
