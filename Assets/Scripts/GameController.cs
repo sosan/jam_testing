@@ -87,7 +87,8 @@ public enum nombreColores
     rojo,
     blanco,
     None,
-    fondo
+    fondo,
+    hueco
 
 
 }
@@ -121,12 +122,19 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tiempoBatalla = null;
 
     private IDisposable crono = null;
+    private IDisposable spawnerpowerups = null;
 
     
     [SerializeField] private ushort TIEMPOMAXBATALLA = 180;
     private short tiempoCurrentBatalla = 180;
 
     [SerializeField] public GameObject prefabBomba = null;
+    [SerializeField] public GameObject prefabBullet = null;
+    [SerializeField] public GameObject prefabPowerup = null;
+    [SerializeField] public GameObject prefabDestroyer = null;
+
+    [SerializeField] public Transform[] positionsPowerups = null;
+
     [SerializeField] public Image[] barrasPuntuaje = null;
 
 
@@ -158,6 +166,8 @@ public class GameController : MonoBehaviour
     //[SerializeField] public nombreColores nombreColoresPlayers;
 
 
+
+
     private void Awake()
     {
 
@@ -171,17 +181,6 @@ public class GameController : MonoBehaviour
         
         }
 
-
-
-        //if (isDebug == true)
-        //{
-
-
-        //    //money.Value = 1000;
-        //    speed = 0.8f;
-
-
-        //}
 
         tiempoBatalla.text = Localization.Get("tiempo") + "00:00";
 
@@ -293,8 +292,8 @@ public class GameController : MonoBehaviour
       //    mainSfxInternal
       //);
         animaciones.Play("ready");
-        //EfectoReady();
         
+        SpawnerPowerups(40);
 
 
 
@@ -337,6 +336,7 @@ public class GameController : MonoBehaviour
     {
 
         playerSePuedenMover = true;
+        faseConcluida.Value = false;
         long binlocal = new DateTime(year:2019, month:1, day:1, hour:9, minute:0, second:0).ToBinary();
 
         crono = Observable.Timer(
@@ -358,6 +358,8 @@ public class GameController : MonoBehaviour
         {
 
             crono.Dispose();
+
+            faseConcluida.Value = true;
 
             tiempoBatalla.text = "";
             tiempoCurrentBatalla = 0;
@@ -390,95 +392,35 @@ public class GameController : MonoBehaviour
     
     }
 
+    public void SpawnerPowerups(ushort timeInSeconds)
+    {
 
-    //public void EfectoReady()
-    //{
+        spawnerpowerups = Observable
+        .Timer(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(timeInSeconds))
+        .TakeUntil(faseConcluida.Where(concluido => concluido == true))
+        .Subscribe(time =>
+        {
+            var rndPos = UnityEngine.Random.Range(0, positionsPowerups.Length);
+            var powerup = GameObject.Instantiate(prefabPowerup, positionsPowerups[rndPos].position, Quaternion.identity, canvasMenu[4].transform);
 
-    //    //FASE 1
-    //    ready.text = Localization.Get("listos"); // "READY?";
-    //    ready.fontSize = 300;
+            powerup.GetComponent<ControllerPowerup>().gameController = this;
+            
+            
 
-    //    Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
-    //    .Take(15)
-    //    .Subscribe(_ =>
-    //    {
-    //        ready.fontSize -= 20;
+        }
+        , ex => { Debug.Log(" OnError:" + ex.Message); spawnerpowerups.Dispose(); },
+        () => //completado
+        {
 
-    //    },
-    //    ex => { },
-    //    () =>
-    //    {
-    //        //FASE 2
-    //        ready.text = Localization.Get("go"); //"GO!";
-    //        ready.fontSize = 300;
+            //Debug.Log("barraprogreso disposed");
+            if (spawnerpowerups is null == false) spawnerpowerups.Dispose();
 
-    //        Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
-    //        .Take(15)
-    //        .Subscribe(y =>
-    //        {
-
-    //            ready.fontSize -= 20;
-
-    //        },
-    //        ex => { },
-    //        () =>
-    //        {
-    //            playerSePuedenMover = true;
-    //            IniciarCrono();
-
-
-    //        });
-
-
-    //    }).AddTo(this.gameObject);;
-
-
-
-    //}
-
-
-    //public void EfectoMisionFailed()
-    //{
-
-
-    //    //FASE 1
-    //    ready.text = Localization.Get("failed");
-    //    ready.fontSize = 10;
-
-    //    Observable.Timer(TimeSpan.FromMilliseconds(0), TimeSpan.FromMilliseconds(20))
-    //    .Take(40)
-    //    .Subscribe(_ =>
-    //    {
-
-
-    //        ready.fontSize += 3;
-
-
-    //    },
-    //    ex => { }, //error
-    //    () =>
-    //    {
-
-    //        ////FASE 2
-    //        //Observable.Timer(TimeSpan.FromSeconds(1))
-    //        //.Take(1)
-    //        //.Subscribe(y =>
-    //        //{
-    //        //    ready.text = "";
-                
-
-    //        //});
-
-
-             
-
-
-    //    }).AddTo(this.gameObject);
+        }).AddTo(this.gameObject);
 
 
 
 
-    //}
+    }
 
 
 

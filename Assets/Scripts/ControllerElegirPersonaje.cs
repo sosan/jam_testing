@@ -940,7 +940,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
                 if (hit is null == false)
                 { 
-                    playerGo.GetComponent<ControllerPlayer>().ProcesarColision(hit);
+                    playerGo.GetComponent<ControllerPlayer>().ProcesarColisionConFondo(hit);
                 }
                 
             

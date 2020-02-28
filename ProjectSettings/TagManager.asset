@@ -11,6 +11,8 @@ TagManager:
   - blanco
   - fondo
   - limites
+  - hueco
+  - powerup
   layers:
   - Default
   - TransparentFX
@@ -26,7 +28,7 @@ TagManager:
   - fondo
   - bomba
   - player_limites
-  - 
+  - powerup
   - 
   - 
   - 

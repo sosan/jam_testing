@@ -275,7 +275,6 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void MenuButtonPressedGamepad(InputAction.CallbackContext obj)
     {
-
         if (isBegun == true) return;
         
         if (gameController.canvasMenu[1].activeSelf == true)

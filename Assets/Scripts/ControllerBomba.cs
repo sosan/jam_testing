@@ -27,19 +27,21 @@ public class ControllerBomba : MonoBehaviour
     // Start is called before the first frame update
     private async void Start()
     {
-        var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(1, 1), 0, layerMask: raycastLayerMask);
-
-        //play explision
-        //explosion.Play();
-        //await UniTask.Delay(TimeSpan.FromSeconds(explosion.main.duration));
         
         await UniTask.Delay(TimeSpan.FromSeconds(timeExplode - 1));
         lerpingColor = true;
         
         await UniTask.Delay(TimeSpan.FromSeconds(1));
-
+        
+        var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(1, 1), 0, layerMask: raycastLayerMask);
         if (hits is null == false)
-        { 
+        {
+            
+            //play explision
+            //explosion.Play();
+            //await UniTask.Delay(TimeSpan.FromSeconds(explosion.main.duration));
+        
+
             for (ushort i = 0 ; i < hits.Length; i++)
             { 
             

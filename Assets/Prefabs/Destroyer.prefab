@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: c976538ed8afe5b499d86ada534cbd67, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9bbcd29b1d5c4954e971c00a0ac6fb05, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -91,11 +91,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7037171254683127493}
   - component: {fileID: 7037171254683127490}
-  - component: {fileID: 1530433564399128932}
+  - component: {fileID: 1845234355916992711}
   - component: {fileID: 7037171254683127491}
   - component: {fileID: 7037171254683127488}
   m_Layer: 12
-  m_Name: Bomba
+  m_Name: Destroyer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +166,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1530433564399128932
+--- !u!114 &1845234355916992711
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -175,18 +175,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7037171254683127489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0f66e68de5421446ad9397b11c4d481, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cce22ef40425ab4d85b99c436441baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   controllerplayer: {fileID: 0}
-  timeExplode: 2
+  timeExplode: 3
   explosion: {fileID: 0}
   ignoreTag: 
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 2048
   color: {r: 1, g: 1, b: 1, a: 1}
-  colorInicial: {r: 0.10980392, g: 0.35686275, b: 0.7176471, a: 1}
+  colorInicial: {r: 1, g: 1, b: 1, a: 1}
   cruz: {fileID: 8623637158823531572}
 --- !u!61 &7037171254683127491
 BoxCollider2D:
