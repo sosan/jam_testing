@@ -15,12 +15,13 @@ public class ControllerBomba : MonoBehaviour
     [SerializeField] public Color color = Color.white;
     [SerializeField] public Color colorInicial = Color.white;
     [SerializeField] public SpriteRenderer cruz = null;
-
+    [SerializeField] private Rigidbody2D rigid = null;
 
     private bool lerpingColor = false;
-
+    
     private float progresoLerp = 0;
     private float interpolateDuration = 0.2f;
+    private bool isExplosion = false;
 
 
 
@@ -28,11 +29,13 @@ public class ControllerBomba : MonoBehaviour
     private async void Start()
     {
         
+        isExplosion = false;
+
         await UniTask.Delay(TimeSpan.FromSeconds(timeExplode - 1));
         lerpingColor = true;
         
         await UniTask.Delay(TimeSpan.FromSeconds(1));
-        
+        isExplosion = true;
         var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(1, 1), 0, layerMask: raycastLayerMask);
         if (hits is null == false)
         {
@@ -44,7 +47,9 @@ public class ControllerBomba : MonoBehaviour
 
             for (ushort i = 0 ; i < hits.Length; i++)
             { 
-            
+                
+                if (hits[i].CompareTag("fondo") == false) continue;
+
                 hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
 
                 //restamos puntuacion al enemigo
@@ -150,6 +155,26 @@ public class ControllerBomba : MonoBehaviour
 
         }
 
+
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (explosion == true) return;
+
+        if (collision.CompareTag("Bullet") == true)
+        { 
+
+            rigid.isKinematic = false;
+            rigid.mass = 5;
+            var contact = collision.ClosestPoint(this.transform.position).normalized;
+            print(contact.ToString());
+            rigid.AddForce( new Vector2(-contact.normalized.x, 0) * 5f, ForceMode2D.Impulse);
+            rigid.isKinematic = true;
+
+
+        }
 
     }
 

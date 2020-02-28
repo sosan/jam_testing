@@ -44,8 +44,8 @@ public sealed class GameCharactersSettings : ScriptableObject
     [Header("[speed movement Characters]")]
     [SerializeField] public float[] speedMovement;
 
-    [Header("[Duration Shots Seconds Characters]")]
-    [SerializeField] public float[] durationShotSeconds;
+    [Header("[Shots Speed Characters]")]
+    [SerializeField] public float[] shootSpeed;
 
     [Header("[bomb cooldown Characters]")]
     [SerializeField] public float[] bombCooldown;

@@ -164,7 +164,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
             matrixCharacters[i].fireCooldown = gameCharactersSettings.fireCooldown[i];
             matrixCharacters[i].speedMovement = gameCharactersSettings.speedMovement[i];
-            matrixCharacters[i].durationShotSeconds = gameCharactersSettings.durationShotSeconds[i];
+            matrixCharacters[i].durationShotSeconds = gameCharactersSettings.shootSpeed[i];
             matrixCharacters[i].bombCooldown = gameCharactersSettings.bombCooldown[i];
          
 
@@ -915,7 +915,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 controllerplayer.fireCooldown = configplayer.fireCooldown;
                 controllerplayer.speedMovement = configplayer.speedMovement;
                 controllerplayer.powerDamage = configplayer.power;
-                controllerplayer.durationShotSeconds = configplayer.durationShotSeconds;
+                controllerplayer.shotSpeed = configplayer.durationShotSeconds;
                 //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
                 controllerplayer.bombCooldown = configplayer.bombCooldown;
                 controllerplayer.defense = configplayer.defense;

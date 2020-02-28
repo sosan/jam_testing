@@ -25,6 +25,8 @@ public class ControllerPlayer : MonoBehaviour
     private float m_MovementInputValue; 
     private Vector2 _inputs = Vector2.zero;
     public float m_Speed = 12f;
+    //[SerializeField] private float shotSpeed = 20f;
+    private bool isFireCooldown = false;
 
     private bool bombAwaiting = false;
     [HideInInspector] public bool isDestroyer = false;
@@ -169,20 +171,44 @@ public class ControllerPlayer : MonoBehaviour
 
   
 
-    private void BotonSur(InputAction.CallbackContext obj)
+    private async void BotonSur(InputAction.CallbackContext obj)
     {
         //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
+        if (isFireCooldown == true) return;
 
 
         //si mira pa la derecha o pa la izquierda?
+        //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+
+        Vector2 direction = Vector2.zero;
+
+        if (_inputs.x >= 0f)
+        { 
+            direction = new Vector2(0.5f, 0); 
+        
+        }
+        else
+        { 
+            direction = new Vector2(-0.5f, 0);
+        
+        }
+
+
 
         GameObject bullet = GameObject.Instantiate(gameController.prefabBullet, 
-            new Vector3(thistransform.position.x + 0.5f, thistransform.position.y, thistransform.position.z),
-            Quaternion.identity,
+            new Vector3(thistransform.position.x + direction.x, thistransform.position.y, thistransform.position.z),
+            Quaternion.AngleAxis(0, Vector3.forward),
             gameController.canvasMenu[4].transform );
 
+        
+        bullet.GetComponent<Rigidbody2D>().velocity = direction * player.shotSpeed;
+
+        isFireCooldown = true;
+        await UniTask.Delay(TimeSpan.FromSeconds(player.fireCooldown));
+        isFireCooldown = false;
 
 
     }
@@ -202,6 +228,18 @@ public class ControllerPlayer : MonoBehaviour
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
         _inputs = obj.ReadValue<Vector2>();
+
+        //if (_inputs.x >= 0.5f)
+        //{ 
+        //    spritePlayer.flipX = false;
+        
+        //}
+        
+        //if (_inputs.x <= -0.5f)
+        //{ 
+        //    spritePlayer.flipX = true;
+        
+        //}
 
     }
 

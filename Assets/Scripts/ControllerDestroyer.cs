@@ -33,16 +33,19 @@ public class ControllerDestroyer : MonoBehaviour
         
         await UniTask.Delay(TimeSpan.FromSeconds(1));
         
-        var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(1, 1), 0, layerMask: raycastLayerMask);
+        var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(2, 2), 0, layerMask: raycastLayerMask);
         if (hits is null == false)
         {
             
             //play explision
             //explosion.Play();
             //await UniTask.Delay(TimeSpan.FromSeconds(explosion.main.duration));
+            //List<Transform> listadoObjetosBorrar = new List<Transform>();
 
             for (ushort i = 0 ; i < hits.Length; i++)
             { 
+
+                print("hit name=" + hits[i].name + " tag=" + hits[i].tag );
                 if (hits[i].CompareTag("amarillo") == true ||  hits[i].CompareTag("azul") == true ||
                     hits[i].CompareTag("rojo") == true || hits[i].CompareTag("blanco") == true
                     )
@@ -56,45 +59,69 @@ public class ControllerDestroyer : MonoBehaviour
                 if (hits[i].CompareTag("Player") == true)
                 { 
                 }
-            
-                if (hits[i].CompareTag("powerup") == true || hits[i].CompareTag("bomba") == true || hits[i].CompareTag("Bullet") == true )
+                
+                //tienen hijos
+                if (hits[i].CompareTag("powerup") == true || hits[i].CompareTag("bomba") == true || hits[i].CompareTag("Bullet") == true)
                 {
-                    
-                    DestruirObjeto(hits[i].transform);
+                    Destroy(hits[i].gameObject);
+                    //hits[i].gameObject.SetActive(false);                   
+                    //DestruirObjetoConHijos(hits[i].transform);
                 }
 
-            
+
+                //if ()
+                //{ 
+                //    print("destruir bullet");
+                //    //listadoObjetosBorrar.Add(hits[i].transform);
+
+                //    //hits[i].gameObject.SetActive(false);
+                //    Destroy(hits[i].gameObject);
+
+                //}
+
+
             }
+
+            //controllerplayer.gameController.DestruirObjeto(listadoObjetosBorrar);
         
         }
 
-        DestruirObjeto(this.gameObject.transform);
+
+
+        //DestruirObjetoConHijos(this.gameObject.transform);
 
         //Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
         //for (ushort i = 0; i < childrens.Length; i++)
         //{ 
         //    Destroy(childrens[i].gameObject);
-        
+
         //}
 
-        //Destroy(this.gameObject);
-        
+        Destroy(this.gameObject);
+
     }
 
 
-    private void DestruirObjeto(Transform objeto)
-    { 
-        Transform[] childrens = objeto.GetComponentsInChildren<Transform>();
-        for (ushort i = 0; i < childrens.Length; i++)
-        { 
-            Destroy(childrens[i].gameObject);
-        
-        }
+    //private void DestruirObjetoConHijos(Transform objeto)
+    //{
+    //    Transform[] childrens = objeto.GetComponentsInChildren<Transform>();
+    //    for (ushort i = 0; i < childrens.Length; i++)
+    //    {
 
-        Destroy(objeto.gameObject);
-    
-    
-    }
+    //        childrens[i].gameObject.SetActive(false);
+    //        Destroy(childrens[i].gameObject);
+
+    //    }
+
+    //    //await UniTask.Delay(TimeSpan.FromSeconds(1));
+    //    if (objeto is null == false)
+    //    { 
+    //        Destroy(objeto.gameObject);
+    //    }
+
+
+
+    //}
 
 
 

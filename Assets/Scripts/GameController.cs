@@ -45,7 +45,7 @@ public class InfoPlayer
     public float fireCooldown = 0;
     public float speedMovement = 0;
     public float powerDamage = 0;
-    public float durationShotSeconds = 0;
+    public float shotSpeed = 0;
     public float bombCooldown = 0;
     public float defense = 0;
     public float defenseMax = 0;
@@ -425,7 +425,34 @@ public class GameController : MonoBehaviour
     }
 
 
+    public void DestruirObjeto(List<Transform> objeto)
+    { 
+        
+        
+        for(ushort i =0 ; i < objeto.Count; i++)
+        { 
+            print("destruir");
+            Destroy(objeto[i].gameObject);
+        
+        
+        }
 
+        //Transform[] childrens = objeto.GetComponentsInChildren<Transform>();
+        //for (ushort i = 0; i < childrens.Length; i++)
+        //{
+            
+        //    childrens[i].gameObject.SetActive(false);
+        //    Destroy(childrens[i].gameObject);
+
+        //}
+
+        //if (objeto is null == false)
+        //{ 
+        //    Destroy(objeto.gameObject);
+        //}
+    
+    
+    }
 
 
   

@@ -215,6 +215,7 @@ MonoBehaviour:
   colorDestino: {r: 1, g: 1, b: 1, a: 1}
   spritePlayer: {fileID: 5276470758355568190}
   m_Speed: 5
+  shotSpeed: 15
   isDestroyer: 0
 --- !u!50 &4462778762192266002
 Rigidbody2D:
