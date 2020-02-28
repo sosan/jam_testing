@@ -158,7 +158,7 @@ public class ControllerPlayer : MonoBehaviour
        
         
         bombAwaiting = true;
-        print("player cooldown=" + player.bombCooldown);
+        //print("player cooldown=" + player.bombCooldown);
         await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
         bombAwaiting = false;
 
