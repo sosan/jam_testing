@@ -54,7 +54,7 @@ public class ControllerBomba : MonoBehaviour
         try
         { 
             isExplosion = true;
-            var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(1, 1), 0, layerMask: raycastLayerMask);
+            var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(2, 2), 0, layerMask: raycastLayerMask);
             if (hits is null == false)
             {
             

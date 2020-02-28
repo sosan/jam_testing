@@ -164,7 +164,7 @@ public class GameController : MonoBehaviour
     private ushort NUM_BLOQUES = 145;
     
     //[SerializeField] public nombreColores nombreColoresPlayers;
-
+    public bool[] casillasOcupadasPowerup = new bool[5];
 
 
 
@@ -180,6 +180,14 @@ public class GameController : MonoBehaviour
             barrasPuntuaje[i].fillAmount = 0.1f;
         
         }
+
+        for (ushort i = 0; i< casillasOcupadasPowerup.Length; i++)
+        { 
+            casillasOcupadasPowerup[i] = false;
+        
+        }
+
+
 
 
         tiempoBatalla.text = Localization.Get("tiempo") + "00:00";
@@ -394,6 +402,7 @@ public class GameController : MonoBehaviour
     
     }
 
+    private ushort contadorPosicionPowerups = 0;
     public void SpawnerPowerups(ushort timeInSeconds)
     {
 
@@ -402,11 +411,31 @@ public class GameController : MonoBehaviour
         .TakeUntil(faseConcluida.Where(concluido => concluido == true))
         .Subscribe(time =>
         {
-            var rndPos = UnityEngine.Random.Range(0, positionsPowerups.Length);
-            var powerup = GameObject.Instantiate(prefabPowerup, positionsPowerups[rndPos].position, Quaternion.identity, canvasMenu[4].transform);
+
+            
+            var powerup = GameObject.Instantiate(prefabPowerup, 
+                positionsPowerups[contadorPosicionPowerups].position, 
+                Quaternion.identity, 
+                canvasMenu[4].transform);
+            
+            casillasOcupadasPowerup[contadorPosicionPowerups] = true;
+
+            if (positionsPowerups[contadorPosicionPowerups].CompareTag("hueco") == true)
+            { 
+                
+            }
+
 
             powerup.GetComponent<ControllerPowerup>().gameController = this;
+            contadorPosicionPowerups++;
+
+            //var rndPos = UnityEngine.Random.Range(0, positionsPowerups.Length);
+
+            //if (casillasOcupadasPowerup[rndPos] == false)
+            //{ 
             
+
+            //}
             
 
         }
