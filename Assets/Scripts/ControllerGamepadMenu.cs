@@ -347,14 +347,6 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
 
-        ////credits
-        //if (gameController.canvasMenu[3].activeSelf == true)
-        //{
-
-        //    BotonExitCreditsGamepad();
-
-
-        //}
 
 
     }
@@ -877,12 +869,12 @@ public class ControllerGamepadMenu : MonoBehaviour
     
     public void EnterHoverEnterGame()
     {
-        if (isBegun == true) return;
+        //if (isBegun == true) return;
 
-        textos[0].color = selectedColor;
+        //textos[0].color = selectedColor;
         
-        contMenuPosition = 0;
-        ShowPositionMenuWithGamePad();
+        //contMenuPosition = 0;
+        //ShowPositionMenuWithGamePad();
 
     }
 
@@ -890,9 +882,9 @@ public class ControllerGamepadMenu : MonoBehaviour
     public void ExitHoverEnterGame()
     {
 
-        if (isBegun == true) return;
-        textos[0].color = notSelectedColor;
-        bola_seleccion.gameObject.SetActive(false);
+        //if (isBegun == true) return;
+        //textos[0].color = notSelectedColor;
+        //bola_seleccion.gameObject.SetActive(false);
 
     }
 
@@ -901,18 +893,18 @@ public class ControllerGamepadMenu : MonoBehaviour
     public void EnterHoverOptions()
     {
 
-        if (isBegun == true) return;
-        textos[1].color = selectedColor;
-        contMenuPosition = 1;
-        ShowPositionMenuWithGamePad();
+        //if (isBegun == true) return;
+        //textos[1].color = selectedColor;
+        //contMenuPosition = 1;
+        //ShowPositionMenuWithGamePad();
     }
 
 
     public void ExitHoverOptions()
     {
-        if (isBegun == true) return;
-        textos[1].color = notSelectedColor;
-        bola_seleccion.gameObject.SetActive(false);
+        //if (isBegun == true) return;
+        //textos[1].color = notSelectedColor;
+        //bola_seleccion.gameObject.SetActive(false);
 
     }
 
@@ -934,18 +926,18 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     public void EnterHoverExit()
     {
-        if (isBegun == true) return;
-        textos[2].color = selectedColor;
-        contMenuPosition = 2;
-        ShowPositionMenuWithGamePad();
+        //if (isBegun == true) return;
+        //textos[2].color = selectedColor;
+        //contMenuPosition = 2;
+        //ShowPositionMenuWithGamePad();
     }
 
 
     public void ExitHoverExit()
     {
-        if (isBegun == true) return;
-        textos[2].color = notSelectedColor;
-        bola_seleccion.gameObject.SetActive(false);
+        //if (isBegun == true) return;
+        //textos[2].color = notSelectedColor;
+        //bola_seleccion.gameObject.SetActive(false);
 
     }
 
@@ -1162,22 +1154,22 @@ public class ControllerGamepadMenu : MonoBehaviour
     public async void ShowExit()
     {
 
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-            );
+//        MusicController.MusicInstance.PlayFXSound(
+//            MusicController.MusicInstance.sfx[1]
+//            );
 
-        ShowPositionMenu(3);
-        //ShowFX(-34, -126);
-        ShowFX(positionTransformparticles[2].anchoredPosition);
-        await UniTask.Delay(400);
+//        ShowPositionMenu(3);
+//        //ShowFX(-34, -126);
+//        ShowFX(positionTransformparticles[2].anchoredPosition);
+//        await UniTask.Delay(400);
 
 
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+//#if UNITY_EDITOR
+//        UnityEditor.EditorApplication.isPlaying = false;
 
-#elif UNITY_STANDALONE
-        Application.Quit();
-#endif
+//#elif UNITY_STANDALONE
+//        Application.Quit();
+//#endif
 
     }
 
@@ -1199,20 +1191,20 @@ public class ControllerGamepadMenu : MonoBehaviour
     public void ClickedEnterGame()
     {
 
-        if (isBegun == true) return;
+        //if (isBegun == true) return;
 
-        print("entramos por click");
-        isBegun = true;
-        descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
+        //print("entramos por click");
+        //isBegun = true;
+        //descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
 
 
-        ShowPositionMenu(0);
-        //MusicController.MusicInstance.PlayFXSound(
-        //    MusicController.MusicInstance.sfx[1]
-        //    );
+        //ShowPositionMenu(0);
+        ////MusicController.MusicInstance.PlayFXSound(
+        ////    MusicController.MusicInstance.sfx[1]
+        ////    );
         
-        //ShowFX(positionTransformparticles[0].anchoredPosition);
-        ShowElegirPersonaje();
+        ////ShowFX(positionTransformparticles[0].anchoredPosition);
+        //ShowElegirPersonaje();
 
 
     }
@@ -1261,7 +1253,7 @@ public class ControllerGamepadMenu : MonoBehaviour
             MusicController.MusicInstance.sfx[1]
         );
 
-            MusicController.MusicInstance.Mute();
+        MusicController.MusicInstance.Mute();
         if (isMutedInternal == true)
         {
             textosOptions[0].text = "ON";
@@ -1293,7 +1285,7 @@ public class ControllerGamepadMenu : MonoBehaviour
             MusicController.MusicInstance.sfx[1]
             );
 
-            MusicController.MusicInstance.Mute();
+        MusicController.MusicInstance.Mute();
         if (isMutedInternal == true)
         {
             textosOptions[0].text = "ON";
@@ -1304,7 +1296,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         }
 
 
-        
+
 
 
         DeColorOptions(0);
@@ -1627,28 +1619,28 @@ public class ControllerGamepadMenu : MonoBehaviour
     public async void BotonExitOptions()
     {
 
-        SavePlayerPrefsValues();
+        //SavePlayerPrefsValues();
 
-        ShowFXOptions(0, -249);
+        //ShowFXOptions(0, -249);
 
-        DeColorOptionsReset(5);
+        //DeColorOptionsReset(5);
 
-        MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-            );
+        //MusicController.MusicInstance.PlayFXSound(
+        //    MusicController.MusicInstance.sfx[1]
+        //    );
 
 
-        await UniTask.Delay(500);
-        DisableCanvas();
+        //await UniTask.Delay(500);
+        //DisableCanvas();
 
-        contMenuPosition = 0;
-        contOptionsPosition = 0;
-        //ShowPositionMenu();
-        ShowPositionMenuWithGamePad();
+        //contMenuPosition = 0;
+        //contOptionsPosition = 0;
+        ////ShowPositionMenu();
+        //ShowPositionMenuWithGamePad();
 
-        descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
-        gameController.canvasMenu[1].SetActive(true);
-        //mar.SetActive(true);
+        //descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
+        //gameController.canvasMenu[1].SetActive(true);
+        ////mar.SetActive(true);
 
     }
 

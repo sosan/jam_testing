@@ -183,11 +183,12 @@ public class ControllerPlayer : MonoBehaviour
         
     }
 
-    public void ProcesarColision(Collider2D collision)
+    public async void ProcesarColision(Collider2D collision)
     {
         
         if (collision.gameObject.tag == nombreColores.fondo.ToString())
         { 
+            await UniTask.Delay(TimeSpan.FromMilliseconds(250));
             collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
             switch(player.nombreColorPlayer)
             {
