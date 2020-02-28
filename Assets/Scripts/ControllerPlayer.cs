@@ -175,7 +175,13 @@ public class ControllerPlayer : MonoBehaviour
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playerSePuedenMover == false) return;
 
-        GameObject bullet = GameObject.Instantiate(gameController.prefabBullet, thistransform.position, Quaternion.identity, gameController.canvasMenu[4].transform );
+
+        //si mira pa la derecha o pa la izquierda?
+
+        GameObject bullet = GameObject.Instantiate(gameController.prefabBullet, 
+            new Vector3(thistransform.position.x + 0.5f, thistransform.position.y, thistransform.position.z),
+            Quaternion.identity,
+            gameController.canvasMenu[4].transform );
 
 
 

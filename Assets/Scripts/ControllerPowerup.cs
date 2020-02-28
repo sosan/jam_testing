@@ -11,7 +11,7 @@ public class ControllerPowerup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigid = this.gameObject.GetComponent<Rigidbody2D>();
     }
 
 

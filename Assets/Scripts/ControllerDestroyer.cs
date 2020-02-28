@@ -43,27 +43,60 @@ public class ControllerDestroyer : MonoBehaviour
 
             for (ushort i = 0 ; i < hits.Length; i++)
             { 
-            
-                hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = Color.black;
-                hits[i].transform.tag = nombreColores.hueco.ToString();
+                if (hits[i].CompareTag("amarillo") == true ||  hits[i].CompareTag("azul") == true ||
+                    hits[i].CompareTag("rojo") == true || hits[i].CompareTag("blanco") == true
+                    )
+                { 
+                    hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = Color.black;
+                    hits[i].transform.tag = nombreColores.hueco.ToString();
 
                 
+                }
+
+                if (hits[i].CompareTag("Player") == true)
+                { 
+                }
+            
+                if (hits[i].CompareTag("powerup") == true || hits[i].CompareTag("bomba") == true || hits[i].CompareTag("Bullet") == true )
+                {
+                    
+                    DestruirObjeto(hits[i].transform);
+                }
 
             
             }
         
         }
 
-        Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
+        DestruirObjeto(this.gameObject.transform);
+
+        //Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
+        //for (ushort i = 0; i < childrens.Length; i++)
+        //{ 
+        //    Destroy(childrens[i].gameObject);
+        
+        //}
+
+        //Destroy(this.gameObject);
+        
+    }
+
+
+    private void DestruirObjeto(Transform objeto)
+    { 
+        Transform[] childrens = objeto.GetComponentsInChildren<Transform>();
         for (ushort i = 0; i < childrens.Length; i++)
         { 
             Destroy(childrens[i].gameObject);
         
         }
 
-        Destroy(this.gameObject);
-        
+        Destroy(objeto.gameObject);
+    
+    
     }
+
+
 
     private void Update()
     {

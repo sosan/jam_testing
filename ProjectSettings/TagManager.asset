@@ -13,6 +13,8 @@ TagManager:
   - limites
   - hueco
   - powerup
+  - bomba
+  - destroyer
   layers:
   - Default
   - TransparentFX
@@ -29,7 +31,7 @@ TagManager:
   - bomba
   - player_limites
   - powerup
-  - 
+  - destroyer
   - 
   - 
   - 

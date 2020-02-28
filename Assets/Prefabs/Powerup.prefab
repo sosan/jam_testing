@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameController: {fileID: 0}
+  rigid: {fileID: 0}
 --- !u!61 &1204190205313220878
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -157,7 +158,7 @@ GameObject:
   - component: {fileID: 5483624991149710897}
   m_Layer: 14
   m_Name: powerup_cruz
-  m_TagString: Untagged
+  m_TagString: powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
