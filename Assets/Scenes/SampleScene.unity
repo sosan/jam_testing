@@ -16129,7 +16129,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ShowOptions
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -16144,7 +16144,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: EnterHoverOptions
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -16159,7 +16159,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ExitHoverOptions
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -21911,7 +21911,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ShowExit
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -21926,7 +21926,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: EnterHoverExit
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -21941,7 +21941,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ExitHoverExit
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -24014,7 +24014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1791492665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26024,7 +26024,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ClickedEnterGame
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -26039,7 +26039,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: EnterHoverEnterGame
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -26054,7 +26054,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 464611536}
-          m_MethodName: ExitHoverEnterGame
+          m_MethodName: 
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -42955,7 +42955,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1715998528, guid: 578cacb5918ca07409793b5cd33f7440, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5539434521484033399, guid: 578cacb5918ca07409793b5cd33f7440,
         type: 3}
@@ -43055,7 +43055,7 @@ PrefabInstance:
     - target: {fileID: 5539434522292422250, guid: 578cacb5918ca07409793b5cd33f7440,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5539434522292422294, guid: 578cacb5918ca07409793b5cd33f7440,
         type: 3}
