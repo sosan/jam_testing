@@ -926,6 +926,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
                 playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
                 controllerplayer.colorPlayer = gameController.jugadores[i].colorPlayer;
+                
+                playerGo.GetComponent<ControllerPlayer>().colorInicial = Color.black;
+                playerGo.GetComponent<ControllerPlayer>().colorDestino = gameController.jugadores[i].colorPlayer;
+                playerGo.GetComponent<ControllerPlayer>().spritePlayer.color = gameController.jugadores[i].colorPlayer;
+
 
                 //COLOCAMOS LOS COLORES DE CADA JUGADOR EN LA BARRA
                 gameController.barrasPuntuaje[i].color = gameController.jugadores[i].colorPlayer;

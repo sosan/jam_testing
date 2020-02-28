@@ -291,9 +291,11 @@ public class GameController : MonoBehaviour
       //    mainSoundInternal,
       //    mainSfxInternal
       //);
+
+        ready.text = Localization.Get("listos");
         animaciones.Play("ready");
         
-        SpawnerPowerups(40);
+        SpawnerPowerups(20); //40
 
 
 

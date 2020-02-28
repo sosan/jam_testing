@@ -25,7 +25,7 @@ public class ControllerPowerup : MonoBehaviour
         
         }
 
-        if (collision.CompareTag("bullet"))
+        if (collision.CompareTag("Bullet"))
         { 
         
             //empujar

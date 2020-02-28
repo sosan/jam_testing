@@ -24,7 +24,7 @@ TagManager:
   - 
   - limites
   - player
-  - fire
+  - bullet
   - fondo
   - bomba
   - player_limites

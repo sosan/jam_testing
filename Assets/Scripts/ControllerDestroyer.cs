@@ -54,11 +54,14 @@ public class ControllerDestroyer : MonoBehaviour
         
         }
 
+        Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
+        for (ushort i = 0; i < childrens.Length; i++)
+        { 
+            Destroy(childrens[i].gameObject);
+        
+        }
 
         Destroy(this.gameObject);
-        
-        //Destroy(this.gameObject, timeExplode);
-        
         
     }
 

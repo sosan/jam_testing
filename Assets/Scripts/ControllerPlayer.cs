@@ -36,8 +36,6 @@ public class ControllerPlayer : MonoBehaviour
     {
         rigid = this.GetComponent<Rigidbody2D>();
         thistransform = this.gameObject.transform;
-        colorInicial = player.colorPlayer;
-        spritePlayer.color = player.colorPlayer;
         
     }
 
