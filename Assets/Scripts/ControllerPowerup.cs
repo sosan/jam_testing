@@ -21,6 +21,15 @@ public class ControllerPowerup : MonoBehaviour
         if (collision.CompareTag("Player"))
         { 
             collision.gameObject.GetComponent<ControllerPlayer>().isDestroyer = true;
+
+            Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
+            for (ushort i = 0; i < childrens.Length; i++)
+            { 
+                Destroy(childrens[i].gameObject);
+        
+            }
+
+
             Destroy(this.gameObject);
         
         }
