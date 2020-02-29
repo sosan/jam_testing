@@ -5821,6 +5821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8d515ff337bc540a6f83073a6cde3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  elegirPersonaje: {fileID: 994474771}
   canvasMenu:
   - {fileID: 1285542576}
   - {fileID: 1791492664}
@@ -5867,6 +5868,7 @@ MonoBehaviour:
   texto_fase2: go
   casillasOcupadasPowerup: 00000000
   lobbyClientPun: {fileID: 516267974}
+  isOnline: 0
 --- !u!1 &400123555
 GameObject:
   m_ObjectHideFlags: 0
@@ -13532,6 +13534,8 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   prefabPlayer: {fileID: 5276470758355568189, guid: 69114681ed8433046b058cae61b72f74,
+    type: 3}
+  playerPrefabOnline: {fileID: 5276470758355568189, guid: 0776022843f71b042baaade661128c26,
     type: 3}
   initialPositionInstantiation: []
   namePlayers:
