@@ -27,3 +27,6 @@ listos,PREPARADOS!,READY!
 go,YA!!!,GO!!!
 failed,FALLO!,FAILED!
 winner,GANADOR!,WINNER!
+disabled,DESACTIVADO,DISABLED
+explicaciona,PULSA A <color=#1C5BB7>ELEGIR</color> / <color=green>LISTO</color>,PRESS A <color=#1C5BB7>SELECT</color> / <color=green>READY</color>
+explicacionb,PULSA B <color=red>CANCELAR</color>,PRES B <color=red>CANCEL</color>

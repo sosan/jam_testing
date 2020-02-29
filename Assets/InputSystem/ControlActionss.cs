@@ -67,6 +67,22 @@ namespace InControlActions
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NorteButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""3db8905a-88ae-4eec-98fc-71c1b8b84846"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""WestButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""1fb89e83-5d80-415a-9a0c-fc3a027af173"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -190,6 +206,28 @@ namespace InControlActions
                     ""action"": ""MovementMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d9fe3fe1-b93e-40bf-9c2f-2003911cfc7a"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NorteButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3023d43-7bd5-499b-9f2b-4648f8f3d674"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WestButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -204,6 +242,8 @@ namespace InControlActions
             m_Menu_Buttons = m_Menu.FindAction("Buttons", throwIfNotFound: true);
             m_Menu_ExitButton = m_Menu.FindAction("ExitButton", throwIfNotFound: true);
             m_Menu_MovementMouse = m_Menu.FindAction("MovementMouse", throwIfNotFound: true);
+            m_Menu_NorteButton = m_Menu.FindAction("NorteButton", throwIfNotFound: true);
+            m_Menu_WestButton = m_Menu.FindAction("WestButton", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -259,6 +299,8 @@ namespace InControlActions
         private readonly InputAction m_Menu_Buttons;
         private readonly InputAction m_Menu_ExitButton;
         private readonly InputAction m_Menu_MovementMouse;
+        private readonly InputAction m_Menu_NorteButton;
+        private readonly InputAction m_Menu_WestButton;
         public struct MenuActions
         {
             private @ControlActions m_Wrapper;
@@ -269,6 +311,8 @@ namespace InControlActions
             public InputAction @Buttons => m_Wrapper.m_Menu_Buttons;
             public InputAction @ExitButton => m_Wrapper.m_Menu_ExitButton;
             public InputAction @MovementMouse => m_Wrapper.m_Menu_MovementMouse;
+            public InputAction @NorteButton => m_Wrapper.m_Menu_NorteButton;
+            public InputAction @WestButton => m_Wrapper.m_Menu_WestButton;
             public InputActionMap Get() { return m_Wrapper.m_Menu; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -296,6 +340,12 @@ namespace InControlActions
                     @MovementMouse.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnMovementMouse;
                     @MovementMouse.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnMovementMouse;
                     @MovementMouse.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnMovementMouse;
+                    @NorteButton.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnNorteButton;
+                    @NorteButton.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnNorteButton;
+                    @NorteButton.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnNorteButton;
+                    @WestButton.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnWestButton;
+                    @WestButton.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnWestButton;
+                    @WestButton.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnWestButton;
                 }
                 m_Wrapper.m_MenuActionsCallbackInterface = instance;
                 if (instance != null)
@@ -318,6 +368,12 @@ namespace InControlActions
                     @MovementMouse.started += instance.OnMovementMouse;
                     @MovementMouse.performed += instance.OnMovementMouse;
                     @MovementMouse.canceled += instance.OnMovementMouse;
+                    @NorteButton.started += instance.OnNorteButton;
+                    @NorteButton.performed += instance.OnNorteButton;
+                    @NorteButton.canceled += instance.OnNorteButton;
+                    @WestButton.started += instance.OnWestButton;
+                    @WestButton.performed += instance.OnWestButton;
+                    @WestButton.canceled += instance.OnWestButton;
                 }
             }
         }
@@ -330,6 +386,8 @@ namespace InControlActions
             void OnButtons(InputAction.CallbackContext context);
             void OnExitButton(InputAction.CallbackContext context);
             void OnMovementMouse(InputAction.CallbackContext context);
+            void OnNorteButton(InputAction.CallbackContext context);
+            void OnWestButton(InputAction.CallbackContext context);
         }
     }
 }

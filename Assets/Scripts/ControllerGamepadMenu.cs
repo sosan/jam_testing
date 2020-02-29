@@ -78,7 +78,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void OnEnable()
     {
 
-        inputActions.Enable();
+       
 
     }
 
@@ -143,6 +143,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         contMenuPosition = 0;
 
         ShowPositionMenuWithGamePad();
+        inputActions.Enable();
 
     }
 
@@ -291,7 +292,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         {
 
             gameController.HacerVibrarMando(obj.control.device.deviceId);
-
+            
             switch (contMenuPosition)
             {
 
@@ -889,7 +890,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void ShowInitGameGamepad(bool online)
     {
-
+        print("online0" + online);
         if (isBegun == true) return;
         isBegun = true;
 
@@ -908,6 +909,10 @@ public class ControllerGamepadMenu : MonoBehaviour
 # if UNITY_EDITOR
         print("entramos por gamepad");
 # endif
+
+
+
+
         ShowElegirPersonaje(online: online);
 
 
@@ -1120,13 +1125,33 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(duration * 1000));
 
+        print("online=" + online);
+        if (online == true)
+        {
+            elegirPersonaje.entrada_txt[0].text = Localization.Get("pulsaboton");
+
+            //si es online ocultamos los menus
+            for(ushort i = 1; i < elegirPersonaje.entrada_txt.Length; i++)
+            { 
+                elegirPersonaje.entrada_txt[i].text = Localization.Get("disabled");
+            
+            }
+
+            
+            
+        
+        }
+
         DisableCanvas();
 
 
-
-        //print("Show initgame");
+        
 
         gameController.canvasMenu[3].SetActive(true);
+
+
+
+
         elegirPersonaje.InitActions(online: online);
 
         //gameController.InitGame();

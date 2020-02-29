@@ -52,6 +52,22 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "NorteButton",
+                    "type": "Button",
+                    "id": "3db8905a-88ae-4eec-98fc-71c1b8b84846",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "WestButton",
+                    "type": "Button",
+                    "id": "1fb89e83-5d80-415a-9a0c-fc3a027af173",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -173,6 +189,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "MovementMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d9fe3fe1-b93e-40bf-9c2f-2003911cfc7a",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NorteButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d3023d43-7bd5-499b-9f2b-4648f8f3d674",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WestButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -44,7 +44,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     [SerializeField] private GameObject[] listoMensaje = null;
 
     public Image[] mandosImage;
-    public GameObject[] entrada_txt = null;
+    public TextMeshProUGUI[] entrada_txt = null;
     public Sprite[] prefabMandosImage;
 
 
@@ -83,21 +83,15 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public GameObject[] initialPlayerPosition = null;
 
     public MatrixCharacters[] matrixCharacters = null;
-    //private MatrixCharacters playerKeyboardLastTaken = null;
 
     public Image[] recuadros = null;
     
 
     private bool isCompletedMoveRightStick = false;
     private bool isCompletedMoveLeftStick = false;
+    private bool isOnline = false;
 
-    //private void OnEnable()
-    //{
 
-    //    //inputActions.Enable();
-        
-
-    //}
 
     private void OnDisable()
     {
@@ -109,20 +103,20 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     }
 
-
+    //bool isInsertingCharacter = true;
 
     private void Awake()
     {
 
-        //lstick.StateThreshold = 0.1f; //0.5f
-        //rstick.StateThreshold = 0.1f;
-        //dpad.StateThreshold = 0.5f;
         inputActions = new ControlActions();
         inputActions.Menu.Dpad.performed += ControlDpad;
 
         inputActions.Menu.Buttons.performed += BotonSur;
+        inputActions.Menu.WestButton.performed += BotonSur;
+        
         inputActions.Menu.ExitButton.performed += ButtonExit;
-
+        inputActions.Menu.NorteButton.performed += ButtonExit;
+        
         inputActions.Menu.LeftStick.performed += ControlLeftStick;
         inputActions.Menu.LeftStick.canceled += ResetLeftStick;
 
@@ -134,7 +128,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
         { 
             panel_players[i].SetActive(false);
             focusPlayers[i].SetActive(false);
-            entrada_txt[i].SetActive(true);
+            entrada_txt[i].text = Localization.Get("pulsaboton");
+            entrada_txt[i].gameObject.SetActive(true);
+            
             focusPlayers[i].SetActive(false);
             recuadros[i].color = Color.white;
             listoMensaje[i].SetActive(false);
@@ -168,22 +164,6 @@ public class ControllerElegirPersonaje : MonoBehaviour
             matrixCharacters[i].bombCooldown = gameCharactersSettings.bombCooldown[i];
          
 
-
-            /*
-              controllerplayer.fireCooldown = configplayer.;
-                controllerplayer.speedMovement = configplayer.;
-                controllerplayer.powerDamage = configplayer.power;
-                controllerplayer.durationShotSeconds = configplayer.;
-                //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
-                controllerplayer.bombCooldown = configplayer.;
-                controllerplayer.defense = configplayer.defense;
-                controllerplayer.defenseMax = configplayer.defenseMax;
-             
-             */
-
-
-
-
             matrixCharacters[i].imageCharacter = gameCharactersSettings.imageCharactersBig.GetSprite(i+"big");
             charactersImagesSmall[i].sprite = gameCharactersSettings.imageCharactersSmall.GetSprite(i.ToString());
             matrixCharacters[i].nameCharacter = gameCharactersSettings.nameCharacters[i];
@@ -214,12 +194,15 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     }
 
-    private bool isOnline = false;
+    
 
     public void InitActions(bool online)
     { 
         isOnline = online;
         inputActions.Enable();
+
+
+
     
     }
 
@@ -317,7 +300,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             MoveFocus(player.focusPlayer, player.focusPlayer.GetComponent<MatrixCharacters>().up, player.posX, player.posicionPlayer );
 
 
-            print("arriba");
+            //print("arriba");
             return;
         }
 
@@ -335,7 +318,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             }
 
 
-            print("abajo");
+            //print("abajo");
             
             if ((player.focusPlayer.GetComponent<MatrixCharacters>().down is null) == false)
             {
@@ -369,7 +352,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
             }
 
 
-            print("derecha");
+            //print("derecha");
             if ((player.focusPlayer.GetComponent<MatrixCharacters>().right is null) == false)
             {
 
@@ -401,7 +384,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 player.posX--;
             }
 
-            print("izquierda");
+            //print("izquierda");
             if ((player.focusPlayer.GetComponent<MatrixCharacters>().left is null) == false)
             {
                 player.focusPlayer.GetComponent<MatrixCharacters>().left.right.taken = false;
@@ -458,8 +441,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
             //gameController.jugadores[gameController.contadorJugadores].idDevice = obj.control.device.deviceId;
             gameController.HacerVibrarMando(obj.control.device.deviceId);
-
-            entrada_txt[posicionLibre].SetActive(false);
+            entrada_txt[posicionLibre].text = Localization.Get("pulsaboton");
+            entrada_txt[posicionLibre].gameObject.SetActive(false);
             panel_players[posicionLibre].SetActive(true);
             //focusPlayers[gameController.contadorJugadores - 1].transform.position = initialPlayerPosition[gameController.contadorJugadores - 1].transform.position;
             focusPlayers[posicionLibre].SetActive(true);
@@ -570,7 +553,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
             recuadros[posicionPlayer].gameObject.SetActive(true);
             panel_players[posicionPlayer].SetActive(false);
-            entrada_txt[posicionPlayer].SetActive(true);
+            entrada_txt[posicionPlayer].text = Localization.Get("pulsaboton");
+            entrada_txt[posicionPlayer].gameObject.SetActive(true);
             focusPlayers[posicionPlayer].SetActive(false);
             focusPlayers[posicionPlayer].transform.position = initialPlayerPosition[posicionPlayer].transform.position;
             
@@ -578,6 +562,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
             
 
 
+        }
+        else
+        { 
+            BotonSur(obj);
+        
         }
 
 
