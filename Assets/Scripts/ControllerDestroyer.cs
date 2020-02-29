@@ -45,7 +45,7 @@ public class ControllerDestroyer : MonoBehaviour
             for (ushort i = 0 ; i < hits.Length; i++)
             { 
 
-                print("hit name=" + hits[i].name + " tag=" + hits[i].tag );
+                //print("hit name=" + hits[i].name + " tag=" + hits[i].tag );
                 if (hits[i].CompareTag("amarillo") == true ||  hits[i].CompareTag("azul") == true ||
                     hits[i].CompareTag("rojo") == true || hits[i].CompareTag("blanco") == true
                     )

@@ -54,6 +54,7 @@ public class InfoPlayer
     public int deviceId = -1;
 
     public bool bot;
+    public bool playerSePuedeMover = true;
 
 
 
@@ -159,7 +160,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] public TextMeshProUGUI ready = null;
 
-    [HideInInspector] public bool playerSePuedenMover = false;
+    [HideInInspector] public bool playersSePuedenMover = false;
     [HideInInspector] public string texto_fase2 = "go";
     private ushort NUM_BLOQUES = 145;
     
@@ -345,7 +346,7 @@ public class GameController : MonoBehaviour
     public void IniciarCrono()
     {
 
-        playerSePuedenMover = true;
+        playersSePuedenMover = true;
         faseConcluida.Value = false;
         long binlocal = new DateTime(year:2019, month:1, day:1, hour:9, minute:0, second:0).ToBinary();
 

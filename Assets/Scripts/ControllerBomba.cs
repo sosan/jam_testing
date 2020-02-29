@@ -203,9 +203,10 @@ public class ControllerBomba : MonoBehaviour
                 xTemp = -4;
             
             }
+            float rnd = UnityEngine.Random.Range(-1f, 1f);
             
 
-            rigid.AddForce( new Vector2(xTemp, 0) * 8f, ForceMode2D.Impulse);
+            rigid.AddForce( new Vector2(xTemp, rnd) * 8f, ForceMode2D.Impulse);
             rigid.isKinematic = true;
 
 

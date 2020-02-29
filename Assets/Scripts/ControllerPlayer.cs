@@ -18,20 +18,26 @@ public class ControllerPlayer : MonoBehaviour
     [SerializeField] public Color colorInicial = Color.white;
     [SerializeField] public Color colorDestino = Color.white;
     [SerializeField] public SpriteRenderer spritePlayer = null;
-    
 
-
-    private bool isCompletedMoveLeftStick = false;
-    private float m_MovementInputValue; 
+    private Transform ultimoBloquePisado = null;
     private Vector2 _inputs = Vector2.zero;
-    public float m_Speed = 12f;
-    //[SerializeField] private float shotSpeed = 20f;
-    private bool isFireCooldown = false;
 
-    private bool bombAwaiting = false;
     [HideInInspector] public bool isDestroyer = false;
+    [HideInInspector] public bool caidoHueco = false;
+    private bool isFireCooldown = false;
+    private bool bombAwaiting = false;
+    private bool isCompletedMoveLeftStick = false;
+    private bool isDashing = false;
+
+    public float m_Speed = 12f;
+    private float m_MovementInputValue;
     private float progresoLerp = 0;
     private float interpolateDuration = 0.2f;
+
+    private ushort countvecesDerecha = 0;
+    private ushort countvecesIzquierda = 0;
+    private ushort countvecesArriba = 0;
+    private ushort countvecesAbajo = 0;
     
 
     private void Awake()
@@ -71,9 +77,8 @@ public class ControllerPlayer : MonoBehaviour
     {
 
         if (obj.control.device.deviceId != player.deviceId) return;
-
-        if(gameController.playerSePuedenMover == false) return;
-
+        if(gameController.playersSePuedenMover == false) return;
+        if(player.playerSePuedeMover == false) return;
         if (bombAwaiting == true) return;
 
          //raycast para saber si estamos encima de que estamos..
@@ -175,7 +180,10 @@ public class ControllerPlayer : MonoBehaviour
     {
         //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
         if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playerSePuedenMover == false) return;
+        if(gameController.playersSePuedenMover == false) return;
+        if(player.playerSePuedeMover == false) return;
+
+
         if (isFireCooldown == true) return;
 
 
@@ -215,19 +223,96 @@ public class ControllerPlayer : MonoBehaviour
 
     private void ResetLeftStick(InputAction.CallbackContext obj)
     {
+
+        print("reset obj=" + obj.ReadValue<Vector2>());
+
         if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playerSePuedenMover == false) return;
-       _inputs = Vector2.zero;
+        if(gameController.playersSePuedenMover == false) return;
+        _inputs = Vector2.zero;
+        print("reset 0");
+
+        if (posibleDash == true)
+        { 
+        
+            countvecesDerecha++;
+        }
+
+        
         
     }
+    
+    private bool posibleDash = false;
 
-    private void ControlLeftStick(InputAction.CallbackContext obj)
+    private async void ControlLeftStick(InputAction.CallbackContext obj)
     {
 
         //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
         if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playerSePuedenMover == false) return;
+        if(gameController.playersSePuedenMover == false) return;
+        if(player.playerSePuedeMover == false) return;
+
         _inputs = obj.ReadValue<Vector2>();
+        //print(_inputs.x);
+        if (_inputs.x > 0.99f)
+        { 
+            posibleDash = true;
+            
+            Debug.LogError("veces" + countvecesDerecha);
+            
+        }
+
+        if (_inputs.x < -0.99f)
+        { 
+            print("veces" + countvecesIzquierda);
+            countvecesIzquierda++;
+        }
+
+        if (_inputs.y > 0.99f)
+        { 
+            print("veces" + countvecesArriba);
+            countvecesArriba++;
+        }
+
+        if (_inputs.y < -0.99f)
+        { 
+            print("veces" + countvecesAbajo);
+            countvecesAbajo++;
+        }
+
+
+        if (countvecesDerecha >= 2)
+        { 
+            countvecesDerecha = 0;
+            print("dash derecha");
+        
+        
+        }
+
+        if (countvecesIzquierda >= 2)
+        { 
+            countvecesIzquierda = 0;
+            print("dash izquierda");
+        
+        
+        }
+
+        if (countvecesArriba >= 2)
+        { 
+            countvecesArriba = 0;
+            print("dash arriba");
+        
+        
+        }
+
+        if (countvecesAbajo >= 2)
+        { 
+            countvecesAbajo = 0;
+            print("dash abajo");
+        
+        
+        }
+
+
 
         //if (_inputs.x >= 0.5f)
         //{ 
@@ -243,40 +328,82 @@ public class ControllerPlayer : MonoBehaviour
 
     }
 
-    
+    private float startTime = 0;
+    private float durationForLongPressSeconds = 0.2f;
+
+    private void Update()
+    {
+        
+        if (posibleDash == true)
+        {
+            startTime += Time.deltaTime;
+            if (startTime >= durationForLongPressSeconds)
+            {
+                posibleDash = false;
+
+            }
+
+        }
+
+
+    }
+
+
 
 
 
     private void FixedUpdate()
     {
         
-        if(gameController.playerSePuedenMover == false) return;
-        rigid.MovePosition(this.rigid.position + _inputs * m_Speed * Time.deltaTime);
+        if(gameController.playersSePuedenMover == false) return;
+        if(player.playerSePuedeMover == true)
+        { 
+            rigid.MovePosition(rigid.position + _inputs * m_Speed * Time.fixedDeltaTime);
+        
+        }
 
-        if (isDestroyer)
+        
+
+        if (isDestroyer == true)
         { 
         
             progresoLerp = Mathf.PingPong(Time.time, interpolateDuration) / interpolateDuration;
             spritePlayer.color = Color.Lerp(colorInicial, colorDestino, progresoLerp);
         
         }
+
+
+        if (caidoHueco == true)
+        { 
+            progresoLerp = Mathf.PingPong(Time.time, interpolateDuration) / interpolateDuration;
+            spritePlayer.color = Color.Lerp(colorInicial, colorDestino, progresoLerp);
+        
+        
+        }
         
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-        
-    //}
 
     //private void OnTriggerEnter2D(Collider2D collision)
     private void OnTriggerStay2D(Collider2D collision)
     {
         
-        if(gameController.playerSePuedenMover == false) return;
+        if(gameController.playersSePuedenMover == false) return;
+        if(player.playerSePuedeMover == false) return;
 
+        if (collision.CompareTag("hueco") == true)
+        { 
+            ProcesarHueco(collision);
+            return;
+        
+        }
+        
+        ultimoBloquePisado = collision.transform;
 
-        if (collision.gameObject.tag == nombreColores.fondo.ToString())
+        if (collision.CompareTag("fondo") == true)
         {
+
+        
             ProcesarColisionConFondo(collision);
             return;
 
@@ -288,9 +415,6 @@ public class ControllerPlayer : MonoBehaviour
             return;
 
         }
-                
-
-        
         
         
     }
@@ -299,6 +423,8 @@ public class ControllerPlayer : MonoBehaviour
     {
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(130));
+        
+
         collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
         switch(player.nombreColorPlayer)
         {
@@ -330,5 +456,20 @@ public class ControllerPlayer : MonoBehaviour
         
     
     }
+
+    public async void ProcesarHueco(Collider2D collision)
+    { 
+
+        player.playerSePuedeMover = false;
+        caidoHueco = true;
+        thistransform.position = ultimoBloquePisado.position;
+        await UniTask.Delay(TimeSpan.FromSeconds(2));
+        caidoHueco = false;
+        player.playerSePuedeMover = true;
+        spritePlayer.color = player.colorPlayer;
+    
+    
+    }
+
 
 }
