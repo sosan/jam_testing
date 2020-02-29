@@ -98,6 +98,10 @@ public enum nombreColores
 public class GameController : MonoBehaviour
 {
 
+    [Header("Elegir Personaje")]
+    [SerializeField] public ControllerElegirPersonaje elegirPersonaje = null;
+
+
     [Header("canvas")]
     [SerializeField] public GameObject[] canvasMenu = null;
 
@@ -167,7 +171,8 @@ public class GameController : MonoBehaviour
     //[SerializeField] public nombreColores nombreColoresPlayers;
     public bool[] casillasOcupadasPowerup = new bool[5];
 
-
+    [SerializeField] public LobbyClientPun lobbyClientPun = null;
+    [HideInInspector] public bool isOnline = false;
 
     private void Awake()
     {
@@ -484,7 +489,78 @@ public class GameController : MonoBehaviour
     
     }
 
+    public void InstanciarJugadorLocal()
+    {
+        for(ushort i = 0; i < jugadores.Length; i++)
+        { 
+            if (jugadores[i].listo == true)
+            { 
+                                       
+                GameObject playerGo = GameObject.Instantiate(elegirPersonaje.prefabPlayer, initialPlayerPositions[i].position, Quaternion.identity, canvasMenu[4].transform);
+                
 
-  
+                var controllerplayer = playerGo.GetComponent<ControllerPlayer>().player;
+                var configplayer = jugadores[i].focusPlayer.GetComponent<MatrixCharacters>();
+                playerGo.name = configplayer.nameCharacter;
+                playerGo.layer = LayerMask.NameToLayer("player");
+
+                controllerplayer.fireCooldown = configplayer.fireCooldown;
+                controllerplayer.speedMovement = configplayer.speedMovement;
+                controllerplayer.powerDamage = configplayer.power;
+                controllerplayer.shotSpeed = configplayer.durationShotSeconds;
+                //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
+                controllerplayer.bombCooldown = configplayer.bombCooldown;
+                controllerplayer.defense = configplayer.defense;
+                controllerplayer.defenseMax = configplayer.defenseMax;
+
+                controllerplayer.deviceId = jugadores[i].deviceId;
+
+                //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
+                playerGo.GetComponent<SpriteRenderer>().color = jugadores[i].colorPlayer;
+                controllerplayer.colorPlayer = jugadores[i].colorPlayer;
+                
+                playerGo.GetComponent<ControllerPlayer>().colorInicial = Color.black;
+                playerGo.GetComponent<ControllerPlayer>().colorDestino = jugadores[i].colorPlayer;
+                playerGo.GetComponent<ControllerPlayer>().spritePlayer.color = jugadores[i].colorPlayer;
+
+
+                //COLOCAMOS LOS COLORES DE CADA JUGADOR EN LA BARRA
+                barrasPuntuaje[i].color = jugadores[i].colorPlayer;
+
+                jugadores[i].playerGameObject = playerGo;
+
+                playerGo.GetComponent<ControllerPlayer>().gameController = this;
+
+                //-----------------
+                var hit = Physics2D.OverlapBox(playerGo.transform.position, new Vector2(0, 0), 0, 
+                    layerMask: playerGo.GetComponent<ControllerPlayer>().raycastLayerMask);
+
+                if (hit is null == false)
+                { 
+                    playerGo.GetComponent<ControllerPlayer>().ProcesarColisionConFondo(hit);
+                }
+                
+            
+            }
+        
+        }
+    
+    }
+    
+
+
+    public (ExitGames.Client.Photon.Hashtable, string) SetPlayerForOnline(ref ExitGames.Client.Photon.Hashtable hastable)
+    {
+        hastable.Add("namePlayer", jugadores[0].namePlayer);
+        hastable.Add("playerPower", jugadores[0].powerDamage);
+        hastable.Add("playerDefense", jugadores[0].defense);
+        hastable.Add("playerColor", jugadores[0].nombreColorPlayer.ToString());
+
+        return (hastable, jugadores[0].namePlayer);
+
+    }
+
+
+
 
 }

@@ -6,6 +6,8 @@ using TMPro;
 using InControlActions;
 using UnityEngine.InputSystem;
 using UniRx.Async;
+using UniRx;
+using System;
 
 public class ControllerElegirPersonaje : MonoBehaviour
 {
@@ -41,7 +43,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     [SerializeField] private UILocalization textoempezarlucha = null;
 
 
-    [SerializeField] private GameObject[] listoMensaje = null;
+    [SerializeField] private TextMeshProUGUI[] listoMensaje = null;
 
     public Image[] mandosImage;
     public TextMeshProUGUI[] entrada_txt = null;
@@ -61,6 +63,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     public Color[] prefabColorsPlayers;
     public GameObject prefabPlayer = null;
+    public GameObject playerPrefabOnline = null;
     public Transform[] initialPositionInstantiation = null;
 
     public TextMeshProUGUI[] namePlayers = null;
@@ -89,8 +92,10 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     private bool isCompletedMoveRightStick = false;
     private bool isCompletedMoveLeftStick = false;
-    private bool isOnline = false;
+    //private bool isOnline = false;
 
+    [SerializeField] private TextMeshProUGUI mensajeBotonEntrar = null;
+    
 
 
     private void OnDisable()
@@ -112,10 +117,10 @@ public class ControllerElegirPersonaje : MonoBehaviour
         inputActions.Menu.Dpad.performed += ControlDpad;
 
         inputActions.Menu.Buttons.performed += BotonSur;
-        inputActions.Menu.WestButton.performed += BotonSur;
+        //inputActions.Menu.WestButton.performed += BotonSur;
         
         inputActions.Menu.ExitButton.performed += ButtonExit;
-        inputActions.Menu.NorteButton.performed += ButtonExit;
+        //inputActions.Menu.NorteButton.performed += ButtonExit;
         
         inputActions.Menu.LeftStick.performed += ControlLeftStick;
         inputActions.Menu.LeftStick.canceled += ResetLeftStick;
@@ -133,7 +138,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
             
             focusPlayers[i].SetActive(false);
             recuadros[i].color = Color.white;
-            listoMensaje[i].SetActive(false);
+            listoMensaje[i].text = Localization.Get("confirmar");
+            listoMensaje[i].gameObject.SetActive(false);
+
         }
 
         textoempezarlucha.key = "esperandojugadores";
@@ -198,7 +205,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     public void InitActions(bool online)
     { 
-        isOnline = online;
+        gameController.isOnline = online;
         inputActions.Enable();
 
 
@@ -439,6 +446,9 @@ public class ControllerElegirPersonaje : MonoBehaviour
             gameController.jugadores[posicionLibre].vacio = false;
             recuadros[posicionLibre].gameObject.SetActive(false);
 
+            listoMensaje[posicionLibre].text = Localization.Get("confirmar");
+            listoMensaje[posicionLibre].gameObject.SetActive(true);
+
             //gameController.jugadores[gameController.contadorJugadores].idDevice = obj.control.device.deviceId;
             gameController.HacerVibrarMando(obj.control.device.deviceId);
             entrada_txt[posicionLibre].text = Localization.Get("pulsaboton");
@@ -470,17 +480,17 @@ public class ControllerElegirPersonaje : MonoBehaviour
             if (gameController.jugadores[posicionPlayer].listo == true)
             { 
 
-                print("3 vez");
-                print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + gameController.contadorJugadores);
+                //print("3 vez");
+                //print("devices count=" + Gamepad.all.Count);
+                //print("contadojugadores=" + gameController.contadorJugadores);
                 // tercera vez
                 //ComprobarPersonajesListo();
             
             }
             else
             { 
-                print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + gameController.contadorJugadores);
+                //print("devices count=" + Gamepad.all.Count);
+                //print("contadojugadores=" + gameController.contadorJugadores);
 
                 //ejecutar que el player esta listo
                 gameController.jugadores[posicionPlayer].listo = true;
@@ -488,13 +498,15 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 gameController.HacerVibrarMando(obj.control.device.deviceId);
                 
                 //ushort o = gameController.dictPlayers[obj.control.device.deviceId].posicionPlayer;
-                listoMensaje[posicionPlayer].SetActive(true);
+
+                listoMensaje[posicionPlayer].text = Localization.Get("listo");
+                listoMensaje[posicionPlayer].gameObject.SetActive(true);
                 readyImage[posicionPlayer].SetActive(
                     !readyImage[posicionPlayer].activeSelf
                 );
 
-                print("devices count=" + Gamepad.all.Count);
-                print("contadojugadores=" + gameController.contadorJugadores);
+                //print("devices count=" + Gamepad.all.Count);
+                //print("contadojugadores=" + gameController.contadorJugadores);
 
                 ComprobarPersonajesListo();
                
@@ -547,7 +559,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
             gameController.jugadores[posicionPlayer].listo = false;
             gameController.jugadores[posicionPlayer].vacio = true;
 
-            listoMensaje[posicionPlayer].SetActive(false);
+            listoMensaje[posicionPlayer].text = Localization.Get("confirmar");
+            listoMensaje[posicionPlayer].gameObject.SetActive(false);
             readyImage[posicionPlayer].SetActive(false);
 
 
@@ -798,7 +811,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     }
 
 
-    private void ComprobarPersonajesListo()
+    private async void ComprobarPersonajesListo()
     { 
         if (Gamepad.all.Count == gameController.contadorJugadores)
         { 
@@ -813,6 +826,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                     return;
                 
                 }
+                
             
             
             }
@@ -833,8 +847,25 @@ public class ControllerElegirPersonaje : MonoBehaviour
             if (completado == true)
             {
                 print("al ataker");
-                RellenarBots();
-                alAtaque();
+                //RellenarBots();
+
+                mensajeBotonEntrar.text = Localization.Get("conectando");
+                gameController.lobbyClientPun.ConnectToPun(gameController.jugadores[0].namePlayer);
+                if (gameController.isOnline == true)
+                {
+                    await UniTask.WaitUntil(() => pistaLibre.Value == true);
+                
+                }
+                else
+                { 
+                    await UniTask.Delay(TimeSpan.FromSeconds(2));
+                    alAtaque();
+                
+                }
+
+                
+
+                
 
             }
 
@@ -850,6 +881,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     
     
     }
+
 
     private void RellenarBots()
     { 
@@ -889,106 +921,13 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         gameController.canvasMenu[4].SetActive(true);
         gameController.canvasMenu[3].SetActive(false);
+        gameController.InstanciarJugadorLocal();
+
+
        
-
-        for(ushort i = 0; i < gameController.jugadores.Length; i++)
-        { 
-            if (gameController.jugadores[i].listo == true)
-            { 
-                                       
-                GameObject playerGo = GameObject.Instantiate(prefabPlayer, gameController.initialPlayerPositions[i].position, Quaternion.identity, gameController.canvasMenu[4].transform);
-                
-
-                var controllerplayer = playerGo.GetComponent<ControllerPlayer>().player;
-                var configplayer = gameController.jugadores[i].focusPlayer.GetComponent<MatrixCharacters>();
-                playerGo.name = configplayer.nameCharacter;
-                playerGo.layer = LayerMask.NameToLayer("player");
-
-                controllerplayer.fireCooldown = configplayer.fireCooldown;
-                controllerplayer.speedMovement = configplayer.speedMovement;
-                controllerplayer.powerDamage = configplayer.power;
-                controllerplayer.shotSpeed = configplayer.durationShotSeconds;
-                //print("control=" + controllerplayer.bombCooldown + " config=" + configplayer.bombCooldown);
-                controllerplayer.bombCooldown = configplayer.bombCooldown;
-                controllerplayer.defense = configplayer.defense;
-                controllerplayer.defenseMax = configplayer.defenseMax;
-
-                controllerplayer.deviceId = gameController.jugadores[i].deviceId;
-
-                //playerGo.GetComponent<SpriteRenderer>().color = gameController.dictPlayers[keys[i]].colorPlayer;
-                playerGo.GetComponent<SpriteRenderer>().color = gameController.jugadores[i].colorPlayer;
-                controllerplayer.colorPlayer = gameController.jugadores[i].colorPlayer;
-                
-                playerGo.GetComponent<ControllerPlayer>().colorInicial = Color.black;
-                playerGo.GetComponent<ControllerPlayer>().colorDestino = gameController.jugadores[i].colorPlayer;
-                playerGo.GetComponent<ControllerPlayer>().spritePlayer.color = gameController.jugadores[i].colorPlayer;
-
-
-                //COLOCAMOS LOS COLORES DE CADA JUGADOR EN LA BARRA
-                gameController.barrasPuntuaje[i].color = gameController.jugadores[i].colorPlayer;
-
-                gameController.jugadores[i].playerGameObject = playerGo;
-
-                playerGo.GetComponent<ControllerPlayer>().gameController = gameController;
-
-                //-----------------
-                var hit = Physics2D.OverlapBox(playerGo.transform.position, new Vector2(0, 0), 0, 
-                    layerMask: playerGo.GetComponent<ControllerPlayer>().raycastLayerMask);
-
-                if (hit is null == false)
-                { 
-                    playerGo.GetComponent<ControllerPlayer>().ProcesarColisionConFondo(hit);
-                }
-                
-            
-            }
-        
-        }
 
 
         gameController.InitGame();
-
-
-
-
-
-        //foreach (var playerInfo in variablesOverScenes.gameController.dictPlayers)
-        //{
-        //    if (playerInfo.Key is null) continue;
-
-
-           
-        //    var newPlayer = GameObject.Instantiate(prefabPlayer, prefabPlayer.transform.position, Quaternion.identity);
-        //    playerInfo.Value.playerGameObject = newPlayer;
-
-
-        //    var itemHealth = newPlayer.GetComponent<Health>();
-        //    var matrixPlayer = playerInfo.Value.focusPlayer.GetComponent<MatrixCharacters>();
-
-        //    itemHealth.HP = matrixPlayer.health;
-        //    itemHealth.maxHP = matrixPlayer.health;
-        //    itemHealth.energy = matrixPlayer.energy;
-        //    itemHealth.energyMax = matrixPlayer.energy;
-        //    itemHealth.power = matrixPlayer.power;
-        //    itemHealth.powerMax = matrixPlayer.power;
-        //    itemHealth.defence = matrixPlayer.defense;
-        //    itemHealth.defenceMax = matrixPlayer.defense;
-
-
-
-
-        //    newPlayer.GetComponent<PlayerGravity>().playerColor = playerInfo.Value.colorPlayer;
-        //    newPlayer.GetComponent<SpriteRenderer>().color = playerInfo.Value.colorPlayer;
-        //    print("name=" + prefabPlayer.GetComponentsInChildren<SpriteRenderer>(true)[2].name);
-        //    newPlayer.GetComponentsInChildren<SpriteRenderer>(true)[2].color = playerInfo.Value.colorPlayer;
-        //    newPlayer.GetComponent<PlayerGravity>().gamepadPosition = id;
-        //    newPlayer.SetActive(false);
-        //    id++;
-
-        //}
-
-        
-        //menuManager.ClickPlay();
 
     }
 
@@ -1127,6 +1066,16 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
 
 
+    }
+
+
+    ReactiveProperty<bool> pistaLibre = new ReactiveProperty<bool>(false);
+
+    public void SetPistaLibre()
+    { 
+    
+        pistaLibre.Value = true;
+    
     }
 
 

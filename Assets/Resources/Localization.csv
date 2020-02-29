@@ -18,7 +18,7 @@ volumenconfig,CONFIGURACION VOLUMEN,VOLUMEN CONFIGURATION
 resetdefault,RESTABLECER VALORES PREDETERMINADOS,RESET DEFAULT VALUES
 movimientodescripcion_mouse,ELEGIR <color=#D40303>PERSONAJE!</color>,CHOOSE <color=#D40303>CHARACTER!</color>
 movimientodescripcion_gamepad,ELEGIR <color=#D40303>PERSONAJE!</color>,CHOOSE <color=#D40303>CHARACTER!</color>
-pulsaboton,PULSA UN BOTON,PRESS A BUTTON
+pulsaboton,PULSA A,PRESS A
 esperandojugadores,ESPERANDO,WAITING
 alataker,EMPEZAR,START
 listo,LISTO,READY
@@ -30,3 +30,5 @@ winner,GANADOR!,WINNER!
 disabled,DESACTIVADO,DISABLED
 explicaciona,PULSA A <color=#1C5BB7>ELEGIR</color> / <color=green>LISTO</color>,PRESS A <color=#1C5BB7>SELECT</color> / <color=green>READY</color>
 explicacionb,PULSA B <color=red>CANCELAR</color>,PRES B <color=red>CANCEL</color>
+confirmar,A CONFIRMAR,CONFIRM
+conectando,CONECTANDO,CONECTING
