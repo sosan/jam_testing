@@ -1,7 +1,8 @@
 KEY,espanol,english
 espanol,ESPAÑOL,SPANISH
 ingles,INGLES,ENGLISH
-entergame,JUGAR,PLAY
+entergameonline,JUGAR MULTI <color=#D40303>ONLINE</color>,PLAY MULTI <color=#D40303>ONLINE</color>
+entergame,JUGAR MULTI LOCAL,PLAY LOCAL MULTI
 options,OPCIONES,OPTIONS
 credits,CREDITOS,CREDITS
 exit,SALIR,EXIT
@@ -15,8 +16,8 @@ musicvolumen,VOLUMEN MUSICA,MUSIC VOLUMEN
 sfxvolumen,VOLUMEN SFX,SFX VOLUMEN
 volumenconfig,CONFIGURACION VOLUMEN,VOLUMEN CONFIGURATION
 resetdefault,RESTABLECER VALORES PREDETERMINADOS,RESET DEFAULT VALUES
-movimientodescripcion_mouse,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
-movimientodescripcion_gamepad,ELEGIR <color=#bc008e>PERSONAJE!</color>,CHOOSE <color=#bc008e>CHARACTER!</color>
+movimientodescripcion_mouse,ELEGIR <color=#D40303>PERSONAJE!</color>,CHOOSE <color=#D40303>CHARACTER!</color>
+movimientodescripcion_gamepad,ELEGIR <color=#D40303>PERSONAJE!</color>,CHOOSE <color=#D40303>CHARACTER!</color>
 pulsaboton,PULSA UN BOTON,PRESS A BUTTON
 esperandojugadores,ESPERANDO,WAITING
 alataker,EMPEZAR,START

@@ -28,16 +28,47 @@ public class ControllerPlayer : MonoBehaviour
     private bool bombAwaiting = false;
     private bool isCompletedMoveLeftStick = false;
     private bool isDashing = false;
+    
+    //private bool posibleDashDerecha = false;
+    //private bool posibleDashIzquierda = false;
+    //private bool posibleDashArriba = false;
+    //private bool posibleDashAbajo = false;
+    
+
+
+    private bool resetDashDerecha = false;
+    private bool resetDashIzquierda = false;
+    private bool resetDashArriba = false;
+    private bool resetDashAbajo = false;
 
     public float m_Speed = 12f;
     private float m_MovementInputValue;
     private float progresoLerp = 0;
     private float interpolateDuration = 0.2f;
+    //private float startTime = 0;
+    private float durationForLongPressSeconds = 0.6f;
+    private float startTimePosibleDashDerecha = 0;
+    private float startTimePosibleDashIzquierda = 0;
+    private float startTimePosibleDashArriba = 0;
+    private float startTimePosibleDashAbajo = 0;
+
+
+    private float startTimeResetDashDerecha = 0;
+    private float startTimeResetDashIzquierda = 0;
+    private float startTimeResetDashArriba = 0;
+    private float startTimeResetDashAbajo = 0;
+
 
     private ushort countvecesDerecha = 0;
     private ushort countvecesIzquierda = 0;
     private ushort countvecesArriba = 0;
     private ushort countvecesAbajo = 0;
+    
+    private ushort faseDashDerecha = 0;
+    private ushort faseDashIzquierda = 0;
+    private ushort faseDashArriba = 0;
+    private ushort faseDashAbajo = 0;
+    
     
 
     private void Awake()
@@ -224,26 +255,92 @@ public class ControllerPlayer : MonoBehaviour
     private void ResetLeftStick(InputAction.CallbackContext obj)
     {
 
-        print("reset obj=" + obj.ReadValue<Vector2>());
+        //print("reset obj=" + obj.ReadValue<Vector2>());
 
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playersSePuedenMover == false) return;
         _inputs = Vector2.zero;
-        print("reset 0");
+        //print("reset 0");
 
-        if (posibleDash == true)
-        { 
-        
+        if (isDashing == true) return;
+
+
+
+        if (faseDashDerecha > 2)
+        {
+            print("derecha=" + countvecesDerecha);
             countvecesDerecha++;
+            
         }
 
+        //if (faseDashIzquierda == 1)
+        //{ 
+        //    print("izquierda=" + countvecesIzquierda);
+        //    countvecesIzquierda++;
+        //    return;
+        //}
+
+        //if (faseDashArriba == 1)
+        //{ 
+        //    print("arriba=" + countvecesArriba);
+        //    countvecesArriba++;
+        //    return;
+        //}
+
+        //if (faseDashAbajo == 1)
+        //{ 
+        //    print("abajo=" + countvecesAbajo);
+        //    countvecesAbajo++;
+        //    return;
+        //}
+
+        if (countvecesDerecha >= 1)
+        { 
+            Debug.LogError("dash derecha");
+            startTimeResetDashDerecha = 0;
+            resetDashDerecha = true;
+            isDashing = true;
+            return;
+
+        }
+
+        if (countvecesIzquierda >= 1)
+        { 
+            Debug.LogError("dash izquierda");
+
+            startTimeResetDashIzquierda = 0;
+            resetDashIzquierda = true;
+            isDashing = true;
+            return;
         
-        
+        }
+
+        if (countvecesArriba >= 1)
+        { 
+
+            Debug.LogError("dash arriba");
+            startTimeResetDashArriba = 0;
+            resetDashArriba = true;
+            isDashing = true;
+            return;
+        }
+
+        if (countvecesAbajo >= 1)
+        { 
+            Debug.LogError("dash abajo");
+            startTimeResetDashAbajo = 0;
+            resetDashAbajo = true;
+            isDashing = true;
+            return;
+        }
+
+
+
     }
     
-    private bool posibleDash = false;
+    
 
-    private async void ControlLeftStick(InputAction.CallbackContext obj)
+    private void ControlLeftStick(InputAction.CallbackContext obj)
     {
 
         //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
@@ -252,65 +349,37 @@ public class ControllerPlayer : MonoBehaviour
         if(player.playerSePuedeMover == false) return;
 
         _inputs = obj.ReadValue<Vector2>();
-        //print(_inputs.x);
+        
+        //print(_inputs.ToString());
         if (_inputs.x > 0.99f)
-        { 
-            posibleDash = true;
-            
-            Debug.LogError("veces" + countvecesDerecha);
+        {
+            faseDashDerecha = 1;
+            startTimePosibleDashDerecha = 0;
+            //posibleDashDerecha = true;
+            return;
             
         }
-
+        
         if (_inputs.x < -0.99f)
         { 
-            print("veces" + countvecesIzquierda);
-            countvecesIzquierda++;
+            faseDashIzquierda = 1;
+            //posibleDashIzquierda = true;
         }
 
         if (_inputs.y > 0.99f)
         { 
-            print("veces" + countvecesArriba);
-            countvecesArriba++;
+            faseDashArriba  =1;
+            //posibleDashArriba = true;
         }
-
+        
         if (_inputs.y < -0.99f)
         { 
-            print("veces" + countvecesAbajo);
-            countvecesAbajo++;
+            faseDashAbajo  =1;
+            //posibleDashAbajo = true;
         }
 
 
-        if (countvecesDerecha >= 2)
-        { 
-            countvecesDerecha = 0;
-            print("dash derecha");
         
-        
-        }
-
-        if (countvecesIzquierda >= 2)
-        { 
-            countvecesIzquierda = 0;
-            print("dash izquierda");
-        
-        
-        }
-
-        if (countvecesArriba >= 2)
-        { 
-            countvecesArriba = 0;
-            print("dash arriba");
-        
-        
-        }
-
-        if (countvecesAbajo >= 2)
-        { 
-            countvecesAbajo = 0;
-            print("dash abajo");
-        
-        
-        }
 
 
 
@@ -328,21 +397,141 @@ public class ControllerPlayer : MonoBehaviour
 
     }
 
-    private float startTime = 0;
-    private float durationForLongPressSeconds = 0.2f;
+    
 
     private void Update()
     {
         
-        if (posibleDash == true)
+        if (faseDashDerecha == 1)
         {
-            startTime += Time.deltaTime;
-            if (startTime >= durationForLongPressSeconds)
+            startTimePosibleDashDerecha += Time.deltaTime;
+            
+            if (startTimePosibleDashDerecha >= 1f)
             {
-                posibleDash = false;
+                print("reset");
+                faseDashDerecha = 0;
 
             }
+            else if (startTimePosibleDashDerecha >= 0.5f && startTimePosibleDashDerecha < 1f)
+            { 
+                print("dentro");
+                if (countvecesDerecha == 1)
+                { 
+                    faseDashDerecha = 2;
+                    startTimePosibleDashDerecha = 0;
+            
+                
+                }
 
+                
+            }
+
+        }
+
+        if (faseDashDerecha == 2)
+        {
+            startTimePosibleDashDerecha += Time.deltaTime;
+            if (startTimePosibleDashDerecha >= 1f)
+            {
+                faseDashDerecha = 0;
+
+            }
+            else if (startTimePosibleDashDerecha >= 0.5f && startTimePosibleDashDerecha < 1f)
+            { 
+
+                if (countvecesDerecha == 2)
+                { 
+                    faseDashDerecha = 3;
+
+                }
+            }
+
+        }
+
+        //if (posibleDashIzquierda == true)
+        //{
+        //    startTimePosibleDashIzquierda += Time.deltaTime;
+        //    if (startTimePosibleDashIzquierda >= durationForLongPressSeconds)
+        //    {
+        //        posibleDashIzquierda = false;
+
+        //    }
+
+        //}
+
+        //if (posibleDashArriba == true)
+        //{
+        //    startTimePosibleDashArriba += Time.deltaTime;
+        //    if (startTimePosibleDashArriba >= durationForLongPressSeconds)
+        //    {
+        //        posibleDashArriba = false;
+
+        //    }
+
+        //}
+
+        
+        //if (posibleDashAbajo == true)
+        //{
+        //    startTimePosibleDashAbajo += Time.deltaTime;
+        //    if (startTimePosibleDashAbajo >= durationForLongPressSeconds)
+        //    {
+        //        posibleDashAbajo = false;
+
+        //    }
+
+        //}
+
+        
+
+
+        if (resetDashDerecha == true)
+        { 
+            
+            startTimeResetDashDerecha += Time.deltaTime;
+            if (startTimeResetDashDerecha >= 5f)
+            {
+                countvecesDerecha = 0;
+                isDashing = false;
+
+            }
+        
+        }
+
+        if (resetDashIzquierda == true)
+        { 
+            
+            startTimeResetDashIzquierda += Time.deltaTime;
+            if (startTimeResetDashIzquierda >= 5f)
+            {
+                countvecesIzquierda = 0;
+                isDashing = false;
+            }
+        
+        }
+
+        if (resetDashArriba == true)
+        { 
+            
+            startTimeResetDashArriba += Time.deltaTime;
+            if (startTimeResetDashArriba >= 5f)
+            {
+                countvecesArriba = 0;
+                isDashing = false;
+            }
+        
+        }
+
+        if (resetDashAbajo == true)
+        { 
+            
+            startTimeResetDashAbajo += Time.deltaTime;
+            if (startTimeResetDashAbajo >= 5f)
+            {
+                countvecesAbajo = 0;
+                isDashing = false;
+            }
+        
         }
 
 

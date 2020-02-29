@@ -34,7 +34,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     //[SerializeField] private ParticleSystem particleCreditsSelected = null;
     [SerializeField] private ParticleSystem particleLogo = null;
     [SerializeField] private CanvasGroup canvasAlphaMenu = null;
-    [SerializeField] private UILocalization descripcionMovimientoLocalization = null;
+    [SerializeField] private TextMeshProUGUI descripcion = null;
     //[SerializeField] private TextMeshProUGUI textMovement = null;
     //[SerializeField] private GameObject mar = null;
 
@@ -92,6 +92,10 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     }
 
+    
+
+
+
     private async void Start()
     {
 
@@ -134,6 +138,12 @@ public class ControllerGamepadMenu : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds( 1000 ));
 
         controllerMenuAnimations.animations.Play("Titulo");
+
+        //ShowPositionMenu(0);
+        contMenuPosition = 0;
+
+        ShowPositionMenuWithGamePad();
+
     }
 
 
@@ -158,7 +168,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         //inputActions.Menu.MovementMouse.performed += MovementMouse;
 
-
+        descripcion.text = Localization.Get("movimientodescripcion_gamepad");
 
 
 
@@ -285,9 +295,10 @@ public class ControllerGamepadMenu : MonoBehaviour
             switch (contMenuPosition)
             {
 
-                case 0: ShowInitGameGamepad(); break;
-                case 1: ShowOptionsGamepad();  break;
-                case 2: ShowExitGamepad(); break;
+                case 0: ShowInitGameGamepad(online: false); break;
+                case 1: ShowInitGameGamepad(online:true);  break;
+                case 2: ShowOptionsGamepad();  break;
+                case 3: ShowExitGamepad(); break;
                 default: return;
             }
 
@@ -326,9 +337,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void MovementMouse(InputAction.CallbackContext obj)
     {
 
-       
-        descripcionMovimientoLocalization.key = "movimientodescripcion_mouse";
-        
+       descripcion.text = Localization.Get("movimientodescripcion_mouse");
 
     }
 
@@ -366,7 +375,8 @@ public class ControllerGamepadMenu : MonoBehaviour
         //Menu
         if (gameController.canvasMenu[1].activeSelf == true)
         {
-            descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
+
+            descripcion.text = Localization.Get("movimientodescripcion_gamepad");
             var move = obj.ReadValue<Vector2>();
             ControlMainMenu(move);
             return;
@@ -489,140 +499,13 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private void ControlMute(Vector2 move)
-    {
-
-
-        if (move.x <= -0.5f)
-        {
-            isMutedInternal = !isMutedInternal;
-            isCompletedHorizontal = true;
-            //
-            MusicController.MusicInstance.PlayFXSound(
-                MusicController.MusicInstance.sfx[1]
-            );
-
-            if (isMutedInternal == true)
-            {
-                textosOptions[0].text = "ON";
-            }
-            else
-            {
-                textosOptions[0].text = "OFF";
-            }
-
-                MusicController.MusicInstance.Mute();
-
-
-          
-
-
-        }
-        else if (move.x > 0.5f)
-        {
-
-            isMutedInternal = !isMutedInternal;
-            isCompletedHorizontal = true;
-
-            MusicController.MusicInstance.PlayFXSound(
-                MusicController.MusicInstance.sfx[1]
-            );
-
-            MusicController.MusicInstance.Mute();
-            if (isMutedInternal == true)
-            {
-                textosOptions[0].text = "ON";
-            }
-            else
-            {
-                textosOptions[0].text = "OFF";
-            }
-
-
-        }
-
-
-    }
-
-
-    private void ControlMainVolumen(Vector2 move)
-    {
-
-
-
-        if (move.x <= -0.5f)
-        {
-
-            isCompletedHorizontal = true;
-            MainVolumenMenos(true);
-
-        }
-        else if (move.x > 0.5f)
-        {
-            isCompletedHorizontal = true;
-            MainVolumenMas(true);
-        }
-
-
-
-
-    }
-
-    private void ControlSoundVolumen(Vector2 move)
-    {
-
-
-
-
-        if (move.x <= -0.5f)
-        {
-
-            isCompletedHorizontal = true;
-            SoundVolumenMenos(true);
-
-        }
-        else if (move.x > 0.5f)
-        {
-            isCompletedHorizontal = true;
-            SoundVolumenMas(true);
-        }
-
-
-
-
-    }
-
-
-
-    private void ControlSfxVolumen(Vector2 move)
-    {
-
-
-
-
-        if (move.x <= -0.5f)
-        {
-
-            isCompletedHorizontal = true;
-            SfxVolumenMenos(true);
-
-        }
-        else if (move.x > 0.5f)
-        {
-            isCompletedHorizontal = true;
-            SfxVolumenMas(true);
-        }
-
-
-
-
-    }
+   
 
 
     private void ShowPositionMenuWithGamePad()
     {
 
-
+        //print(contMenuPosition);
         var nombreclip = controllerMenuAnimations.animationClips[contMenuPosition].name;
         controllerMenuAnimations.animations.Play(nombreclip);
 
@@ -730,7 +613,8 @@ public class ControllerGamepadMenu : MonoBehaviour
         //Menu
         if (gameController.canvasMenu[1].activeSelf == true)
         {
-            descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
+            
+            descripcion.text = Localization.Get("movimientodescripcion_gamepad");
             var mov = obj.ReadValue<Vector2>();
             ControlMenuStick(mov);
             return;
@@ -1003,7 +887,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private void ShowInitGameGamepad()
+    private void ShowInitGameGamepad(bool online)
     {
 
         if (isBegun == true) return;
@@ -1013,15 +897,18 @@ public class ControllerGamepadMenu : MonoBehaviour
         //    MusicController.MusicInstance.sfx[1]
         //);
 
-        descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
-        
+        descripcion.text = Localization.Get("movimientodescripcion_gamepad");
+
+
         //controllerMenuAnimations.DesactiveMenu();
 
         //await UniTask.Delay(5000);
 
         //DisableCanvas();
+# if UNITY_EDITOR
         print("entramos por gamepad");
-        ShowElegirPersonaje();
+# endif
+        ShowElegirPersonaje(online: online);
 
 
     }
@@ -1038,7 +925,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
         //ShowFX(-5, -67);
-        ShowFX(positionTransformparticles[1].anchoredPosition);
+        ShowFX(positionTransformparticles[2].anchoredPosition);
         ShowPositionMenu(1);
         await UniTask.Delay(500);
 
@@ -1076,9 +963,9 @@ public class ControllerGamepadMenu : MonoBehaviour
             );
 
 
-        ShowPositionMenu(3);
+        ShowPositionMenu(4);
         //ShowFX(-5, -144);
-        ShowFX(positionTransformparticles[2].anchoredPosition);
+        ShowFX(positionTransformparticles[3].anchoredPosition);
         await UniTask.Delay(400);
 
 
@@ -1209,17 +1096,25 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private async void ShowElegirPersonaje()
+    private async void ShowElegirPersonaje(bool online)
     {
 
 
         inputActions.Disable();
 
-        ShowFX(positionTransformparticles[0].anchoredPosition);
-          MusicController.MusicInstance.PlayFXSound(
-            MusicController.MusicInstance.sfx[1]
-        );
+        if (online == true)
+        { 
         
+            ShowFX(positionTransformparticles[1].anchoredPosition);
+        
+        }
+        else
+        { 
+            ShowFX(positionTransformparticles[0].anchoredPosition);
+        
+        }
+
+        MusicController.MusicInstance.PlayFXSound(MusicController.MusicInstance.sfx[1]);
 
         float duration = controllerMenuAnimations.DesactiveMenu();
 
@@ -1232,7 +1127,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         //print("Show initgame");
 
         gameController.canvasMenu[3].SetActive(true);
-        elegirPersonaje.InitActions();
+        elegirPersonaje.InitActions(online: online);
 
         //gameController.InitGame();
 
@@ -1555,7 +1450,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         textosOptions[2].text = mainSoundInternal.ToString();
         textosOptions[3].text = mainSfxInternal.ToString();
 
-        ShowFXOptions(0, -130);
+        ShowFXOptions(0, -193);
 
         DeColorOptionsReset(4);
         contOptionsPosition = 0;
@@ -1603,7 +1498,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         textosOptions[2].text = mainSoundInternal.ToString();
         textosOptions[3].text = mainSfxInternal.ToString();
 
-        ShowFXOptions(0, -192);
+        ShowFXOptions(0, -193);
 
         DeColorOptionsReset(4);
         contOptionsPosition = 0;
@@ -1650,7 +1545,7 @@ public class ControllerGamepadMenu : MonoBehaviour
                    MusicController.MusicInstance.sfx[1]
                );
         SavePlayerPrefsValues();
-        ShowFXOptions(0, -184);
+        ShowFXOptions(0, -250);
 
 
         DeColorOptionsReset(5);
@@ -1662,7 +1557,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         contMenuPosition = 0;
         contOptionsPosition = 0;
         ShowPositionMenuWithGamePad();
-        descripcionMovimientoLocalization.key = "movimientodescripcion_gamepad";
+        descripcion.text = Localization.Get("movimientodescripcion_gamepad");
         gameController.canvasMenu[1].SetActive(true);
         //mar.SetActive(true);
 
@@ -1754,5 +1649,136 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     }
 
+
+#region OPCIONES
+     private void ControlMute(Vector2 move)
+    {
+
+
+        if (move.x <= -0.5f)
+        {
+            isMutedInternal = !isMutedInternal;
+            isCompletedHorizontal = true;
+            //
+            MusicController.MusicInstance.PlayFXSound(
+                MusicController.MusicInstance.sfx[1]
+            );
+
+            if (isMutedInternal == true)
+            {
+                textosOptions[0].text = "ON";
+            }
+            else
+            {
+                textosOptions[0].text = "OFF";
+            }
+
+                MusicController.MusicInstance.Mute();
+
+
+          
+
+
+        }
+        else if (move.x > 0.5f)
+        {
+
+            isMutedInternal = !isMutedInternal;
+            isCompletedHorizontal = true;
+
+            MusicController.MusicInstance.PlayFXSound(
+                MusicController.MusicInstance.sfx[1]
+            );
+
+            MusicController.MusicInstance.Mute();
+            if (isMutedInternal == true)
+            {
+                textosOptions[0].text = "ON";
+            }
+            else
+            {
+                textosOptions[0].text = "OFF";
+            }
+
+
+        }
+
+
+    }
+
+
+    private void ControlMainVolumen(Vector2 move)
+    {
+
+
+
+        if (move.x <= -0.5f)
+        {
+
+            isCompletedHorizontal = true;
+            MainVolumenMenos(true);
+
+        }
+        else if (move.x > 0.5f)
+        {
+            isCompletedHorizontal = true;
+            MainVolumenMas(true);
+        }
+
+
+
+
+    }
+
+    private void ControlSoundVolumen(Vector2 move)
+    {
+
+
+
+
+        if (move.x <= -0.5f)
+        {
+
+            isCompletedHorizontal = true;
+            SoundVolumenMenos(true);
+
+        }
+        else if (move.x > 0.5f)
+        {
+            isCompletedHorizontal = true;
+            SoundVolumenMas(true);
+        }
+
+
+
+
+    }
+
+
+
+    private void ControlSfxVolumen(Vector2 move)
+    {
+
+
+
+
+        if (move.x <= -0.5f)
+        {
+
+            isCompletedHorizontal = true;
+            SfxVolumenMenos(true);
+
+        }
+        else if (move.x > 0.5f)
+        {
+            isCompletedHorizontal = true;
+            SfxVolumenMas(true);
+        }
+
+
+
+
+    }
+    #endregion
 
 }

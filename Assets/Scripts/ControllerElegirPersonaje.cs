@@ -214,8 +214,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     }
 
-    public void InitActions()
+    private bool isOnline = false;
+
+    public void InitActions(bool online)
     { 
+        isOnline = online;
         inputActions.Enable();
     
     }
@@ -421,11 +424,11 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void BotonSur(InputAction.CallbackContext obj)
     {
 
-        print(gameController.dictPlayers.ContainsKey(obj.control.device.deviceId));
+        //print(gameController.dictPlayers.ContainsKey(obj.control.device.deviceId));
 
         if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
         { 
-            print("insertado: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
+            //print("insertado: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
             //insertar player
             
 
@@ -591,7 +594,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         for(short i = 0; i < gameController.JUGADORES_MAXIMO; i++)
         { 
-            print(gameController.jugadores[i]);    
+            //print(gameController.jugadores[i]);    
             if (gameController.jugadores[i].vacio == true)
             { 
                 //posicionLibre = i;
@@ -694,7 +697,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         gameController.dictPlayers.Add(deviceId, posicionLibre);
 
-        print("deviceid=" + deviceId);
+        //print("deviceid=" + deviceId);
 
         gameController.jugadores[posicionLibre] = new InfoPlayer(
                 focusPlayers[posicionLibre],
@@ -712,7 +715,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 deviceId
 
             );
-        print("deviceid=" + deviceId + "" + gameController.jugadores[posicionLibre].deviceId);
+        //print("deviceid=" + deviceId + "" + gameController.jugadores[posicionLibre].deviceId);
         //gameController.dictPlayers.Add(deviceId, new InfoPlayer(
         //        focusPlayers[gameController.contadorJugadores],
         //        null,
@@ -738,7 +741,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private void MoveFocus(GameObject focus, MatrixCharacters matrixPos, ushort posX, int posicionPlayer)
     {
 
-        print("nombre=" + focus.name + " matriz=" + matrixPos + " posX=" + posX + " playerID=" + posicionPlayer);
+        //print("nombre=" + focus.name + " matriz=" + matrixPos + " posX=" + posX + " playerID=" + posicionPlayer);
         
         if ((matrixPos is null) == false)
         {
