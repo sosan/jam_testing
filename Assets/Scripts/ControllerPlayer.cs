@@ -75,6 +75,12 @@ public class ControllerPlayer : MonoBehaviour
     {
         rigid = this.GetComponent<Rigidbody2D>();
         thistransform = this.gameObject.transform;
+
+        if (gameController is null == true)
+        { 
+            gameController = GameObject.FindObjectOfType<GameController>();
+        
+        } 
         
     }
 
@@ -408,13 +414,13 @@ public class ControllerPlayer : MonoBehaviour
             
             if (startTimePosibleDashDerecha >= 1f)
             {
-                print("reset");
+                //print("reset");
                 faseDashDerecha = 0;
 
             }
             else if (startTimePosibleDashDerecha >= 0.5f && startTimePosibleDashDerecha < 1f)
             { 
-                print("dentro");
+                //print("dentro");
                 if (countvecesDerecha == 1)
                 { 
                     faseDashDerecha = 2;

@@ -1,5 +1,6 @@
 KEY,espanol,english
 espanol,ESPAÑOL,SPANISH
+english,SPANISH,ENGLISH
 ingles,INGLES,ENGLISH
 entergameonline,JUGAR MULTI <color=#D40303>ONLINE</color>,PLAY MULTI <color=#D40303>ONLINE</color>
 entergame,JUGAR MULTI LOCAL,PLAY LOCAL MULTI
@@ -32,3 +33,6 @@ explicaciona,PULSA A <color=#1C5BB7>ELEGIR</color> / <color=green>LISTO</color>,
 explicacionb,PULSA B <color=red>CANCELAR</color>,PRES B <color=red>CANCEL</color>
 confirmar,A CONFIRMAR,CONFIRM
 conectando,CONECTANDO,CONECTING
+esperando,ESPERANDO JUGADORES,WAITING PLAYERS
+,,
+generandomapa,GENERANDO MAPA,GENERATING MAP

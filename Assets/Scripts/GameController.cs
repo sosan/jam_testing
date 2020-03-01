@@ -174,6 +174,8 @@ public class GameController : MonoBehaviour
     [SerializeField] public LobbyClientPun lobbyClientPun = null;
     [HideInInspector] public bool isOnline = false;
 
+    public Dictionary<int, GameObject> playersPhotonViewIdDict = new Dictionary<int, GameObject>();
+
     private void Awake()
     {
 
@@ -308,8 +310,21 @@ public class GameController : MonoBehaviour
 
         ready.text = Localization.Get("listos");
         animaciones.Play("ready");
+
+        if (isOnline == false)
+        { 
+            SpawnerPowerups(20); //40
         
-        SpawnerPowerups(20); //40
+        }
+        else
+        { 
+        
+        
+        
+        }
+
+        
+        
 
 
 
@@ -411,7 +426,10 @@ public class GameController : MonoBehaviour
     private ushort contadorPosicionPowerups = 0;
     public void SpawnerPowerups(ushort timeInSeconds)
     {
-
+        
+        
+        
+        
         spawnerpowerups = Observable
         .Timer(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(timeInSeconds))
         .TakeUntil(faseConcluida.Where(concluido => concluido == true))
@@ -546,17 +564,19 @@ public class GameController : MonoBehaviour
         }
     
     }
+
+    
     
 
 
-    public (ExitGames.Client.Photon.Hashtable, string) SetPlayerForOnline(ref ExitGames.Client.Photon.Hashtable hastable)
+    public ExitGames.Client.Photon.Hashtable SetPlayerForOnline(ref ExitGames.Client.Photon.Hashtable hastable)
     {
         hastable.Add("namePlayer", jugadores[0].namePlayer);
         hastable.Add("playerPower", jugadores[0].powerDamage);
         hastable.Add("playerDefense", jugadores[0].defense);
         hastable.Add("playerColor", jugadores[0].nombreColorPlayer.ToString());
 
-        return (hastable, jugadores[0].namePlayer);
+        return hastable;
 
     }
 

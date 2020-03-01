@@ -39,8 +39,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
     [Header("Nombre Personajes")]
     public TextMeshProUGUI[] nameCharactersPlayer;
 
-    [Header("texto empezar lucha")]
-    [SerializeField] private UILocalization textoempezarlucha = null;
+    //[Header("texto empezar lucha")]
+    //[SerializeField] private UILocalization textoempezarlucha = null;
 
 
     [SerializeField] private TextMeshProUGUI[] listoMensaje = null;
@@ -94,7 +94,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
     private bool isCompletedMoveLeftStick = false;
     //private bool isOnline = false;
 
-    [SerializeField] private TextMeshProUGUI mensajeBotonEntrar = null;
+    [SerializeField] public TextMeshProUGUI mensajeBotonEntrar = null;
     
 
 
@@ -143,7 +143,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         }
 
-        textoempezarlucha.key = "esperandojugadores";
+        //textoempezarlucha.key = "esperandojugadores";
 
         //fitting alpha image with collider. needs read/write enabled from texture
         for (ushort i = 0; i < charactersImagesSmall.Length; i++)
@@ -473,7 +473,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
         else
         { 
         
-            print("player listo: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
+            //print("player listo: " + gameController.contadorJugadores + " device=" + obj.control.device.deviceId);
             
             int posicionPlayer = gameController.dictPlayers[obj.control.device.deviceId];
             
@@ -578,7 +578,8 @@ public class ControllerElegirPersonaje : MonoBehaviour
         }
         else
         { 
-            BotonSur(obj);
+            //
+            print("queremos volver atras???");
         
         }
 
@@ -846,18 +847,41 @@ public class ControllerElegirPersonaje : MonoBehaviour
             //todos los gameController.jugadores al completo listos
             if (completado == true)
             {
+#if UNITY_EDITOR
                 print("al ataker");
+#endif
                 //RellenarBots();
 
-                mensajeBotonEntrar.text = Localization.Get("conectando");
-                gameController.lobbyClientPun.ConnectToPun(gameController.jugadores[0].namePlayer);
+
                 if (gameController.isOnline == true)
                 {
+                    mensajeBotonEntrar.text = Localization.Get("conectando");
+                    gameController.lobbyClientPun.ConnectToPun(gameController.jugadores[0].focusPlayer.GetComponent<MatrixCharacters>().nameCharacter);
+
+                    // hay que esperar a que haya al menos 2 jugadores ???
                     await UniTask.WaitUntil(() => pistaLibre.Value == true);
+
+                    if (inputActions != null)
+                    {
+                        inputActions.Disable();
+
+                    }
+
+                    gameController.canvasMenu[5].SetActive(true);
+                    gameController.canvasMenu[6].SetActive(true);
+
+                    gameController.canvasMenu[4].SetActive(true);
+                    gameController.canvasMenu[3].SetActive(false);
+                    
+
+                    gameController.InitGame();
+
                 
                 }
                 else
                 { 
+
+                    mensajeBotonEntrar.text = Localization.Get("generandomapa");
                     await UniTask.Delay(TimeSpan.FromSeconds(2));
                     alAtaque();
                 
@@ -919,14 +943,13 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
         }
 
+        gameController.canvasMenu[5].SetActive(true);
+        gameController.canvasMenu[6].SetActive(true);
+
         gameController.canvasMenu[4].SetActive(true);
         gameController.canvasMenu[3].SetActive(false);
+
         gameController.InstanciarJugadorLocal();
-
-
-       
-
-
         gameController.InitGame();
 
     }

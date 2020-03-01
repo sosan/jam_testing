@@ -117,12 +117,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5276470758355568191}
+  - component: {fileID: 4392441893035107320}
+  - component: {fileID: -8210343536605830737}
   - component: {fileID: 5276470758355568190}
-  - component: {fileID: 1465185731}
   - component: {fileID: 4462778762192266002}
   - component: {fileID: 6378607363783633385}
+  - component: {fileID: -6423473797200078200}
+  - component: {fileID: -4275581959602445022}
   m_Layer: 9
-  m_Name: Player
+  m_Name: PlayerOnline
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,6 +146,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4392441893035107320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5276470758355568189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa436b4b7ff13994185d75ae1284daad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameController: {fileID: 0}
+  rigid: {fileID: 4462778762192266002}
+  thistransform: {fileID: 5276470758355568191}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  colorInicial: {r: 1, g: 1, b: 1, a: 1}
+  colorDestino: {r: 1, g: 1, b: 1, a: 1}
+  spritePlayer: {fileID: 5276470758355568190}
+  isDestroyer: 0
+  caidoHueco: 0
+  m_Speed: 5
+--- !u!114 &-8210343536605830737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5276470758355568189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fecd25ba514e4d4a95a62e4a7cdee69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lobby: {fileID: 0}
+  gameController: {fileID: 0}
+  photonview: {fileID: -6423473797200078200}
+  shotPrefabs: []
+  rigid: {fileID: 4462778762192266002}
+  thistransform: {fileID: 5276470758355568191}
+  raycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  colorInicial: {r: 1, g: 1, b: 1, a: 1}
+  colorDestino: {r: 1, g: 1, b: 1, a: 1}
+  spritePlayer: {fileID: 5276470758355568190}
+  isDestroyer: 0
+  caidoHueco: 0
+  m_Speed: 5
 --- !u!212 &5276470758355568190
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -193,30 +247,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1465185731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5276470758355568189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa436b4b7ff13994185d75ae1284daad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameController: {fileID: 0}
-  rigid: {fileID: 4462778762192266002}
-  thistransform: {fileID: 5276470758355568191}
-  raycastLayerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  colorInicial: {r: 1, g: 1, b: 1, a: 1}
-  colorDestino: {r: 1, g: 1, b: 1, a: 1}
-  spritePlayer: {fileID: 5276470758355568190}
-  m_Speed: 5
-  shotSpeed: 15
-  isDestroyer: 0
 --- !u!50 &4462778762192266002
 Rigidbody2D:
   serializedVersion: 4
@@ -264,3 +294,41 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.13828571, y: 0.18534923}
   m_EdgeRadius: 0
+--- !u!114 &-6423473797200078200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5276470758355568189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: -8210343536605830737}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-4275581959602445022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5276470758355568189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 0
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3

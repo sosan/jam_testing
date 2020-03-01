@@ -27,7 +27,9 @@ public class ControllerGamepadMenu : MonoBehaviour
     [SerializeField] private ParticleSystem particleMenuSelected = null;
     [SerializeField] private RectTransform particleTransform = null;
     [SerializeField] private RectTransform[] positionTransformparticles = null;
+    [SerializeField] private RectTransform[] positionOptionsTransform = null;
     [SerializeField] private RectTransform bola_seleccion = null;
+    [SerializeField] private RectTransform bola_options = null;
 
     [SerializeField] private ParticleSystem particleOptionsSelected = null;
     [SerializeField] private RectTransform particleTransformOptions = null;
@@ -68,12 +70,10 @@ public class ControllerGamepadMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] textosOptions = null;
     [SerializeField] private TextMeshProUGUI[] txtOptions = null;
 
-
-    //[Header("Credits")]
-    //[SerializeField] private TextMeshProUGUI textoCredits = null;
-
-
-    //private CancellationTokenSource[] tokenSource = null;
+    [Header("Imagen Logo")]
+    [SerializeField] private Sprite imagenSpa = null;
+    [SerializeField] private Sprite imagenEng = null;
+    [SerializeField] private Image logo = null;
 
     private void OnEnable()
     {
@@ -93,11 +93,16 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
     
+    
 
 
 
     private async void Start()
     {
+
+
+
+
 
         Application.targetFrameRate = 60;
         Application.runInBackground = true;
@@ -109,7 +114,7 @@ public class ControllerGamepadMenu : MonoBehaviour
            mainSfxInternal
        );
 
-
+        ShowPositionMenuWithGamePad();
         MusicController.MusicInstance.PlayInGameMusic( MusicController.MusicInstance.sounds[0]);
         DisableCanvas();
 
@@ -142,7 +147,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         //ShowPositionMenu(0);
         contMenuPosition = 0;
 
-        ShowPositionMenuWithGamePad();
+        //ShowPositionMenuWithGamePad();
         inputActions.Enable();
 
     }
@@ -175,8 +180,35 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     }
 
+   
+
     private void GettingPlayerPrefsValues()
     {
+
+        if (PlayerPrefs.HasKey("idioma") == true)
+        {
+
+
+            string t = PlayerPrefs.GetString("idioma");
+
+            switch (t)
+            {
+
+                case "espanol": logo.sprite = imagenSpa; break;
+                case "english": logo.sprite = imagenEng; break;
+                default: Debug.LogError("NOT SET IDIOMA"); return;
+
+            }
+
+
+        }
+        else
+        {
+            logo.sprite = imagenSpa;
+
+        }
+
+
 
         if (PlayerPrefs.HasKey("isMutedInternal") == true)
         {
@@ -537,7 +569,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     private void ShowPositionOptions()
     {
 
-
+        
         for (ushort i = 0; i < textosOptions.Length; i++)
         {
 
@@ -548,6 +580,20 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         textosOptions[contOptionsPosition].color = selectedColor;
         txtOptions[contOptionsPosition].color = selectedColor;
+
+        //print(contOptionsPosition);
+        if (contOptionsPosition >= 0 && contOptionsPosition < 4)
+        { 
+            var tempPos = positionOptionsTransform[contOptionsPosition].anchoredPosition;
+            tempPos.x = bola_options.anchoredPosition.x;
+            bola_options.anchoredPosition = tempPos;
+            bola_options.gameObject.SetActive(true);
+
+        
+        }
+
+        
+
     }
 
 
@@ -617,7 +663,8 @@ public class ControllerGamepadMenu : MonoBehaviour
             
             descripcion.text = Localization.Get("movimientodescripcion_gamepad");
             var mov = obj.ReadValue<Vector2>();
-            ControlMenuStick(mov);
+
+            ControlMenuStick(mov, obj.control.device.deviceId);
             return;
 
         }
@@ -627,7 +674,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         {
 
             var mov = obj.ReadValue<Vector2>();
-            ControlOptionStick(mov);
+            ControlOptionStick(mov, obj.control.device.deviceId);
             return;
         }
 
@@ -639,7 +686,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private void ControlMenuStick(Vector2 move)
+    private void ControlMenuStick(Vector2 move, int deviceId)
     {
 
 
@@ -649,7 +696,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         {
             isCompletedVertical = true;
             MusicController.MusicInstance.PlayFXSound(MusicController.MusicInstance.sfx[0]);
-
+            gameController.HacerVibrarMando(deviceId);
             contMenuPosition++;
             if (contMenuPosition > textos.Length - 1)
             {
@@ -665,7 +712,7 @@ public class ControllerGamepadMenu : MonoBehaviour
             isCompletedVertical = true;
             MusicController.MusicInstance.PlayFXSound(MusicController.MusicInstance.sfx[0]);
             contMenuPosition--;
-
+            gameController.HacerVibrarMando(deviceId);
             if (contMenuPosition < 0)
             {
 
@@ -682,7 +729,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     }
 
 
-    private void ControlOptionStick(Vector2 move)
+    private void ControlOptionStick(Vector2 move, int deviceId)
     {
 
         
@@ -695,6 +742,7 @@ public class ControllerGamepadMenu : MonoBehaviour
             contOptionsPosition++;
             isCompletedVertical = true;
             MusicController.MusicInstance.PlayFXSound(MusicController.MusicInstance.sfx[0]);
+            gameController.HacerVibrarMando(deviceId);
             if (contOptionsPosition > 5)
             {
 
@@ -707,6 +755,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         {
 
             contOptionsPosition--;
+            gameController.HacerVibrarMando(deviceId);
             isCompletedVertical = true;
             MusicController.MusicInstance.PlayFXSound(MusicController.MusicInstance.sfx[0]);
 
@@ -890,7 +939,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private void ShowInitGameGamepad(bool online)
     {
-        print("online0" + online);
+        //print("online0" + online);
         if (isBegun == true) return;
         isBegun = true;
 
@@ -974,12 +1023,19 @@ public class ControllerGamepadMenu : MonoBehaviour
         await UniTask.Delay(400);
 
 
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-
-#elif UNITY_STANDALONE
-        Application.Quit();
+#if (UNITY_EDITOR)
+    UnityEditor.EditorApplication.isPlaying = false;
+#elif (UNITY_STANDALONE) 
+    Application.Quit();
+#elif (UNITY_WEBGL)
+    Application.OpenURL("about:blank");
 #endif
+
+
+
+
+
+
 
     }
 
@@ -1125,7 +1181,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(duration * 1000));
 
-        print("online=" + online);
+        //print("online=" + online);
         if (online == true)
         {
             elegirPersonaje.entrada_txt[0].text = Localization.Get("pulsaboton");
