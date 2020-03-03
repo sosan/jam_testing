@@ -136,8 +136,8 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
         int contadorJugadores = PhotonNetwork.CurrentRoom.PlayerCount;
         contadorJugadores--;
 
-        print("numero de jugadores=" + PhotonNetwork.CurrentRoom.PlayerCount);
-        print("numero ju" + contadorJugadores);
+        //print("numero de jugadores=" + PhotonNetwork.CurrentRoom.PlayerCount);
+        //print("numero ju" + contadorJugadores);
 
         if (contadorJugadores <= 0)
         { 

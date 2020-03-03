@@ -73,7 +73,13 @@ public class ControllerDestroyer :  MonoBehaviourPun //, IPunObservable
                 }
 
                 if (hits[i].CompareTag("Player") == true)
-                { 
+                {
+                    
+                    //teletransportar al jugador al inicio?
+                    hits[i].transform.position = gameController.initialPlayerPositions[hits[i].GetComponent<ControllerPlayer>().posicion].position;
+
+
+
                 }
                 
                 //tienen hijos

@@ -1183,12 +1183,12 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public void AddPlayerFromOnline(int posicionLibre)
     { 
     
-        print("posicionlibre" + posicionLibre);
+        //print("posicionlibre" + posicionLibre);
         
         explicaciones[0].text = "";
         explicaciones[1].text = "";
 
-        print("es mastercliente=" + Photon.Pun.PhotonNetwork.IsMasterClient);
+        //print("es mastercliente=" + Photon.Pun.PhotonNetwork.IsMasterClient);
         if (Photon.Pun.PhotonNetwork.IsMasterClient == true)
         { 
             explicaciones[0].text = Localization.Get("explicacionaonline");

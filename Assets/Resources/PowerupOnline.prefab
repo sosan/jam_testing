@@ -101,6 +101,7 @@ MonoBehaviour:
   gameController: {fileID: 0}
   rigid: {fileID: 5535258453933399486}
   isOnline: 1
+  isCalled: 0
 --- !u!61 &1204190205313220878
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -171,7 +171,7 @@ public class GameController : MonoBehaviour
 
     [HideInInspector] public bool playersSePuedenMover = false;
     [HideInInspector] public string texto_fase2 = "go";
-    private ushort NUM_BLOQUES = 145;
+    private ushort NUM_BLOQUES = 141;
     
     //[SerializeField] public nombreColores nombreColoresPlayers;
     public bool[] casillasOcupadasPowerup = new bool[5];
@@ -422,7 +422,7 @@ public class GameController : MonoBehaviour
 
                 tiempoBatalla.text = "";
                 tiempoCurrentBatalla = 0; 
-                MostrarGanador();
+                
             
             }
 
@@ -431,7 +431,12 @@ public class GameController : MonoBehaviour
         () => //completado
         {
 
-            crono.Dispose();
+            if (crono is null == false)
+            { 
+                crono.Dispose();
+            }
+
+            
 
             faseConcluida.Value = true;
 

@@ -446,7 +446,7 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
 
     //    }
-
+    
 
 
     //}
@@ -476,13 +476,36 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
 
     [PunRPC]
-    private void ColisionConPowerup(int target, PhotonMessageInfo info)
+    private void ColisionConPowerup(int idplayer, int idpowerup, PhotonMessageInfo info)
     { 
         
-        var player = PhotonNetwork.GetPhotonView( target).gameObject;
-        player.GetComponent<ControllerPlayer>().ProcesarPowerUp(null);
+        print("colisionconpowerup=" + idplayer +  " idpowerup=" + idpowerup );
+
+        var player = PhotonNetwork.GetPhotonView( idplayer).gameObject;
+        player.GetComponent<ControllerPlayer>().ProcesarPowerUp();
+
+        if (PhotonNetwork.IsMasterClient == true)
+        { 
+            var powerup = PhotonNetwork.GetPhotonView( idpowerup);
+            PhotonNetwork.Destroy(powerup);
+            
+        
+        }
     
     }
+
+
+    //[PunRPC]
+    //private void QuitarPowerup(int target, PhotonMessageInfo info)
+    //{
+
+    //    print("hola");
+       
+    //    var powerup = PhotonNetwork.GetPhotonView( target);
+    //    PhotonNetwork.DestroyAll(powerup);
+    
+    
+    //}
 
 
 }

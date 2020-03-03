@@ -11,6 +11,7 @@ public class ControllerPowerup : MonoBehaviour
     [SerializeField] public GameController gameController = null;
     [SerializeField] private Rigidbody2D rigid = null;
     [SerializeField] private bool isOnline = false;
+    [SerializeField] public bool isCalled = false;
     
 
 
@@ -21,7 +22,7 @@ public class ControllerPowerup : MonoBehaviour
     }
 
 
-    private async void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         
         if (collision.CompareTag("Player"))
@@ -29,32 +30,29 @@ public class ControllerPowerup : MonoBehaviour
             
             if (isOnline == true)
             {
+                if (this.GetComponent<PhotonView>().IsMine == false) return;
+                //this.GetComponent<PhotonView>().RPC("QuitarPowerup", RpcTarget.MasterClient, true);
                 
-                //if (collision.gameObject.GetComponent<Photon.Pun.PhotonView>().IsMine == false)
+            }
+            else
+            { 
+                collision.gameObject.GetComponent<ControllerPlayer>().isDestroyer = true;
+
+                Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
+                for (ushort i = 0; i < childrens.Length; i++)
                 { 
-                    
-                    var target = collision.gameObject.GetComponent<PhotonView>().ViewID;
-                    this.gameObject.GetComponent<PhotonView>().RPC("CollisionConPowerup", RpcTarget.OthersBuffered, target);
-                    await UniTask.Delay(TimeSpan.FromMilliseconds(300));
-                    PhotonNetwork.Destroy(this.GetComponent<PhotonView>());
-                    return;
+                    Destroy(childrens[i].gameObject);
+        
                 }
+
+        
+                Destroy(this.gameObject);
+        
             
             }
 
 
-            collision.gameObject.GetComponent<ControllerPlayer>().isDestroyer = true;
-
-            Transform[] childrens = this.gameObject.GetComponentsInChildren<Transform>();
-            for (ushort i = 0; i < childrens.Length; i++)
-            { 
-                Destroy(childrens[i].gameObject);
-        
-            }
-
-        
-            Destroy(this.gameObject);
-        
+            
         }
 
 
