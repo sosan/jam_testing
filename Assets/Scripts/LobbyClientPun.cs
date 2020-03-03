@@ -322,6 +322,14 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
 
     }
 
+    public void InstanciarPowerups(Vector3 posicion)
+    { 
+        PhotonNetwork.InstantiateSceneObject("PowerupOnline", posicion, Quaternion.identity, 0);
+        
+    
+    
+    }
+
 
 
 

@@ -125,9 +125,16 @@ public class ControllerPlayer : MonoBehaviour
             
         //    );
 
-        if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playersSePuedenMover == false) return;
-        if(player.playerSePuedeMover == false) return;
+
+        if (gameController.isOnline == false)
+        { 
+            if (obj.control.device.deviceId != player.deviceId) return;
+            if(gameController.playersSePuedenMover == false) return;
+            if(player.playerSePuedeMover == false) return;
+
+        
+        }
+
         if (bombAwaiting == true) return;
 
          //raycast para saber si estamos encima de que estamos..
@@ -182,15 +189,47 @@ public class ControllerPlayer : MonoBehaviour
             
             isDestroyer = false;
             spritePlayer.color = player.colorPlayer;
-            GameObject destroyer = GameObject.Instantiate(gameController.prefabDestroyer, 
+
+            if (gameController.isOnline)
+            { 
+
+                
+                object[] data = new object[3];
+
+                data[0] = player.colorPlayer.r;
+                data[1] = player.colorPlayer.g;
+                data[2] = player.colorPlayer.b;
+
+
+                var destroyer = PhotonNetwork.Instantiate("DestroyerOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
+                
+                destroyer.transform.SetParent(gameController.canvasMenu[4].transform);
+
+                //destroyer.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+                //destroyer.GetComponent<ControllerDestroyer>().color = player.colorPlayer;
+                //destroyer.GetComponent<ControllerDestroyer>().cruz.color = player.colorPlayer;
+                //destroyer.GetComponent<ControllerDestroyer>().controllerplayer = this;
+
+
+            
+            }
+            else
+            { 
+                GameObject destroyer = GameObject.Instantiate(gameController.prefabDestroyer, 
                 new Vector3(x, y, 0), 
                 Quaternion.identity,
                 gameController.canvasMenu[4].transform);
 
-            destroyer.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-            destroyer.GetComponent<ControllerDestroyer>().color = player.colorPlayer;
-            destroyer.GetComponent<ControllerDestroyer>().cruz.color = player.colorPlayer;
-            destroyer.GetComponent<ControllerDestroyer>().controllerplayer = this;
+                destroyer.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+                destroyer.GetComponent<ControllerDestroyer>().color = player.colorPlayer;
+                destroyer.GetComponent<ControllerDestroyer>().cruz.color = player.colorPlayer;
+                //destroyer.GetComponent<ControllerDestroyer>().controllerplayer = this;
+            
+            
+            }
+
+
+           
             
         
         }
@@ -706,6 +745,13 @@ public class ControllerPlayer : MonoBehaviour
 
         if (collision.CompareTag("powerup") == true)
         {
+
+            if (gameController.isOnline == true)
+            {
+                punPlayer.photonview.RPC("ColisionConPowerup", RpcTarget.OthersBuffered, true);
+
+            }
+
             ProcesarPowerUp(collision);
             return;
 

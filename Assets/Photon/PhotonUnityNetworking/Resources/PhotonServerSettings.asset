@@ -40,5 +40,6 @@ MonoBehaviour:
   - Empezar
   - UpdateUI
   - ColisionConHueco
+  - ColisionConPowerup
   DisableAutoOpenWizard: 1
   ShowSettings: 1

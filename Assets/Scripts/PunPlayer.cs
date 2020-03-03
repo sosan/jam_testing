@@ -369,7 +369,7 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
 
         Color32 color = new Color32(r, g, b, 255);
-        print("namebox" + nameBox + color.ToString());
+        //print("namebox" + nameBox + color.ToString());
 
 
         if (gameController.listadoBoxes.ContainsKey(nameBox) == true)
@@ -471,6 +471,16 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
         var player = PhotonNetwork.GetPhotonView( info.photonView.ViewID).gameObject;
         player.GetComponent<ControllerPlayer>().ProcesarHueco(null);
 
+    
+    }
+
+
+    [PunRPC]
+    private void ColisionConPowerup(int target, PhotonMessageInfo info)
+    { 
+        
+        var player = PhotonNetwork.GetPhotonView( target).gameObject;
+        player.GetComponent<ControllerPlayer>().ProcesarPowerUp(null);
     
     }
 

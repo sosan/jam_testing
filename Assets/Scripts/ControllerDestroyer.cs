@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UniRx.Async;
+using Photon.Pun;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Pun.UtilityScripts;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
-public class ControllerDestroyer : MonoBehaviour
+public class ControllerDestroyer :  MonoBehaviourPun //, IPunObservable
 {
     [SerializeField] public ControllerPlayer controllerplayer = null;
     [SerializeField] private ushort timeExplode = 3;
@@ -21,12 +26,23 @@ public class ControllerDestroyer : MonoBehaviour
 
     private float progresoLerp = 0;
     private float interpolateDuration = 0.2f;
+    private GameController gameController = null;
+
+
+    private void Awake()
+    {
+        gameController = GameObject.FindObjectOfType<GameController>();
+    }
+
 
 
 
     // Start is called before the first frame update
     private async void Start()
     {
+
+
+
         
         await UniTask.Delay(TimeSpan.FromSeconds(timeExplode - 1));
         lerpingColor = true;
@@ -134,6 +150,29 @@ public class ControllerDestroyer : MonoBehaviour
             cruz.color = Color.Lerp(colorInicial, color, progresoLerp);
 
         }
+
+
+    }
+
+
+    void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        object[] data = photonView.InstantiationData;
+
+        Color color = new Color((float)data[0], (float)data[1], (float)data[2]);
+
+        this.GetComponent<SpriteRenderer>().color = color;
+        this.GetComponent<ControllerDestroyer>().color = color;
+        this.GetComponent<ControllerDestroyer>().cruz.color = color;
+        //this.GetComponent<ControllerDestroyer>().controllerplayer = this;
+
+
+        if (gameController is null == true)
+        { 
+            gameController = GameObject.FindObjectOfType<GameController>();
+        }
+
+        this.gameObject.transform.SetParent(gameController.canvasMenu[4].transform);
 
 
     }

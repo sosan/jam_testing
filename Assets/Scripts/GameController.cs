@@ -8,6 +8,7 @@ using System;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using InControlActions;
+using Photon.Pun;
 
 
 public class InfoPlayer
@@ -97,6 +98,10 @@ public enum nombreColores
 
 public class GameController : MonoBehaviour
 {
+
+    [Header("Elegir Personaje")]
+    [SerializeField] public LobbyClientPun lobby = null;
+
 
     [Header("Elegir Personaje")]
     [SerializeField] public ControllerElegirPersonaje elegirPersonaje = null;
@@ -328,7 +333,15 @@ public class GameController : MonoBehaviour
         
         }
         else
-        { 
+        {
+            
+            if (Photon.Pun.PhotonNetwork.IsMasterClient == true)
+            { 
+            
+                SpawnerPowerups(20); //40
+            
+            
+            }
         
         
         
@@ -461,6 +474,7 @@ public class GameController : MonoBehaviour
     }
 
     private ushort contadorPosicionPowerups = 0;
+
     public void SpawnerPowerups(ushort timeInSeconds)
     {
         
@@ -473,30 +487,53 @@ public class GameController : MonoBehaviour
         .Subscribe(time =>
         {
 
-            
-            var powerup = GameObject.Instantiate(prefabPowerup, 
-                positionsPowerups[contadorPosicionPowerups].position, 
-                Quaternion.identity, 
-                canvasMenu[4].transform);
-            
-            casillasOcupadasPowerup[contadorPosicionPowerups] = true;
 
-            if (positionsPowerups[contadorPosicionPowerups].CompareTag("hueco") == true)
-            { 
+            if (casillasOcupadasPowerup[contadorPosicionPowerups] == false)
+            {
+                
+                if (isOnline == true)
+                { 
+            
+                    if (Photon.Pun.PhotonNetwork.IsMasterClient == true)
+                    { 
+                        lobby.InstanciarPowerups(positionsPowerups[contadorPosicionPowerups].position);
+            
+                    }
+
+                }
+                else
+                { 
+            
+                     var powerup = GameObject.Instantiate(prefabPowerup, 
+                        positionsPowerups[contadorPosicionPowerups].position, 
+                        Quaternion.identity, 
+                        canvasMenu[4].transform
+                        );
+
+                    powerup.GetComponent<ControllerPowerup>().gameController = this;
+
+                }
+
+                casillasOcupadasPowerup[contadorPosicionPowerups] = true;
+
+                contadorPosicionPowerups++;
+                if (contadorPosicionPowerups >= casillasOcupadasPowerup.Length)
+                { 
+                    contadorPosicionPowerups = 0;
+            
+            
+                }
+          
                 
             }
 
 
-            powerup.GetComponent<ControllerPowerup>().gameController = this;
-            contadorPosicionPowerups++;
-
-            //var rndPos = UnityEngine.Random.Range(0, positionsPowerups.Length);
-
-            //if (casillasOcupadasPowerup[rndPos] == false)
-            //{ 
             
-
+            //if (positionsPowerups[contadorPosicionPowerups].CompareTag("hueco") == true)
+            //{ 
+                
             //}
+
             
 
         }

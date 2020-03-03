@@ -5875,6 +5875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8d515ff337bc540a6f83073a6cde3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lobby: {fileID: 516267974}
   elegirPersonaje: {fileID: 994474771}
   canvasMenu:
   - {fileID: 1285542576}
