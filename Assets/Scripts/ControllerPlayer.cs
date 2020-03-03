@@ -195,16 +195,17 @@ public class ControllerPlayer : MonoBehaviour
             if (gameController.isOnline)
             { 
 
-                
-                object[] data = new object[3];
+                if (this.GetComponent<PhotonView>().IsMine == true)
+                { 
+                    object[] data = new object[3];
 
-                data[0] = player.colorPlayer.r;
-                data[1] = player.colorPlayer.g;
-                data[2] = player.colorPlayer.b;
+                    data[0] = player.colorPlayer.r;
+                    data[1] = player.colorPlayer.g;
+                    data[2] = player.colorPlayer.b;
 
 
-                destroyer = PhotonNetwork.Instantiate("DestroyerOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
-                
+                    destroyer = PhotonNetwork.Instantiate("DestroyerOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
+                }
             
             }
             else
@@ -236,16 +237,30 @@ public class ControllerPlayer : MonoBehaviour
             GameObject bomba = null;
             if (gameController.isOnline == true)
             { 
-                object[] data = new object[4];
 
-                data[0] = player.colorPlayer.r;
-                data[1] = player.colorPlayer.g;
-                data[2] = player.colorPlayer.b;
-                data[3] = this.GetComponent<PhotonView>().ViewID;
+                if (this.GetComponent<PhotonView>().IsMine == true)
+                { 
+                    object[] data = new object[4];
 
-                bomba = PhotonNetwork.Instantiate("BombaOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
+                    data[0] = player.colorPlayer.r;
+                    data[1] = player.colorPlayer.g;
+                    data[2] = player.colorPlayer.b;
+                    data[3] = this.GetComponent<PhotonView>().ViewID;
+                    print("este es el id" + this.GetComponent<PhotonView>().ViewID);
 
-            
+                    bomba = PhotonNetwork.Instantiate("BombaOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
+                    bomba.GetComponent<ControllerBomba>().viewidPlayer = bomba.GetComponent<PhotonView>().ViewID;
+                    
+                    //local
+
+                    bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+                    bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
+                    bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+
+                
+                }
+
+                
             }
             else
             { 
@@ -253,16 +268,16 @@ public class ControllerPlayer : MonoBehaviour
                 new Vector3(x, y, 0), 
                 Quaternion.identity,
                 gameController.canvasMenu[4].transform);
-
+                 bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+                bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
+                bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+                bomba.GetComponent<ControllerBomba>().controllerPlayer = this;
             
             
             
             }
 
-            bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-            bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
-            bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
-            bomba.GetComponent<ControllerBomba>().controllerPlayer = this;
+           
            
         
         }

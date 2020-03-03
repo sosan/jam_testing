@@ -494,6 +494,15 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     
     }
 
+    [PunRPC]
+    private void DatosBomba(List<string> datosAmarillos, List<string> datosAzules, List<string> datosRojos, List<string> datosBlancos)
+    { 
+    
+        print("datosamarillos" + datosAmarillos.Count);
+        print("datosamarillos" + datosAzules.Count);
+    
+    }
+
 
     //[PunRPC]
     //private void QuitarPowerup(int target, PhotonMessageInfo info)

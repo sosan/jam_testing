@@ -43,5 +43,6 @@ MonoBehaviour:
   - ColisionConPowerup
   - RemovePowerup
   - QuitarPowerup
+  - DatosBomba
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -25,7 +25,7 @@ public class ControllerLimites : MonoBehaviour
             collision.attachedRigidbody.isKinematic = false;
             collision.gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
 
-            collision.gameObject.GetComponent<ControllerBomba>().CalcularExplosion(isShooted: true);
+            collision.gameObject.GetComponent<ControllerBomba>().CalcularExplosion();
             
             
 

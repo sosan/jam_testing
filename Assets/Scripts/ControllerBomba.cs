@@ -6,19 +6,24 @@ using UniRx.Async;
 using Photon.Pun;
 
 
-public class ControllerBomba : MonoBehaviourPun
+public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 {
 
     [SerializeField] public ControllerPlayer controllerPlayer = null;
     [SerializeField] public GameController gameController = null;
+    [SerializeField] private PhotonView photonView = null;
     [SerializeField] private ushort timeExplode = 3;
     [SerializeField] private ParticleSystem explosion = null;
+    [SerializeField] private ParticleSystem.MainModule mainmodule;
     [SerializeField] private string ignoreTag;
     [SerializeField] private LayerMask raycastLayerMask = -1;
     [SerializeField] public Color color = Color.white;
     [SerializeField] public Color colorInicial = Color.white;
     [SerializeField] public SpriteRenderer cruz = null;
     [SerializeField] private Rigidbody2D rigid = null;
+    [SerializeField] private SpriteRenderer fondo = null;
+
+
 
     private bool lerpingColor = false;
     
@@ -26,9 +31,20 @@ public class ControllerBomba : MonoBehaviourPun
     private float interpolateDuration = 0.2f;
     private bool isExplosion = false;
 
-    private bool isOnline = false;
-    private int viewidPlayer = -1;
+    public bool isOnline = false;
+    public int viewidPlayer = -1;
     public bool isShooted = false;
+
+    
+    short bloquesAmarillos = 0;
+    short bloquesAzules = 0;
+    short bloquesRojos = 0; 
+    short bloquesBlancos = 0; 
+
+    private List<string> quitarAmarillos = new List<string>();
+    private List<string> quitarAzules = new List<string>();
+    private List<string> quitarRojos = new List<string>();
+    private List<string> quitarBlancos = new List<string>();
 
     private void Awake()
     {
@@ -40,8 +56,11 @@ public class ControllerBomba : MonoBehaviourPun
         
         }
 
+        mainmodule = explosion.main;
+        mainmodule.startColor = new ParticleSystem.MinMaxGradient(color);
 
     }
+
 
 
     private async void Start()
@@ -54,48 +73,100 @@ public class ControllerBomba : MonoBehaviourPun
         
         await UniTask.Delay(TimeSpan.FromSeconds(1));
         if (isExplosion == false)
-        { 
+        {
 
-            //if (isOnline == true)
-            //{ 
-            //    CalcularExplosionOnline();
+            if (isOnline == true)
+            {
+                CalcularExplosionOnline();
+
+            }
+            else
+            {
+                CalcularExplosion();
+
+            }
             
-            //}
-            //else
-            //{ 
-                
-            
-            //}
-            CalcularExplosion();
             
         }
         
         
     }
 
-    //public async void CalcularExplosionOnline()
-    //{ 
-    //    if (isShooted == true)
-    //    { 
-    //        await UniTask.Delay(TimeSpan.FromSeconds(1));
-    //    }
+    public async void CalcularExplosionOnline()
+    {
+        if (isShooted == true)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+        }
 
-    //    try
-    //    { 
-    //        isExplosion = true;
-    //        var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(2, 2), 0, layerMask: raycastLayerMask);
-
-    //        PhotonNetwork.Destroy(this.GetComponent<PhotonView>());
-    //    }
-    //    catch (MissingReferenceException)
-    //    { 
+        try
+        {
             
-        
-    //    } 
+            if (controllerPlayer is null == true)
+            { 
+
+                print("viewidPlayer=" + viewidPlayer);
+                controllerPlayer = PhotonNetwork.GetPhotonView(viewidPlayer).gameObject.GetComponent<ControllerPlayer>();
+                    
+                    
+            }
+            
+            isExplosion = true;
+            var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(2, 2), 0, layerMask: raycastLayerMask);
+            if (hits is null == false)
+            {
+            
+                
+                print("longitud hits=" + hits.Length);
+                ushort numerohitsefectivo = 0;
+
+                for (ushort i = 0 ; i < hits.Length; i++)
+                { 
+                    print("hits" + i + " nombre" + hits[i].name);
+                    if (hits[i].CompareTag("fondo") == false) continue;
+
+                    hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                    
+                    numerohitsefectivo++;
+                    //restamos puntuacion al enemigo
+                    switch (hits[i].transform.tag)
+                    {
+                        case "amarillo": quitarAmarillos.Add(hits[i].gameObject.name); break;
+                        case "azul": quitarAzules.Add(hits[i].gameObject.name); break;
+                        case "rojo": quitarRojos.Add(hits[i].gameObject.name);  break;
+                        case "blanco": quitarBlancos.Add(hits[i].gameObject.name); break;
+                        case "fondo": break;
+
+                    }
 
 
-    
-    //}
+                    hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
+
+            
+                }
+
+
+                photonView.RPC("DatosBomba", RpcTarget.OthersBuffered, quitarAmarillos, quitarAzules, quitarRojos, quitarBlancos);
+
+
+                    
+
+                print("numerohitsefectivo=" + numerohitsefectivo);
+            }
+
+
+
+            PhotonNetwork.Destroy(this.GetComponent<PhotonView>());
+        }
+        catch (MissingReferenceException)
+        {
+
+
+        }
+
+
+
+    }
 
     public async void CalcularExplosion()
     { 
@@ -109,6 +180,7 @@ public class ControllerBomba : MonoBehaviourPun
         try
         { 
             isExplosion = true;
+            explosion.Play();
             var hits = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(2, 2), 0, layerMask: raycastLayerMask);
             if (hits is null == false)
             {
@@ -118,12 +190,15 @@ public class ControllerBomba : MonoBehaviourPun
                 //await UniTask.Delay(TimeSpan.FromSeconds(explosion.main.duration));
                 print("longitud hits=" + hits.Length);
 
+                
+
                 for (ushort i = 0 ; i < hits.Length; i++)
                 { 
                     print("hits" + i + " nombre" + hits[i].name);
                     if (hits[i].CompareTag("fondo") == false) continue;
 
                     hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                    
 
                     //restamos puntuacion al enemigo
                     switch (hits[i].transform.tag)
@@ -160,8 +235,11 @@ public class ControllerBomba : MonoBehaviourPun
                 
                     }
 
+                   
 
                     hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
+
+                    
 
                     //subimos puntuacion al player
                     switch(controllerPlayer.player.nombreColorPlayer)
@@ -270,20 +348,26 @@ public class ControllerBomba : MonoBehaviourPun
     }
 
 
-    void OnPhotonInstantiate(PhotonMessageInfo info)
+
+    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        object[] data = photonView.InstantiationData;
+         object[] data = photonView.InstantiationData;
 
-        Color color = new Color((float)data[0], (float)data[1], (float)data[2]);
-        int idplayerowner = (int)data[3];
+        Color t_color = new Color((float)data[0], (float)data[1], (float)data[2]);
+        viewidPlayer = (int)data[3];
+        
+        fondo.color = t_color;
+        cruz.color = t_color;
+        colorInicial = t_color;
+        color = t_color;
+        
+        print("idplayerowner" + viewidPlayer);
 
-        var player = PhotonNetwork.GetPhotonView(idplayerowner).gameObject;
+        var player = PhotonNetwork.GetPhotonView(viewidPlayer).gameObject;
         controllerPlayer = player.GetComponent<ControllerPlayer>();
 
-
-
+        
+        
 
     }
-
-
 }

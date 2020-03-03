@@ -178,9 +178,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f66e68de5421446ad9397b11c4d481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerplayer: {fileID: 0}
+  controllerPlayer: {fileID: 0}
+  gameController: {fileID: 0}
+  photonView: {fileID: 0}
   timeExplode: 2
-  explosion: {fileID: 0}
+  explosion: {fileID: 5127299797882420911, guid: 9d1fecc1b23737440b6443ac35028567,
+    type: 3}
   ignoreTag: 
   raycastLayerMask:
     serializedVersion: 2
@@ -189,6 +192,10 @@ MonoBehaviour:
   colorInicial: {r: 0.10980392, g: 0.35686275, b: 0.7176471, a: 1}
   cruz: {fileID: 8623637158823531572}
   rigid: {fileID: 7037171254683127488}
+  fondo: {fileID: 7037171254683127490}
+  isOnline: 0
+  viewidPlayer: -1
+  isShooted: 0
 --- !u!61 &7037171254683127491
 BoxCollider2D:
   m_ObjectHideFlags: 0

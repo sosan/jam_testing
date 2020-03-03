@@ -10,7 +10,7 @@ using Photon.Pun.UtilityScripts;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
-public class ControllerDestroyer :  MonoBehaviourPun //, IPunObservable
+public class ControllerDestroyer :  MonoBehaviourPun, IPunInstantiateMagicCallback //, IPunObservable
 {
     [SerializeField] public ControllerPlayer controllerplayer = null;
     [SerializeField] private ushort timeExplode = 3;
@@ -161,7 +161,8 @@ public class ControllerDestroyer :  MonoBehaviourPun //, IPunObservable
     }
 
 
-    void OnPhotonInstantiate(PhotonMessageInfo info)
+   
+    void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
         object[] data = photonView.InstantiationData;
 
@@ -179,9 +180,5 @@ public class ControllerDestroyer :  MonoBehaviourPun //, IPunObservable
         }
 
         this.gameObject.transform.SetParent(gameController.canvasMenu[4].transform);
-
-
     }
-
-
 }
