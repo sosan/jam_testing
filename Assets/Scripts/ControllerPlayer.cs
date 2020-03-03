@@ -5,11 +5,14 @@ using UnityEngine.InputSystem;
 using InControlActions;
 using UniRx.Async;
 using System;
+using Photon.Pun;
+using UniRx;
 
 public class ControllerPlayer : MonoBehaviour
 {
 
     public ControlActions inputActions;
+    public PunPlayer punPlayer = null;
     [SerializeField] public InfoPlayer player = new InfoPlayer();
     [SerializeField] public GameController gameController = null;
     [SerializeField] public Rigidbody2D rigid = null;
@@ -69,12 +72,16 @@ public class ControllerPlayer : MonoBehaviour
     private ushort faseDashArriba = 0;
     private ushort faseDashAbajo = 0;
     
+    IDisposable cronoCooldown = null;
+    [SerializeField] private Transform cooldownBar = null;
     
-
+    public int posicion = 0;
     private void Awake()
     {
         rigid = this.GetComponent<Rigidbody2D>();
         thistransform = this.gameObject.transform;
+
+        SetCooldownBar(0);
 
         if (gameController is null == true)
         { 
@@ -112,6 +119,11 @@ public class ControllerPlayer : MonoBehaviour
 
     private async void BotonOeste(InputAction.CallbackContext obj)
     {
+
+        //print("obj=" + obj.control.device.deviceId +" deviceid="  +  player.deviceId +
+        //    "players=" + gameController.playersSePuedenMover + " se=" + player.playerSePuedeMover + " awating" + bombAwaiting
+            
+        //    );
 
         if (obj.control.device.deviceId != player.deviceId) return;
         if(gameController.playersSePuedenMover == false) return;
@@ -201,6 +213,7 @@ public class ControllerPlayer : MonoBehaviour
         
         bombAwaiting = true;
         //print("player cooldown=" + player.bombCooldown);
+        CooldownShow((int)player.bombCooldown);
         await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
         bombAwaiting = false;
 
@@ -211,15 +224,78 @@ public class ControllerPlayer : MonoBehaviour
 
     }
 
+    private void SetCooldownBar(int x)
+    { 
+        var localScale = cooldownBar.localScale;
+        localScale.x = x;
+        cooldownBar.localScale = localScale;
+    
+    }
+
+
+    private void CooldownShow(int TIEMPOMAXBATALLA)
+    { 
+        
+
+        if (cronoCooldown is null == false) cronoCooldown.Dispose();
+
+        SetCooldownBar(1);
+
+        int duracion = TIEMPOMAXBATALLA * 1000 / 250;
+        float desplazamiento = 1f / duracion; 
+       
+        cronoCooldown = Observable.Timer(
+        TimeSpan.FromSeconds(0),
+        TimeSpan.FromMilliseconds(250), Scheduler.MainThread).Do(x => { }).
+        ObserveOnMainThread().Take(duracion)
+        .Subscribe
+        (_ =>
+        {
+            
+            var localscale = cooldownBar.localScale;
+            localscale.x -= desplazamiento; 
+            if (localscale.x <= 0)
+            { 
+                localscale.x = 0;
+            
+            }
+
+            cooldownBar.localScale = localscale;
+
+            if (localscale.x <= 0)
+            { 
+                cronoCooldown.Dispose();
+            
+            }
+
+
+        }
+        , ex => { Debug.Log(" cooldown OnError:" + ex.Message); if (cronoCooldown != null) cronoCooldown.Dispose(); },
+        () => //completado
+        {
+
+            cronoCooldown.Dispose();
+
+
+        }).AddTo(this.gameObject);
+    
+    }
+
   
 
     private async void BotonSur(InputAction.CallbackContext obj)
     {
         //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
-        if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playersSePuedenMover == false) return;
-        if(player.playerSePuedeMover == false) return;
 
+        if (gameController.isOnline == false)
+        { 
+            if (obj.control.device.deviceId != player.deviceId) return;
+            if(gameController.playersSePuedenMover == false) return;
+            if(player.playerSePuedeMover == false) return;
+
+        
+        }
+        
 
         if (isFireCooldown == true) return;
 
@@ -263,8 +339,17 @@ public class ControllerPlayer : MonoBehaviour
 
         //print("reset obj=" + obj.ReadValue<Vector2>());
 
-        if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playersSePuedenMover == false) return;
+        if (gameController.isOnline == false)
+        { 
+        
+            if (obj.control.device.deviceId != player.deviceId) return;
+            if(gameController.playersSePuedenMover == false) return;
+            if(player.playerSePuedeMover == false) return;
+        
+        }
+
+
+        
         _inputs = Vector2.zero;
         //print("reset 0");
 
@@ -349,10 +434,18 @@ public class ControllerPlayer : MonoBehaviour
     private void ControlLeftStick(InputAction.CallbackContext obj)
     {
 
-        //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
-        if (obj.control.device.deviceId != player.deviceId) return;
-        if(gameController.playersSePuedenMover == false) return;
-        if(player.playerSePuedeMover == false) return;
+        //print("obj=" + obj.control.device.deviceId + " deviceidplayer=" + player.deviceId);
+        //print("gameController.playersSePuedenMover" + gameController.playersSePuedenMover + " player.playerSePuedeMover=" + player.playerSePuedeMover);
+
+        if (gameController.isOnline == false)
+        { 
+
+            if (obj.control.device.deviceId != player.deviceId) return;
+            if(gameController.playersSePuedenMover == false) return;
+            if(player.playerSePuedeMover == false) return;
+
+
+        }
 
         _inputs = obj.ReadValue<Vector2>();
         
@@ -588,6 +681,13 @@ public class ControllerPlayer : MonoBehaviour
 
         if (collision.CompareTag("hueco") == true)
         { 
+
+            if (gameController.isOnline == true)
+            {
+                punPlayer.photonview.RPC("ColisionConHueco", RpcTarget.OthersBuffered, false, true);
+
+            }
+
             ProcesarHueco(collision);
             return;
         
@@ -617,10 +717,12 @@ public class ControllerPlayer : MonoBehaviour
     public async void ProcesarColisionConFondo(Collider2D collision)
     {
 
-        await UniTask.Delay(TimeSpan.FromMilliseconds(130));
+        if (gameController is null == true)
+        { 
+            gameController = GameObject.FindObjectOfType<GameController>();
         
+        } 
 
-        collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
         switch(player.nombreColorPlayer)
         {
             case nombreColores.amarillo: gameController.bloquesAmarillos++; break;
@@ -629,7 +731,33 @@ public class ControllerPlayer : MonoBehaviour
             case nombreColores.blanco: gameController.bloquesBlancos++; break;
             
         }
-        //player.numerobloques++;
+
+        
+
+        if (gameController.isOnline == true)
+        {
+            
+            //print("photonview" + punPlayer.photonView);
+            punPlayer.photonview.RPC("ColisionConFondo", RpcTarget.OthersBuffered, 
+            collision.gameObject.name,
+            (byte)(player.colorPlayer.r * 255),
+            (byte)(player.colorPlayer.g * 255),
+            (byte)(player.colorPlayer.b * 255),
+            gameController.bloquesAmarillos,
+            gameController.bloquesAzules,
+            gameController.bloquesRojos,
+            gameController.bloquesBlancos
+            );
+
+        
+        }
+        else
+        { 
+            await UniTask.Delay(TimeSpan.FromMilliseconds(130));
+        
+        }
+
+        collision.gameObject.GetComponent<SpriteRenderer>().color = player.colorPlayer;
         collision.gameObject.tag = player.nombreColorPlayer.ToString();
 
         

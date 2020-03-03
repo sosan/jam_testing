@@ -17,6 +17,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     //[SerializeField] private const ushort MAX_ = null;
     [SerializeField] private GameController gameController = null;
     [SerializeField] private ControllerElegirPersonaje elegirPersonaje = null;
+    [SerializeField] private ControllerElegirConexion elegirConexion = null;
     
     //[SerializeField] private Animation camAnim = null;
     //[SerializeField] private Animation spriteInicioAnim = null;
@@ -51,12 +52,12 @@ public class ControllerGamepadMenu : MonoBehaviour
 
     private bool isMutedDefault = false;
     private ushort mainVolumenDefault = 100;
-    private ushort mainSoundDefault = 40;
+    private ushort mainSoundDefault = 20;
     private ushort mainSfxDefault = 60;
 
-    private bool isMutedInternal = false;
+    private bool isMutedInternal = true;
     private ushort mainVolumenInternal = 100;
-    private ushort mainSoundInternal = 40;
+    private ushort mainSoundInternal = 20;
     private ushort mainSfxInternal = 60;
 
     private short contOptionsPosition = 0;
@@ -74,6 +75,9 @@ public class ControllerGamepadMenu : MonoBehaviour
     [SerializeField] private Sprite imagenSpa = null;
     [SerializeField] private Sprite imagenEng = null;
     [SerializeField] private Image logo = null;
+
+
+    [SerializeField] private LobbyClientPun lobby = null;
 
     private void OnEnable()
     {
@@ -132,12 +136,11 @@ public class ControllerGamepadMenu : MonoBehaviour
             
 
         }
+        contMenuPosition = 0;
+        textos[contMenuPosition].color = selectedColor;
 
         gameController.canvasMenu[0].SetActive(false);
-
-        //textos[contMenuPosition].color = selectedColor;
         gameController.canvasMenu[1].SetActive(true);
-        //mar.SetActive(true);
 
         controllerMenuAnimations.animations.Play("MenuActivate");
         await UniTask.Delay(TimeSpan.FromMilliseconds( 1000 ));
@@ -145,7 +148,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         controllerMenuAnimations.animations.Play("Titulo");
 
         //ShowPositionMenu(0);
-        contMenuPosition = 0;
+        
 
         //ShowPositionMenuWithGamePad();
         inputActions.Enable();
@@ -943,23 +946,17 @@ public class ControllerGamepadMenu : MonoBehaviour
         if (isBegun == true) return;
         isBegun = true;
 
-        //MusicController.MusicInstance.PlayFXSound(
-        //    MusicController.MusicInstance.sfx[1]
-        //);
+        MusicController.MusicInstance.PlayFXSound(
+            MusicController.MusicInstance.sfx[1]
+        );
 
-        descripcion.text = Localization.Get("movimientodescripcion_gamepad");
+        
 
 
-        //controllerMenuAnimations.DesactiveMenu();
 
-        //await UniTask.Delay(5000);
-
-        //DisableCanvas();
-# if UNITY_EDITOR
+#if UNITY_EDITOR
         print("entramos por gamepad");
 # endif
-
-
 
 
         ShowElegirPersonaje(online: online);
@@ -1017,10 +1014,10 @@ public class ControllerGamepadMenu : MonoBehaviour
             );
 
 
-        ShowPositionMenu(4);
+        ShowPositionMenu(3);
         //ShowFX(-5, -144);
         ShowFX(positionTransformparticles[3].anchoredPosition);
-        await UniTask.Delay(400);
+        await UniTask.Delay(TimeSpan.FromMilliseconds(600));
 
 
 #if (UNITY_EDITOR)
@@ -1098,7 +1095,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
 
-    public async void ShowExit()
+    public void ShowExit()
     {
 
 //        MusicController.MusicInstance.PlayFXSound(
@@ -1165,13 +1162,15 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         if (online == true)
         { 
-        
+            gameController.isOnline = true;
             ShowFX(positionTransformparticles[1].anchoredPosition);
-        
+            descripcion.text = Localization.Get("conectando");
+
         }
         else
         { 
             ShowFX(positionTransformparticles[0].anchoredPosition);
+            descripcion.text = Localization.Get("movimientodescripcion_gamepad");
         
         }
 
@@ -1182,36 +1181,40 @@ public class ControllerGamepadMenu : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds(duration * 1000));
 
         //print("online=" + online);
-        if (online == true)
-        {
-            elegirPersonaje.entrada_txt[0].text = Localization.Get("pulsaboton");
-
-            //si es online ocultamos los menus
-            for(ushort i = 1; i < elegirPersonaje.entrada_txt.Length; i++)
-            { 
-                elegirPersonaje.entrada_txt[i].text = Localization.Get("disabled");
-            
-            }
-
-            
-            
         
-        }
 
         DisableCanvas();
 
+        if (online == true)
+        {
+            lobby.ConnectToPun();
+            
+            //elegirConexion.Init();
+        
+        
+        }
+        else
+        { 
+        
+            elegirPersonaje.InitActions(online: online);
+        }
 
         
-
-        gameController.canvasMenu[3].SetActive(true);
-
-
-
-
-        elegirPersonaje.InitActions(online: online);
+        
 
         //gameController.InitGame();
 
+    }
+
+
+    public void ShowCrearPartida()
+    { 
+    
+       
+
+
+    
+    
     }
 
 
@@ -1531,7 +1534,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         textosOptions[2].text = mainSoundInternal.ToString();
         textosOptions[3].text = mainSfxInternal.ToString();
 
-        ShowFXOptions(0, -193);
+        ShowFXOptions(0, -626);
 
         DeColorOptionsReset(4);
         contOptionsPosition = 0;
@@ -1579,7 +1582,7 @@ public class ControllerGamepadMenu : MonoBehaviour
         textosOptions[2].text = mainSoundInternal.ToString();
         textosOptions[3].text = mainSfxInternal.ToString();
 
-        ShowFXOptions(0, -193);
+        ShowFXOptions(0, -626);
 
         DeColorOptionsReset(4);
         contOptionsPosition = 0;
@@ -1626,7 +1629,7 @@ public class ControllerGamepadMenu : MonoBehaviour
                    MusicController.MusicInstance.sfx[1]
                );
         SavePlayerPrefsValues();
-        ShowFXOptions(0, -250);
+        ShowFXOptions(0, -681);
 
 
         DeColorOptionsReset(5);

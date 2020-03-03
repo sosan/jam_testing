@@ -131,7 +131,7 @@ public class GameController : MonoBehaviour
 
     
     [SerializeField] private ushort TIEMPOMAXBATALLA = 180;
-    private short tiempoCurrentBatalla = 180;
+    public short tiempoCurrentBatalla = 180;
 
     [SerializeField] public GameObject prefabBomba = null;
     [SerializeField] public GameObject prefabBullet = null;
@@ -175,9 +175,20 @@ public class GameController : MonoBehaviour
     [HideInInspector] public bool isOnline = false;
 
     public Dictionary<int, GameObject> playersPhotonViewIdDict = new Dictionary<int, GameObject>();
+    public Dictionary<string, GameObject> listadoBoxes = new Dictionary<string, GameObject>();
+    public GameObject[] tempList = null; 
+
+    public bool estaEmpezado = false;
+    public int viewIdMasterclient = 0;
 
     private void Awake()
     {
+
+        for (ushort i =0 ; i < tempList.Length;i++)
+        { 
+            listadoBoxes.Add(tempList[i].name, tempList[i]);
+        
+        }
 
 
         // inicizalicion de jugadores
@@ -337,7 +348,12 @@ public class GameController : MonoBehaviour
     private void ActualizarPuntuacion()
     {
 #if UNITY_EDITOR
-        //print("bloques amarillos=" + bloquesAmarillos);
+        //print("AMARILLOS=" + bloquesAmarillos + 
+        //    "azules=" + bloquesAzules + 
+        //    "rojos=" + bloquesRojos + 
+        //    "blancos=" + bloquesBlancos 
+            
+        //    );
 #endif
         if (bloquesAmarillos > minimoBloques)
         { 
@@ -381,7 +397,21 @@ public class GameController : MonoBehaviour
             //print(tiempoCurrentBatalla);
             tiempoCurrentBatalla--;
 
+            
+
             ActualizarPuntuacion();
+
+            if (tiempoCurrentBatalla <= 0)
+            { 
+                crono.Dispose();
+
+                faseConcluida.Value = true;
+
+                tiempoBatalla.text = "";
+                tiempoCurrentBatalla = 0; 
+                MostrarGanador();
+            
+            }
 
         }
         , ex => { Debug.Log(" cuentaatrasantes OnError:" + ex.Message); if (crono != null) crono.Dispose(); },
@@ -394,13 +424,20 @@ public class GameController : MonoBehaviour
 
             tiempoBatalla.text = "";
             tiempoCurrentBatalla = 0;
-
+            MostrarGanador();
 
         }).AddTo(this.gameObject);
 
 
 
 
+    }
+
+    private void MostrarGanador()
+    { 
+        print("hay un ganador");
+    
+    
     }
 
 

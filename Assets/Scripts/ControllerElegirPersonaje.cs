@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UniRx.Async;
 using UniRx;
 using System;
+using Photon.Pun;
 
 public class ControllerElegirPersonaje : MonoBehaviour
 {
@@ -206,6 +207,35 @@ public class ControllerElegirPersonaje : MonoBehaviour
     public void InitActions(bool online)
     { 
         gameController.isOnline = online;
+        if (online == true)
+        {
+            
+            entrada_txt[0].text = Localization.Get("pulsaboton");
+            
+
+            //si es online ocultamos los menus
+            for(ushort i = 1; i < entrada_txt.Length; i++)
+            { 
+                entrada_txt[i].text = Localization.Get("esperando");
+            
+            }
+           
+            //cambiar color al jugador....
+        
+        
+        }
+        else
+        { 
+        
+            explicaciones[0].text = Localization.Get("explicaciona");
+            explicaciones[1].text = Localization.Get("explicacionb");
+
+        }
+
+        
+        gameController.canvasMenu[3].SetActive(true);
+
+
         inputActions.Enable();
 
 
@@ -411,10 +441,45 @@ public class ControllerElegirPersonaje : MonoBehaviour
     }
 
     
-    private void BotonSur(InputAction.CallbackContext obj)
+    private async void BotonSur(InputAction.CallbackContext obj)
     {
 
         //print(gameController.dictPlayers.ContainsKey(obj.control.device.deviceId));
+        if (gameController.isOnline == true)
+        { 
+            if (PhotonNetwork.IsMasterClient == true)
+            {
+                gameController.HacerVibrarMando(obj.control.device.deviceId);
+                mensajeBotonEntrar.text = Localization.Get("conectando");
+
+                await UniTask.Delay(TimeSpan.FromSeconds(2));
+
+                if (inputActions != null)
+                {
+                    inputActions.Disable();
+
+                }
+                gameController.estaEmpezado = true;
+
+
+
+                var view = PhotonNetwork.GetPhotonView(gameController.viewIdMasterclient);
+                view.RPC("Empezar", RpcTarget.OthersBuffered, true);
+
+                gameController.canvasMenu[5].SetActive(true);
+                gameController.canvasMenu[6].SetActive(true);
+
+                gameController.canvasMenu[4].SetActive(true);
+                gameController.canvasMenu[3].SetActive(false);
+                    
+
+                gameController.InitGame();
+
+            }
+
+            return;
+        
+        }
 
         if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == false)
         { 
@@ -535,6 +600,14 @@ public class ControllerElegirPersonaje : MonoBehaviour
 
     private void ButtonExit(InputAction.CallbackContext obj)
     {
+
+        if (gameController.isOnline == true)
+        { 
+        
+
+            return;
+        
+        }
 
         if (gameController.dictPlayers.ContainsKey(obj.control.device.deviceId) == true)
         { 
@@ -697,8 +770,12 @@ public class ControllerElegirPersonaje : MonoBehaviour
         }
 
         //int posicionLibre = GetPosicionLibre();
-
-        gameController.dictPlayers.Add(deviceId, posicionLibre);
+        if (deviceId != -1)
+        { 
+            gameController.dictPlayers.Add(deviceId, posicionLibre);
+        
+        }
+        
 
         //print("deviceid=" + deviceId);
 
@@ -856,7 +933,7 @@ public class ControllerElegirPersonaje : MonoBehaviour
                 if (gameController.isOnline == true)
                 {
                     mensajeBotonEntrar.text = Localization.Get("conectando");
-                    gameController.lobbyClientPun.ConnectToPun(gameController.jugadores[0].focusPlayer.GetComponent<MatrixCharacters>().nameCharacter);
+                    //gameController.lobbyClientPun.ConnectToPun(gameController.jugadores[0].focusPlayer.GetComponent<MatrixCharacters>().nameCharacter);
 
                     // hay que esperar a que haya al menos 2 jugadores ???
                     await UniTask.WaitUntil(() => pistaLibre.Value == true);
@@ -1101,6 +1178,45 @@ public class ControllerElegirPersonaje : MonoBehaviour
     
     }
 
+    [SerializeField] private TextMeshProUGUI[] explicaciones = null;
+
+    public void AddPlayerFromOnline(int posicionLibre)
+    { 
+    
+        print("posicionlibre" + posicionLibre);
+        
+        explicaciones[0].text = "";
+        explicaciones[1].text = "";
+
+        print("es mastercliente=" + Photon.Pun.PhotonNetwork.IsMasterClient);
+        if (Photon.Pun.PhotonNetwork.IsMasterClient == true)
+        { 
+            explicaciones[0].text = Localization.Get("explicacionaonline");
+            explicaciones[1].text = Localization.Get("explicacionbonline");
+        
+        }
+
+        gameController.jugadores[posicionLibre].vacio = false;
+        recuadros[posicionLibre].gameObject.SetActive(false);
+
+        listoMensaje[posicionLibre].text = Localization.Get("listo");
+        listoMensaje[posicionLibre].gameObject.SetActive(true);
+
+        entrada_txt[posicionLibre].text = "";
+        entrada_txt[posicionLibre].gameObject.SetActive(false);
+        panel_players[posicionLibre].SetActive(true);
+        focusPlayers[posicionLibre].SetActive(true);
+        mandosImage[posicionLibre].gameObject.SetActive(true);
+
+        AddPlayer(posicionLibre, -1, false);
+        (ushort, ushort)posicion = PosicionPlayerMatrix(posicionLibre);
+            
+        MoveFocus(focusPlayers[posicionLibre], initialPlayerPosition[posicionLibre].GetComponent<MatrixCharacters>(), posicion.Item1, posicionLibre);
+            
+    
+    
+    
+    }
 
 
 

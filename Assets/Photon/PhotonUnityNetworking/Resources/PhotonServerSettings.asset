@@ -36,5 +36,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - InitialSetting
   - InstantiateFire
+  - ColisionConFondo
+  - Empezar
+  - UpdateUI
+  - ColisionConHueco
   DisableAutoOpenWizard: 1
   ShowSettings: 1

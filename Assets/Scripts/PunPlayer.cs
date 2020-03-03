@@ -51,32 +51,32 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     private float distanceOldPosition = 0;
     private float angleOldPos = 0;
 
+    
+    private int posicionBarras = -1;
+    private Color colorBarra = Color.white;
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-
-        //inputActions = new ControlActions();
-        //inputActions.Menu.Dpad.performed += ControlDpad;
-
-        //inputActions.Menu.Buttons.performed += BotonSur;
-        //inputActions.Menu.ExitButton.performed += BotonOeste;
-
-        //inputActions.Menu.LeftStick.performed += ControlLeftStick;
-        //inputActions.Menu.LeftStick.canceled += ResetLeftStick;
-
-
-        //inputActions.Enable();
-
         if (gameController is null == true)
         { 
             gameController = GameObject.FindObjectOfType<GameController>();
         
         }
+
+        if (lobby is null == true)
+        { 
+            lobby = GameObject.FindObjectOfType<LobbyClientPun>();
         
+        }
+
+
         
-        
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
 
     }
 
@@ -88,242 +88,6 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     }
 
 
-    //private async void BotonOeste(InputAction.CallbackContext obj)
-    //{
-    //    if (photonView.IsMine == false) return;
-    //    //if (obj.control.device.deviceId != player.deviceId) return;
-    //    if(gameController.playersSePuedenMover == false) return;
-    //    if(player.playerSePuedeMover == false) return;
-    //    if (bombAwaiting == true) return;
-
-    //     //raycast para saber si estamos encima de que estamos..
-    //    var hit = Physics2D.OverlapBox(thistransform.position, new Vector2(0, 0), 0, layerMask: raycastLayerMask);
-    //    if (hit is null == false)
-    //    { 
-    //        if (hit.CompareTag("fondo"))
-    //        { 
-    //            return;
-    //        }
-
-        
-    //    }
-       
-
-    //    gameController.HacerVibrarMando(obj.control.device.deviceId);
-
-
-    //    float x = (float)Math.Round(thistransform.position.x * 2, MidpointRounding.ToEven) / 2;
-    //    float y = (float)Math.Round(thistransform.position.y * 2, MidpointRounding.ToEven) / 2;
-
-    //    //print("x=" + x + " y=" + y);
-    //    if ((Math.Abs(x) % 1) == 0)
-    //    {
-    //        x += 0.5f;
-
-    //    }
-
-    //    if ((Math.Abs(y) % 1) == 0)
-    //    {
-    //        y += 0.5f;
-
-    //    }
-
-
-    //    if (isDestroyer == true)
-    //    { 
-            
-    //        isDestroyer = false;
-    //        spritePlayer.color = player.colorPlayer;
-    //        GameObject destroyer = GameObject.Instantiate(gameController.prefabDestroyer, 
-    //            new Vector3(x, y, 0), 
-    //            Quaternion.identity,
-    //            gameController.canvasMenu[4].transform);
-
-    //        destroyer.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-    //        destroyer.GetComponent<ControllerDestroyer>().color = player.colorPlayer;
-    //        destroyer.GetComponent<ControllerDestroyer>().cruz.color = player.colorPlayer;
-    //        //destroyer.GetComponent<ControllerDestroyer>().controllerplayer = this;
-            
-        
-    //    }
-    //    else
-    //    { 
-        
-    //        GameObject bomba = GameObject.Instantiate(gameController.prefabBomba, 
-    //            new Vector3(x, y, 0), 
-    //            Quaternion.identity,
-    //            gameController.canvasMenu[4].transform);
-
-    //        bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-    //        bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
-    //        bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
-    //        //bomba.GetComponent<ControllerBomba>().controllerplayer = this;
-        
-    //    }
-
-       
-        
-    //    bombAwaiting = true;
-    //    //print("player cooldown=" + player.bombCooldown);
-    //    await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
-    //    bombAwaiting = false;
-
-
-       
-
-
-
-    //}
-
-  
-
-    //private async void BotonSur(InputAction.CallbackContext obj)
-    //{
-    //    //print("obj="  + obj.control.device.deviceId + " deviceidplayer=" +  player.deviceId);
-    //    //if (obj.control.device.deviceId != player.deviceId) return;
-    //    if (photonView.IsMine == false) return;
-    //    if(gameController.playersSePuedenMover == false) return;
-    //    if(player.playerSePuedeMover == false) return;
-
-
-    //    if (isFireCooldown == true) return;
-
-
-    //    //si mira pa la derecha o pa la izquierda?
-    //    //float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-
-    //    Vector2 direction = Vector2.zero;
-
-    //    if (_inputs.x >= 0f)
-    //    { 
-    //        direction = new Vector2(0.5f, 0); 
-        
-    //    }
-    //    else
-    //    { 
-    //        direction = new Vector2(-0.5f, 0);
-        
-    //    }
-
-
-
-    //    GameObject bullet = GameObject.Instantiate(gameController.prefabBullet, 
-    //        new Vector3(thistransform.position.x + direction.x, thistransform.position.y, thistransform.position.z),
-    //        Quaternion.AngleAxis(0, Vector3.forward),
-    //        gameController.canvasMenu[4].transform );
-
-        
-    //    bullet.GetComponent<Rigidbody2D>().velocity = direction * player.shotSpeed;
-
-    //    isFireCooldown = true;
-    //    await UniTask.Delay(TimeSpan.FromSeconds(player.fireCooldown));
-    //    isFireCooldown = false;
-
-
-    //}
-
-    //private void ResetLeftStick(InputAction.CallbackContext obj)
-    //{
-
-    //    //print("reset obj=" + obj.ReadValue<Vector2>());
-    //    if (photonView.IsMine == false) return;
-    //    if (obj.control.device.deviceId != player.deviceId) return;
-    //    if(gameController.playersSePuedenMover == false) return;
-    //    _inputs = Vector2.zero;
-    //    //print("reset 0");
-
-    //    if (isDashing == true) return;
-
-
-
-    //    //if (faseDashDerecha > 2)
-    //    //{
-    //    //    print("derecha=" + countvecesDerecha);
-    //    //    countvecesDerecha++;
-            
-    //    //}
-
-    //    //if (faseDashIzquierda == 1)
-    //    //{ 
-    //    //    print("izquierda=" + countvecesIzquierda);
-    //    //    countvecesIzquierda++;
-    //    //    return;
-    //    //}
-
-    //    //if (faseDashArriba == 1)
-    //    //{ 
-    //    //    print("arriba=" + countvecesArriba);
-    //    //    countvecesArriba++;
-    //    //    return;
-    //    //}
-
-    //    //if (faseDashAbajo == 1)
-    //    //{ 
-    //    //    print("abajo=" + countvecesAbajo);
-    //    //    countvecesAbajo++;
-    //    //    return;
-    //    //}
-
-       
-    //}
-    
-    
-
-    //private void ControlLeftStick(InputAction.CallbackContext obj)
-    //{
-
-    //    //print(
-    //    //    "obj=" + obj.control.device.deviceId + 
-    //    //    " deviceidplayer=" + player.deviceId +
-    //    //    " gameController.playersSePuedenMover=" + gameController.playersSePuedenMover +
-    //    //    " player.playerSePuedeMover=" + player.playerSePuedeMover + 
-    //    //    "photonView.IsMine=" + photonView.IsMine
-            
-    //    //    );
-    //    //if (obj.control.device.deviceId != player.deviceId) return;
-    //    if (photonView.IsMine == false) return;
-    //    if (gameController.playersSePuedenMover == false) return;
-    //    if(player.playerSePuedeMover == false) return;
-
-    //    _inputs = obj.ReadValue<Vector2>();
-        
-    //    //if (_inputs.x > 0.99f)
-    //    //{
-    //    //    faseDashDerecha = 1;
-    //    //    startTimePosibleDashDerecha = 0;
-    //    //    return;
-            
-    //    //}
-        
-    //    //if (_inputs.x < -0.99f)
-    //    //{ 
-    //    //    faseDashIzquierda = 1;
-    //    //}
-
-    //    //if (_inputs.y > 0.99f)
-    //    //{ 
-    //    //    faseDashArriba  =1;
-    //    //}
-        
-    //    //if (_inputs.y < -0.99f)
-    //    //{ 
-    //    //    faseDashAbajo  =1;
-    //    //}
-
-
-        
-
-
-    //}
-
-
-
-    //void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-
-
-    //}
 
 
 
@@ -335,6 +99,15 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
             stream.SendNext(rigid.rotation);
             stream.SendNext(rigid.velocity);
             stream.SendNext(rigid.angularVelocity);
+            
+            if (PhotonNetwork.IsMasterClient == true)
+            { 
+                stream.SendNext(gameController.tiempoCurrentBatalla);
+            
+            }
+            
+
+
         }
         else
         {
@@ -352,6 +125,14 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
             rigid.angularVelocity = (float)stream.ReceiveNext();
             latestRot += rigid.angularVelocity * lag;
             angleOldPos = Mathf.Abs(rigid.rotation - latestRot);
+
+            if (PhotonNetwork.IsMasterClient == false)
+            {
+
+                gameController.tiempoCurrentBatalla = (short)stream.ReceiveNext();
+
+            }
+
 
         }
     }
@@ -393,7 +174,8 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
         float bombCooldown,
         float defense,
         float defenseMax,
-        int deviceId ,
+        int posicion,
+        string nombreColorPlayer,
 
         PhotonMessageInfo info)
     {
@@ -428,14 +210,56 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
             gameController.playersPhotonViewIdDict[photonView.ViewID] = photonView.gameObject;
         }
 
-        GameObject playerGo = photonView.gameObject;
+        GameObject playerProxy = photonView.gameObject;
 
-        playerGo.GetComponent<SpriteRenderer>().color = new Color32(r, g, b, 255);
+        playerProxy.transform.SetParent(gameController.canvasMenu[4].transform);
+        playerProxy.gameObject.name = namePlayer;
+
+        playerProxy.GetComponent<SpriteRenderer>().color = new Color32(r, g, b, 255);
+        playerProxy.GetComponent<ControllerPlayer>().player.colorPlayer = new Color32(r, g, b, 255);
+
+        playerProxy.GetComponent<ControllerPlayer>().colorInicial = Color.black;
+        playerProxy.GetComponent<ControllerPlayer>().colorDestino = new Color32(r, g, b, 255);
+        playerProxy.GetComponent<ControllerPlayer>().posicion = posicion;
+
+        print("nombrecolorplayer=" + nombreColorPlayer);
+
+        switch(nombreColorPlayer)
+        {
+            case "amarillo": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.amarillo; break;
+            case "azul": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.azul; break;
+            case "rojo": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.rojo; break;
+            case "blanco": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.blanco; break;
+
+            case "0": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.amarillo; break;
+            case "1": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.azul; break;
+            case "2": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.rojo; break;
+            case "3": playerProxy.GetComponent<ControllerPlayer>().player.nombreColorPlayer = nombreColores.blanco; break;
+
+        }
+
+        print("posicion=" + posicion);
+        posicionBarras = posicion;
+        colorBarra = new Color32(r, g, b, 255);
+
+        gameController.barrasPuntuaje[posicion].color = new Color32(r, g, b, 255);
 
 
-        gameController.barrasPuntuaje[lobby.contadorJugadores - 1].color = new Color32(r, g, b, 255);
+    }
+    
+    [PunRPC]
+    private void Empezar(bool empezar)
+    { 
+    
+        gameController.canvasMenu[5].SetActive(true);
+        gameController.canvasMenu[6].SetActive(true);
 
+        gameController.canvasMenu[4].SetActive(true);
+        gameController.canvasMenu[3].SetActive(false);
+                    
 
+        gameController.InitGame();
+    
     }
 
 
@@ -528,6 +352,41 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
     }
 
+    [PunRPC]
+    private void ColisionConFondo(string nameBox, byte r, byte g, byte b, short numeroAmarillo, short numeroAzules,
+        short numeroRojos, short numeroBlancos, PhotonMessageInfo info)
+    { 
+        //if (gameController.playersPhotonViewIdDict.ContainsKey(info.photonView.ViewID) == true)
+        //{
+
+        //}
+        if (gameController is null == true)
+        { 
+        
+            gameController = GameObject.FindObjectOfType<GameController>();
+        
+        }
+
+
+        Color32 color = new Color32(r, g, b, 255);
+        print("namebox" + nameBox + color.ToString());
+
+
+        if (gameController.listadoBoxes.ContainsKey(nameBox) == true)
+        { 
+        
+            gameController.listadoBoxes[nameBox].GetComponent<SpriteRenderer>().color = new Color32(r, g, b, 255);
+
+            gameController.bloquesAmarillos = numeroAmarillo;
+            gameController.bloquesAzules = numeroAzules;
+            gameController.bloquesRojos = numeroRojos;
+            gameController.bloquesBlancos = numeroBlancos;
+
+        
+        }
+
+
+    }
 
 
     //public void SendRopeToMaster(Vector2 worldpos)
@@ -591,6 +450,29 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
 
     //}
+
+    [PunRPC]
+    private void UpdateUI()
+    { 
+        for (int i = 0; i <  PhotonNetwork.PlayerList.Length; i++)
+        { 
+        
+            gameController.elegirPersonaje.AddPlayerFromOnline(i);
+
+        }
+    
+    }
+
+
+    [PunRPC]
+    private void ColisionConHueco(bool playerSePuedeMover, bool caidohueco, PhotonMessageInfo info)
+    { 
+    
+        var player = PhotonNetwork.GetPhotonView( info.photonView.ViewID).gameObject;
+        player.GetComponent<ControllerPlayer>().ProcesarHueco(null);
+
+    
+    }
 
 
 }
