@@ -509,27 +509,27 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     [PunRPC]
     private void DatosBomba(object[] datosAmarillos, object[] datosAzules, object[] datosRojos, object[] datosBlancos, int viewidPlayer, PhotonMessageInfo info )
     { 
-    
+        Debug.LogError("no se llama o si");
         print("datosamarillos" + datosAmarillos.Length);
         print("datosamarillos" + datosAzules.Length);
 
-        if (photonview.IsMine == true)
-        { 
+        //if (photonview.IsMine == true)
+        //{ 
 
-            gameController.bloquesAmarillos += (short)datosAmarillos.Length;
-            gameController.bloquesAzules += (short)datosAzules.Length;
-            gameController.bloquesRojos += (short)datosRojos.Length;
-            gameController.bloquesBlancos += (short)datosBlancos.Length;
+        //    gameController.bloquesAmarillos += (short)datosAmarillos.Length;
+        //    gameController.bloquesAzules += (short)datosAzules.Length;
+        //    gameController.bloquesRojos += (short)datosRojos.Length;
+        //    gameController.bloquesBlancos += (short)datosBlancos.Length;
 
 
-            ProcesarBloques(datosAmarillos, gameController.elegirPersonaje.prefabColorsPlayers[0], "amarillo");
-            ProcesarBloques(datosAzules, gameController.elegirPersonaje.prefabColorsPlayers[1], "azul");
-            ProcesarBloques(datosRojos, gameController.elegirPersonaje.prefabColorsPlayers[2], "rojo");
-            ProcesarBloques(datosBlancos, gameController.elegirPersonaje.prefabColorsPlayers[3], "blanco");
+        //    ProcesarBloques(datosAmarillos, gameController.elegirPersonaje.prefabColorsPlayers[0], "amarillo");
+        //    ProcesarBloques(datosAzules, gameController.elegirPersonaje.prefabColorsPlayers[1], "azul");
+        //    ProcesarBloques(datosRojos, gameController.elegirPersonaje.prefabColorsPlayers[2], "rojo");
+        //    ProcesarBloques(datosBlancos, gameController.elegirPersonaje.prefabColorsPlayers[3], "blanco");
 
         
         
-        }
+        //}
 
         
         if (viewidPlayer == photonview.ViewID )

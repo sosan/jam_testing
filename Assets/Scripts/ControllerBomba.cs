@@ -390,6 +390,18 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 
     }
 
+    private void ProcesarBloques(object[] bloques, Color colorBloque, string tag)
+    { 
+    
+        for (ushort i = 0; i < bloques.Length; i++)
+        { 
+            var index = (string)bloques[i];
+            gameController.listadoBoxes[index].GetComponent<SpriteRenderer>().color = colorBloque;
+            gameController.listadoBoxes[index].tag = tag;
+            
+        }
+    }
+
     [PunRPC]
     private void DatosBomba(object[] datosAmarillos, object[] datosAzules, object[] datosRojos, object[] datosBlancos, int viewid, PhotonMessageInfo info )
     { 
@@ -401,7 +413,27 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
         //bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
         //bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
         //bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+        //if (photonView.IsMine == true)
+        { 
+            print("dentro");
+            gameController.bloquesAmarillos += (short)datosAmarillos.Length;
+            gameController.bloquesAzules += (short)datosAzules.Length;
+            gameController.bloquesRojos += (short)datosRojos.Length;
+            gameController.bloquesBlancos += (short)datosBlancos.Length;
+
+
+            ProcesarBloques(datosAmarillos, gameController.elegirPersonaje.prefabColorsPlayers[0], "amarillo");
+            ProcesarBloques(datosAzules, gameController.elegirPersonaje.prefabColorsPlayers[1], "azul");
+            ProcesarBloques(datosRojos, gameController.elegirPersonaje.prefabColorsPlayers[2], "rojo");
+            ProcesarBloques(datosBlancos, gameController.elegirPersonaje.prefabColorsPlayers[3], "blanco");
+
         
+        
+        }
+
+
+
+
         if (photonView.IsMine == true)
         { 
 
