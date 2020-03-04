@@ -171,6 +171,7 @@ MonoBehaviour:
   spritePlayer: {fileID: 5276470758355568190}
   isDestroyer: 0
   caidoHueco: 0
+  bombAwaiting: 0
   m_Speed: 5
   cooldownBar: {fileID: 8980092922536301318}
   posicion: 0

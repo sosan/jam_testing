@@ -28,7 +28,7 @@ public class ControllerPlayer : MonoBehaviour
     [HideInInspector] public bool isDestroyer = false;
     [HideInInspector] public bool caidoHueco = false;
     private bool isFireCooldown = false;
-    private bool bombAwaiting = false;
+    public bool bombAwaiting = false;
     private bool isCompletedMoveLeftStick = false;
     private bool isDashing = false;
     
@@ -134,7 +134,7 @@ public class ControllerPlayer : MonoBehaviour
 
         
         }
-
+        print("bombawaiting=" + bombAwaiting);
         if (bombAwaiting == true) return;
 
         gameController.HacerVibrarMando(obj.control.device.deviceId);
@@ -242,17 +242,18 @@ public class ControllerPlayer : MonoBehaviour
 
                 if (this.GetComponent<PhotonView>().IsMine == true)
                 { 
-                    object[] data = new object[4];
+                    object[] data = new object[5];
 
                     data[0] = player.colorPlayer.r;
                     data[1] = player.colorPlayer.g;
                     data[2] = player.colorPlayer.b;
                     data[3] = punPlayer.photonview.ViewID;
+                    data[4] = (int)player.bombCooldown;
                     print("este es el id" + this.GetComponent<PhotonView>().ViewID);
 
 
                     bomba = PhotonNetwork.Instantiate("BombaOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
-                    print(bomba.name);
+                    //print(bomba.name);
                     //bomba.GetComponent<ControllerBomba>().viewidPlayer = bomba.GetComponent<PhotonView>().ViewID;
                     
                     ////local
@@ -289,7 +290,7 @@ public class ControllerPlayer : MonoBehaviour
        
         
         bombAwaiting = true;
-        //print("player cooldown=" + player.bombCooldown);
+        print("player cooldown=" + player.bombCooldown);
         CooldownShow((int)player.bombCooldown);
         await UniTask.Delay(TimeSpan.FromSeconds(player.bombCooldown));
         bombAwaiting = false;
@@ -310,7 +311,7 @@ public class ControllerPlayer : MonoBehaviour
     }
 
 
-    private void CooldownShow(int TIEMPOMAXBATALLA)
+    public void CooldownShow(int TIEMPOMAXBATALLA)
     { 
         
 

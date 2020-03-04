@@ -542,6 +542,13 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     
     }
 
+    //[PunRPC]
+    //private void BombCooldown()
+    //{ 
+    
+    
+    //}
+
 
     
 }

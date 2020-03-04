@@ -46,6 +46,8 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
     private List<string> quitarRojos = new List<string>();
     private List<string> quitarBlancos = new List<string>();
 
+    private int cooldownBomb = 0;
+
     private void Awake()
     {
         
@@ -366,7 +368,7 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 
     }
 
-
+    
 
     void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
     {
@@ -374,17 +376,23 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 
         Color t_color = new Color((float)data[0], (float)data[1], (float)data[2]);
         viewidPlayer = (int)data[3];
+        cooldownBomb = (int)data[4];
 
         fondo.color = t_color;
         cruz.color = t_color;
-        colorInicial = t_color;
+        colorInicial = Color.white; ////t_color;
         color = t_color;
+        
 
         //print("idplayerowner" + viewidPlayer);
 
         var player = PhotonNetwork.GetPhotonView(viewidPlayer).gameObject;
         controllerPlayer = player.GetComponent<ControllerPlayer>();
 
+        //print("BOMB COOLDONW=" + controllerPlayer.player.bombCooldown);
+        controllerPlayer.CooldownShow((int) cooldownBomb);
+
+        //photonView.RPC("BombCooldown", info.Sender);
 
 
 
