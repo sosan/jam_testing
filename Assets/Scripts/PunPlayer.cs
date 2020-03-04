@@ -222,7 +222,7 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
         playerProxy.GetComponent<ControllerPlayer>().colorDestino = new Color32(r, g, b, 255);
         playerProxy.GetComponent<ControllerPlayer>().posicion = posicion;
 
-        print("nombrecolorplayer=" + nombreColorPlayer);
+        //print("nombrecolorplayer=" + nombreColorPlayer);
 
         switch(nombreColorPlayer)
         {
@@ -238,7 +238,7 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
 
         }
 
-        print("posicion=" + posicion);
+        //print("posicion=" + posicion);
         posicionBarras = posicion;
         colorBarra = new Color32(r, g, b, 255);
 
@@ -494,27 +494,54 @@ public class PunPlayer : MonoBehaviourPun, IPunObservable
     
     }
 
-    [PunRPC]
-    private void DatosBomba(List<string> datosAmarillos, List<string> datosAzules, List<string> datosRojos, List<string> datosBlancos)
+    private void ProcesarBloques(object[] bloques, Color colorBloque, string tag)
     { 
     
-        print("datosamarillos" + datosAmarillos.Count);
-        print("datosamarillos" + datosAzules.Count);
+        for (ushort i = 0; i < bloques.Length; i++)
+        { 
+            var index = (string)bloques[i];
+            gameController.listadoBoxes[index].GetComponent<SpriteRenderer>().color = colorBloque;
+            gameController.listadoBoxes[index].tag = tag;
+            
+        }
+    }
+
+    [PunRPC]
+    private void DatosBomba(object[] datosAmarillos, object[] datosAzules, object[] datosRojos, object[] datosBlancos, int viewidPlayer, PhotonMessageInfo info )
+    { 
+    
+        print("datosamarillos" + datosAmarillos.Length);
+        print("datosamarillos" + datosAzules.Length);
+
+        if (photonview.IsMine == true)
+        { 
+
+            gameController.bloquesAmarillos += (short)datosAmarillos.Length;
+            gameController.bloquesAzules += (short)datosAzules.Length;
+            gameController.bloquesRojos += (short)datosRojos.Length;
+            gameController.bloquesBlancos += (short)datosBlancos.Length;
+
+
+            ProcesarBloques(datosAmarillos, gameController.elegirPersonaje.prefabColorsPlayers[0], "amarillo");
+            ProcesarBloques(datosAzules, gameController.elegirPersonaje.prefabColorsPlayers[1], "azul");
+            ProcesarBloques(datosRojos, gameController.elegirPersonaje.prefabColorsPlayers[2], "rojo");
+            ProcesarBloques(datosBlancos, gameController.elegirPersonaje.prefabColorsPlayers[3], "blanco");
+
+        
+        
+        }
+
+        
+        if (viewidPlayer == photonview.ViewID )
+        { 
+            print("el player borra ---- ");
+            PhotonNetwork.Destroy(info.photonView);
+
+        }
+
     
     }
 
 
-    //[PunRPC]
-    //private void QuitarPowerup(int target, PhotonMessageInfo info)
-    //{
-
-    //    print("hola");
-       
-    //    var powerup = PhotonNetwork.GetPhotonView( target);
-    //    PhotonNetwork.DestroyAll(powerup);
     
-    
-    //}
-
-
 }

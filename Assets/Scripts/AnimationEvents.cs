@@ -24,4 +24,12 @@ public class AnimationEvents : MonoBehaviour
     
     }
 
+
+    public void IniciarExplicacionLayoutMando()
+    { 
+    
+        
+    
+    }
+
 }

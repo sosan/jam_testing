@@ -18,6 +18,7 @@ public class ControllerGamepadMenu : MonoBehaviour
     [SerializeField] private GameController gameController = null;
     [SerializeField] private ControllerElegirPersonaje elegirPersonaje = null;
     [SerializeField] private ControllerElegirConexion elegirConexion = null;
+    [SerializeField] private ControllerExplicacion controllerExplicacion = null;
     
     //[SerializeField] private Animation camAnim = null;
     //[SerializeField] private Animation spriteInicioAnim = null;
@@ -950,15 +951,6 @@ public class ControllerGamepadMenu : MonoBehaviour
             MusicController.MusicInstance.sfx[1]
         );
 
-        
-
-
-
-#if UNITY_EDITOR
-        print("entramos por gamepad");
-# endif
-
-
         ShowElegirPersonaje(online: online);
 
 
@@ -1159,10 +1151,11 @@ public class ControllerGamepadMenu : MonoBehaviour
 
 
         inputActions.Disable();
+        gameController.isOnline = true;
 
         if (online == true)
         { 
-            gameController.isOnline = true;
+            
             ShowFX(positionTransformparticles[1].anchoredPosition);
             descripcion.text = Localization.Get("conectando");
 
@@ -1182,7 +1175,7 @@ public class ControllerGamepadMenu : MonoBehaviour
 
         //print("online=" + online);
         
-
+        
         DisableCanvas();
 
         if (online == true)
@@ -1196,14 +1189,32 @@ public class ControllerGamepadMenu : MonoBehaviour
         else
         { 
         
-            elegirPersonaje.InitActions(online: online);
+            controllerExplicacion.Init();
+            //elegirPersonaje.InitActions(online: online);
         }
 
-        
-        
 
-        //gameController.InitGame();
 
+
+
+
+    }
+
+    public void ShowPantallaPersonajes()
+    { 
+    
+        if (gameController.isOnline == true)
+        {
+            elegirConexion.Init();
+                
+        }
+        else
+        { 
+        
+            elegirPersonaje.InitActions(online: gameController.isOnline);
+        }
+
+    
     }
 
 

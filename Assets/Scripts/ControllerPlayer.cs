@@ -137,6 +137,8 @@ public class ControllerPlayer : MonoBehaviour
 
         if (bombAwaiting == true) return;
 
+        gameController.HacerVibrarMando(obj.control.device.deviceId);
+
          //raycast para saber si estamos encima de que estamos..
         var hit = Physics2D.OverlapBox(thistransform.position, new Vector2(0, 0), 0, layerMask: raycastLayerMask);
         if (hit is null == false)
@@ -164,7 +166,7 @@ public class ControllerPlayer : MonoBehaviour
         //stop.Stop();
         //print("tiempo=" + stop.Elapsed.TotalMilliseconds);
 
-        gameController.HacerVibrarMando(obj.control.device.deviceId);
+        
 
 
         float x = (float)Math.Round(thistransform.position.x * 2, MidpointRounding.ToEven) / 2;
@@ -245,17 +247,19 @@ public class ControllerPlayer : MonoBehaviour
                     data[0] = player.colorPlayer.r;
                     data[1] = player.colorPlayer.g;
                     data[2] = player.colorPlayer.b;
-                    data[3] = this.GetComponent<PhotonView>().ViewID;
+                    data[3] = punPlayer.photonview.ViewID;
                     print("este es el id" + this.GetComponent<PhotonView>().ViewID);
 
-                    bomba = PhotonNetwork.Instantiate("BombaOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
-                    bomba.GetComponent<ControllerBomba>().viewidPlayer = bomba.GetComponent<PhotonView>().ViewID;
-                    
-                    //local
 
-                    bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
-                    bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
-                    bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+                    bomba = PhotonNetwork.Instantiate("BombaOnline", new Vector3(x, y, 0), Quaternion.identity, 0, data);
+                    print(bomba.name);
+                    //bomba.GetComponent<ControllerBomba>().viewidPlayer = bomba.GetComponent<PhotonView>().ViewID;
+                    
+                    ////local
+
+                    //bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+                    //bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
+                    //bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
 
                 
                 }
@@ -773,7 +777,7 @@ public class ControllerPlayer : MonoBehaviour
         
         if(gameController.playersSePuedenMover == false) return;
         if(player.playerSePuedeMover == false) return;
-
+        //print(collision.tag);
         if (collision.CompareTag("hueco") == true)
         { 
 

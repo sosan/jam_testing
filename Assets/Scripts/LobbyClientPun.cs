@@ -10,7 +10,7 @@ using System;
 using UniRx;
 using InControlActions;
 using UnityEngine.InputSystem;
-
+using UniRx.Async;
 
 public class LobbyClientPun : MonoBehaviourPunCallbacks
 {
@@ -19,6 +19,8 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
     [SerializeField] private ControllerElegirPersonaje elegirPersonaje = null;
     [SerializeField] private GameController gameController = null;
     [SerializeField] private TextMeshPro txtStatus;
+    [SerializeField] private ControllerExplicacion controllerExplicacion = null;
+
 
     public short deviceId = -1;
 
@@ -57,7 +59,7 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
 
    
 
-    
+    public ReactiveProperty<bool> siguienteFase = new ReactiveProperty<bool>(false);
 
 
     public override void OnConnectedToMaster()
@@ -66,7 +68,11 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
         print("connected to master");
 #endif
 
-        controllerElegirConexion.Init();
+        controllerExplicacion.Init();
+
+        //await UniTask.WaitUntil( () => siguienteFase.Value == true);
+
+        //controllerElegirConexion.Init();
 
 
     }
@@ -86,9 +92,20 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
 
     public void ConectarsePartida()
     { 
-        bool entrado = PhotonNetwork.JoinRandomRoom();
-        print("entrado" + entrado);
+
+        //print("estado conexion=" + PhotonNetwork.NetworkingClient.State);
+
+        if (PhotonNetwork.IsConnected && PhotonNetwork.NetworkingClient.State != ClientState.Joining  
+            && PhotonNetwork.NetworkingClient.State != ClientState.ConnectingToGameserver)
+        { 
+        
+            bool entrado = PhotonNetwork.JoinRandomRoom();
+            //print("entrado" + entrado);
     
+        
+        }
+
+        
     
     }
 
@@ -96,7 +113,7 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         //base.OnPlayerEnteredRoom(newPlayer);
-        print("player entrado" + newPlayer.ActorNumber);
+        //print("player entrado" + newPlayer.ActorNumber);
 
         Debug.Log( "OnPlayerEnteredRoom() " + newPlayer.NickName);
 
@@ -105,6 +122,7 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
+        
         
 
     }
@@ -115,6 +133,7 @@ public class LobbyClientPun : MonoBehaviourPunCallbacks
 #if UNIT_EDITOR
         print("joined room");
 #endif
+
         ExitGames.Client.Photon.Hashtable initialProps = new ExitGames.Client.Photon.Hashtable();
         initialProps = gameController.SetPlayerForOnline(ref initialProps);
         PhotonNetwork.NickName = PhotonNetwork.LocalPlayer.NickName ;

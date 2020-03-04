@@ -117,46 +117,57 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
             {
             
                 
-                print("longitud hits=" + hits.Length);
-                ushort numerohitsefectivo = 0;
+                //print("longitud hits=" + hits.Length);
+                //ushort numerohitsefectivo = 0;
 
                 for (ushort i = 0 ; i < hits.Length; i++)
                 { 
-                    print("hits" + i + " nombre" + hits[i].name);
-                    if (hits[i].CompareTag("fondo") == false) continue;
-
-                    hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                    //print("hits" + i + " nombre" + hits[i].name + " tag=" + hits[i].tag);
+                    if (hits[i].CompareTag("fondo") == true ||
+                        hits[i].CompareTag("amarillo") == true ||
+                        hits[i].CompareTag("azul") == true ||
+                        hits[i].CompareTag("rojo") == true ||
+                        hits[i].CompareTag("blanco") == true 
+                        )
+                    { 
+                        hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
                     
-                    numerohitsefectivo++;
-                    //restamos puntuacion al enemigo
-                    switch (hits[i].transform.tag)
-                    {
-                        case "amarillo": quitarAmarillos.Add(hits[i].gameObject.name); break;
-                        case "azul": quitarAzules.Add(hits[i].gameObject.name); break;
-                        case "rojo": quitarRojos.Add(hits[i].gameObject.name);  break;
-                        case "blanco": quitarBlancos.Add(hits[i].gameObject.name); break;
-                        case "fondo": break;
+                        //numerohitsefectivo++;
+                        //restamos puntuacion al enemigo
+                        switch (hits[i].transform.tag)
+                        {
+                            case "amarillo": quitarAmarillos.Add(hits[i].gameObject.name); break;
+                            case "azul": quitarAzules.Add(hits[i].gameObject.name); break;
+                            case "rojo": quitarRojos.Add(hits[i].gameObject.name);  break;
+                            case "blanco": quitarBlancos.Add(hits[i].gameObject.name); break;
+                            case "fondo": break;
 
+                        }
+
+
+                        hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
+                    
                     }
 
-
-                    hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
+                    
 
             
                 }
 
-
-                photonView.RPC("DatosBomba", RpcTarget.OthersBuffered, quitarAmarillos, quitarAzules, quitarRojos, quitarBlancos);
-
-
+                photonView.RPC("DatosBomba", RpcTarget.AllBuffered, 
+                    quitarAmarillos.ToArray(), 
+                    quitarAzules.ToArray(), 
+                    quitarRojos.ToArray(), 
+                    quitarBlancos.ToArray()
+                    , viewidPlayer
                     
+                    );
 
-                print("numerohitsefectivo=" + numerohitsefectivo);
             }
 
 
 
-            PhotonNetwork.Destroy(this.GetComponent<PhotonView>());
+            
         }
         catch (MissingReferenceException)
         {
@@ -194,86 +205,94 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 
                 for (ushort i = 0 ; i < hits.Length; i++)
                 { 
-                    print("hits" + i + " nombre" + hits[i].name);
-                    if (hits[i].CompareTag("fondo") == false) continue;
+                    //print("hits" + i + " nombre" + hits[i].name);
+                    if (hits[i].CompareTag("fondo") == true ||
+                        hits[i].CompareTag("amarillo") == true ||
+                        hits[i].CompareTag("azul") == true ||
+                        hits[i].CompareTag("rojo") == true ||
+                        hits[i].CompareTag("blanco") == true 
+                    )
+                    { 
 
-                    hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
+                        hits[i].transform.gameObject.GetComponent<SpriteRenderer>().color = color;
                     
 
-                    //restamos puntuacion al enemigo
-                    switch (hits[i].transform.tag)
-                    {
-                        case "amarillo": gameController.bloquesAmarillos -= 1; break;
-                        case "azul": gameController.bloquesAzules  -= 1; break;
-                        case "rojo": gameController.bloquesRojos -= 1;break;
-                        case "blanco":gameController.bloquesBlancos -= 1; break;
-                        case "fondo": break;
+                        //restamos puntuacion al enemigo
+                        switch (hits[i].transform.tag)
+                        {
+                            case "amarillo": gameController.bloquesAmarillos -= 1; break;
+                            case "azul": gameController.bloquesAzules  -= 1; break;
+                            case "rojo": gameController.bloquesRojos -= 1;break;
+                            case "blanco":gameController.bloquesBlancos -= 1; break;
+                            case "fondo": break;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesAmarillos < 0)
-                    { 
+                        if (gameController.bloquesAmarillos < 0)
+                        { 
                         gameController.bloquesAmarillos = 0;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesAzules < 0)
-                    { 
+                        if (gameController.bloquesAzules < 0)
+                        { 
                         gameController.bloquesAzules = 0;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesRojos < 0)
-                    { 
+                        if (gameController.bloquesRojos < 0)
+                        { 
                         gameController.bloquesRojos = 0;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesBlancos < 0)
-                    { 
+                        if (gameController.bloquesBlancos < 0)
+                        { 
                         gameController.bloquesBlancos = 0;
                 
-                    }
+                        }
 
                    
 
-                    hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
+                        hits[i].transform.tag = controllerPlayer.player.nombreColorPlayer.ToString();
 
                     
 
-                    //subimos puntuacion al player
-                    switch(controllerPlayer.player.nombreColorPlayer)
-                    {
+                        //subimos puntuacion al player
+                        switch(controllerPlayer.player.nombreColorPlayer)
+                        {
                         case nombreColores.amarillo: gameController.bloquesAmarillos += 1; break;
                         case nombreColores.azul: gameController.bloquesAzules  += 1; break;
                         case nombreColores.rojo: gameController.bloquesRojos += 1;break;
                         case nombreColores.blanco:gameController.bloquesBlancos += 1; break;
                         case nombreColores.fondo: break;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesAmarillos > 162)
-                    { 
+                        if (gameController.bloquesAmarillos > 162)
+                        { 
                         gameController.bloquesAmarillos = 162;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesAzules > 162)
-                    { 
+                        if (gameController.bloquesAzules > 162)
+                        { 
                         gameController.bloquesAzules = 162;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesRojos > 162)
-                    { 
+                        if (gameController.bloquesRojos > 162)
+                        { 
                         gameController.bloquesRojos = 162;
                 
-                    }
+                        }
 
-                    if (gameController.bloquesBlancos > 162)
-                    { 
+                        if (gameController.bloquesBlancos > 162)
+                        { 
                         gameController.bloquesBlancos = 162;
                 
+                        }
+
                     }
 
             
@@ -355,19 +374,45 @@ public class ControllerBomba : MonoBehaviour, IPunInstantiateMagicCallback
 
         Color t_color = new Color((float)data[0], (float)data[1], (float)data[2]);
         viewidPlayer = (int)data[3];
-        
+
         fondo.color = t_color;
         cruz.color = t_color;
         colorInicial = t_color;
         color = t_color;
-        
-        print("idplayerowner" + viewidPlayer);
+
+        //print("idplayerowner" + viewidPlayer);
 
         var player = PhotonNetwork.GetPhotonView(viewidPlayer).gameObject;
         controllerPlayer = player.GetComponent<ControllerPlayer>();
 
+
+
+
+    }
+
+    [PunRPC]
+    private void DatosBomba(object[] datosAmarillos, object[] datosAzules, object[] datosRojos, object[] datosBlancos, int viewid, PhotonMessageInfo info )
+    { 
+        print("datos bomba dentro de la bomba");
+        //bomba.GetComponent<ControllerBomba>().viewidPlayer = bomba.GetComponent<PhotonView>().ViewID;
+                    
+        ////local
+
+        //bomba.GetComponent<SpriteRenderer>().color =  player.colorPlayer;
+        //bomba.GetComponent<ControllerBomba>().color = player.colorPlayer;
+        //bomba.GetComponent<ControllerBomba>().cruz.color = player.colorPlayer;
+        
+        if (photonView.IsMine == true)
+        { 
+
+            print("es mio y lo destruyo?");
+            PhotonNetwork.Destroy(photonView);
+        
+        }
         
         
 
+    
     }
+
 }

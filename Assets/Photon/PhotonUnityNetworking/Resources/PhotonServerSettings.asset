@@ -44,5 +44,6 @@ MonoBehaviour:
   - RemovePowerup
   - QuitarPowerup
   - DatosBomba
+  - DatosBombaAMasterClient
   DisableAutoOpenWizard: 1
   ShowSettings: 1
